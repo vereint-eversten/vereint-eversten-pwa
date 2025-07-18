@@ -1,0 +1,17 @@
+
+backend:
+  name: git-gateway
+  branch: main
+
+media_folder: "uploads"
+public_folder: "/uploads"
+
+collections:
+  - name: "seiten"
+    label: "Seiten"
+    files:
+      - label: "Startseite"
+        name: "startseite"
+        file: "index.html"
+        fields:
+          - {label: "Inhalt", name: "body", widget: "markdown"}
