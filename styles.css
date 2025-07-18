@@ -1,0 +1,9 @@
+body { font-family: sans-serif; background-color: #f2fef2; color: #103c1e; margin: 0; }
+header { background: #1e7d3e; color: white; padding: 1rem; }
+nav ul { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 1rem; }
+nav ul ul { display: none; position: absolute; background: #fff; padding: 0.5rem; }
+nav li:hover > ul { display: block; }
+main { padding: 1rem; }
+footer { background: #1e7d3e; color: white; padding: 1rem; text-align: center; }
+a { color: #1e7d3e; text-decoration: none; }
+a:hover { text-decoration: underline; }
