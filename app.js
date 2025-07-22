@@ -7,7 +7,7 @@ const moduleFiles = {
   home: "home.html",
   vereint: "vereint.html",
   tus: "tus.html",
-  chat: "chat.html",
+  messenger: "messenger.html",
   kalender: "kalender.html",
   shop: "shop.html",
   einstellungen: "einstellungen.html",
