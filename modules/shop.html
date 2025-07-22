@@ -1,1 +1,125 @@
-<h2>Shop Modul</h2><p>Inhalt des Moduls shop.</p>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>verein[t] Onlineshop mit Bildern</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; background: #f5f5f5; }
+    h1 { color: #2d662f; }
+    .product, .cart { background: #fff; padding: 15px; margin: 15px 0; border-radius: 6px; box-shadow: 0 0 5px #ccc; }
+    .product h2 { margin-top: 0; color: #333; }
+    label { display: block; margin-top: 6px; font-weight: bold; }
+    select, input[type=text], input[type=email] { width: 100%; padding: 6px; margin-bottom: 10px; }
+    .price-options label { display: inline-block; margin-right: 20px; }
+    button { padding: 8px 16px; background: #2d662f; color: white; border: none; cursor: pointer; }
+    .cart ul { padding-left: 20px; }
+    img.product-image { width: 100%; max-width: 250px; height: auto; display: block; margin-bottom: 10px; border: 1px solid #ccc; }
+  </style>
+</head>
+<body>
+  <h1>🛒 verein[t] Onlineshop</h1>
+  <div id="products"></div>
+
+  <div class="cart">
+    <h2>🧾 Warenkorb</h2>
+    <ul id="cartList"></ul>
+    <p><strong>Gesamtpreis:</strong> <span id="total">0 €</span></p>
+    <label for="email">Email für Bestellbestätigung</label>
+    <input type="email" id="email" placeholder="deine@email.de" />
+    <button onclick="submitOrder()">Jetzt bestellen</button>
+  </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script>
+  const supabase = supabase.createClient(
+    'https://ntccnkvpxrpwgxmiherf.supabase.co',
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc'
+  );
+
+  const cart = [];
+  const prices = { selbstkosten: 10, fair: 15, solidarisch: 20 };
+  const productsContainer = document.getElementById("products");
+  const cartList = document.getElementById("cartList");
+  const totalDisplay = document.getElementById("total");
+
+  for (let i = 1; i <= 10; i++) {
+    const div = document.createElement("div");
+    div.className = "product";
+    div.innerHTML = `
+      <h2>Produkt ${i}</h2>
+      <img class="product-image" src="https://via.placeholder.com/250x200.png?text=Produkt+${i}" alt="Produktbild ${i}" />
+      <label>Variante</label>
+      <select class="variante">
+        <option>Standard</option>
+        <option>Premium</option>
+      </select>
+      <label>Farbe</label>
+      <select class="farbe"><option>Schwarz</option><option>Weiß</option><option>Grün</option><option>Blau</option><option>Rot</option></select>
+      <label>Größe</label>
+      <select class="größe"><option>XS</option><option>S</option><option>M</option><option>L</option><option>XL</option></select>
+      <label>Logo</label>
+      <select class="logo"><option>Ohne</option><option>Logo vorne</option><option>Logo hinten</option><option>Beides</option></select>
+      <label>Personalisierung</label>
+      <input type="text" class="personalisierung" placeholder="z. B. Alex #23" />
+      <div class="price-options">
+        <label><input type="radio" name="preis_${i}" value="selbstkosten"> Selbstkosten</label>
+        <label><input type="radio" name="preis_${i}" value="fair" checked> Fair</label>
+        <label><input type="radio" name="preis_${i}" value="solidarisch"> Solidarisch</label>
+      </div>
+      <button onclick="addToCart(this)">In den Warenkorb</button>
+    `;
+    productsContainer.appendChild(div);
+  }
+
+  function addToCart(button) {
+    const container = button.parentElement;
+    const produkt = {
+      name: container.querySelector("h2").innerText,
+      variante: container.querySelector(".variante").value,
+      farbe: container.querySelector(".farbe").value,
+      größe: container.querySelector(".größe").value,
+      logo: container.querySelector(".logo").value,
+      personalisierung: container.querySelector(".personalisierung").value,
+      preisoption: container.querySelector("input[type=radio]:checked").value,
+      einzelpreis: prices[container.querySelector("input[type=radio]:checked").value]
+    };
+    cart.push(produkt);
+    renderCart();
+  }
+
+  function renderCart() {
+    cartList.innerHTML = "";
+    let total = 0;
+    cart.forEach((p, i) => {
+      const li = document.createElement("li");
+      li.innerText = `${p.name} – ${p.variante} (${p.farbe}, ${p.größe}, ${p.logo}) – ${p.einzelpreis} €`;
+      total += p.einzelpreis;
+      cartList.appendChild(li);
+    });
+    totalDisplay.innerText = total + " €";
+  }
+
+  async function submitOrder() {
+    const email = document.getElementById("email").value;
+    const total = cart.reduce((sum, p) => sum + p.einzelpreis, 0);
+    const user = await supabase.auth.getUser();
+
+    const { error } = await supabase.from("shop_orders").insert([{
+      email,
+      products: cart,
+      total_price: total,
+      created_by: user?.data?.user?.id || null
+    }]);
+
+    if (error) {
+      alert("Fehler bei Bestellung: " + error.message);
+    } else {
+      alert("Bestellung erfolgreich gespeichert!");
+      cart.length = 0;
+      renderCart();
+    }
+  }
+</script>
+</body>
+</html>
