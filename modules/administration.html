@@ -1,1 +1,675 @@
-<h2>Administration Modul</h2><p>Inhalt des Moduls administration.</p>
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Scoreboard Controller mit Logbuch</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .flex-container {
+      display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;
+    }
+    .score-box, .time-box { text-align: center; width: 30%; }
+    button { padding: 10px 20px; font-size: 18px; margin: 5px; }
+    .score-buttons button { width: 60px; height: 60px; font-size: 20px; }
+    .blue { background-color: #0066ff; color: white; }
+    .orange { background-color: #ffa500; color: white; }
+    .green { background-color: green; color: white; }
+    .red { background-color: red; color: white; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid black; text-align: center; padding: 8px; }
+    .modal {
+      display: none; position: fixed; z-index: 1;
+      left: 0; top: 0; width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background-color: white; margin: 10% auto; padding: 20px;
+      width: 300px; border-radius: 5px;
+    }
+  </style>
+
+<style>
+.trikot-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 60px);
+  grid-gap: 10px;
+  margin: 10px;
+}
+.trikot-btn {
+  background: #ccc;
+  width: 60px;
+  height: 60px;
+  font-size: 18px;
+  cursor: pointer;
+  border: 1px solid #999;
+}
+</style>
+
+</head>
+<body>
+
+<div id="setupSection">
+  <label>Team A wählen:</label>
+  <select id="teamASelect" onchange="checkNewTeam(this)">
+    <option>- bitte wählen -</option>
+    
+  </select>
+  
+
+  <br><br>
+
+  <label>Team B wählen:</label>
+  <select id="teamBSelect" onchange="checkNewTeam(this)">
+    <option>- bitte wählen -</option>
+    
+  </select>
+  
+
+  <br><br>
+
+  <label>Wettbewerb wählen:</label>
+  <select id="competitionSelect" onchange="checkNewCompetition(this)">
+    <option>- bitte wählen -</option>
+    
+  </select>
+
+  <br><br>
+  <button onclick="startGame()">zum Spiel</button>
+</div>
+
+<div id="mainSection" style="display:none;">
+  
+
+  <div class="flex-container">
+    <div class="score-box">
+      <div>
+        <h3>Team A</h3>
+        <div onclick="toggleInput('punkteA')" id="punkteA_display" style="font-size:80px; font-weight:bold;"></div>
+<input type="number" id="punkteA" value="0" style="font-size:80px; width:200px; text-align:center; display:none;" />
+      </div>
+      <div class="score-buttons">
+        <button class="blue" onclick="handlePoints('A', 1)">+1</button>
+        <button class="blue" onclick="handlePoints('A', 2)">+2</button>
+        <button class="blue" onclick="handlePoints('A', 3)">+3</button>
+      </div>
+      <br>
+      <label>Fouls:</label>
+      <input type="number" id="foulsA" value="0" />
+      <button onclick="handleFoul('A')">+1</button>
+      <button onclick="resetFoul('A')">Reset</button>
+    </div>
+
+    <div class="time-box">
+      <h3>Zeit</h3>
+      <div onclick="toggleInput('spielzeit')" id="spielzeit_display" style="font-size:80px; font-weight:bold;"></div>
+<input type="text" id="spielzeit" value="10:00" style="font-size:80px; width:200px; text-align:center; display:none;" />
+      <div id="sectionDisplay">1 / 4</div>
+      <button id="startStopBtn" class="green">Start</button>
+      <br>
+      <button onclick="nextSection()">Nächster Abschnitt</button>
+      <br><button onclick="returnToStart()">Einstellungen</button>
+    </div>
+
+    <div class="score-box">
+      <div>
+        <h3>Team B</h3>
+        <div onclick="toggleInput('punkteB')" id="punkteB_display" style="font-size:80px; font-weight:bold;"></div>
+<input type="number" id="punkteB" value="0" style="font-size:80px; width:200px; text-align:center; display:none;" />
+      </div>
+      <div class="score-buttons">
+        <button class="orange" onclick="handlePoints('B', 1)">+1</button>
+        <button class="orange" onclick="handlePoints('B', 2)">+2</button>
+        <button class="orange" onclick="handlePoints('B', 3)">+3</button>
+      </div>
+      <br>
+      <label>Fouls:</label>
+      <input type="number" id="foulsB" value="0" />
+      <button onclick="handleFoul('B')">+1</button>
+      <button onclick="resetFoul('B')">Reset</button>
+    </div>
+  </div>
+
+  
+<h3>Logbuch</h3>
+<button onclick="exportLogbuch()">Logbuch exportieren</button>
+<button onclick="exportStatistik()">Statistik exportieren</button>
+<table id="logTable">
+
+    <thead>
+      <tr>
+        <th>Zeit</th>
+        <th>Ereignis</th>
+        <th>Spielstand</th>
+        <th>Trikotnummer</th>
+        <th>Aktion</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Modals -->
+<div id="jerseyModal" class="modal">
+  <div class="modal-content">
+    <h3>Trikotnummer eingeben</h3>
+    <input type="text" id="jerseyInput" placeholder="z. B. 12" />
+    <button onclick="confirmJersey()">OK</button>
+  </div>
+</div>
+
+<div id="teamModal" class="modal">
+  <div class="modal-content">
+    <h3>Team speichern</h3>
+    <input type="text" id="teamName" placeholder="Name" />
+    <input type="file" />
+    <button onclick="saveTeam()">Speichern</button>
+  </div>
+</div>
+
+<div id="competitionModal" class="modal">
+  <div class="modal-content">
+    <h3>Wettbewerb speichern</h3>
+    <input type="text" id="compName" placeholder="Name" />
+    <input type="file" />
+    <input type="number" id="compSections" placeholder="Anzahl Abschnitte" />
+    <input type="number" id="compDuration" placeholder="Dauer Abschnitte (Sekunden)" />
+    <label><input type="checkbox" id="jerseyCheckbox" checked /> Trikotnummer abfragen</label>
+    <button onclick="saveCompetition()">Speichern</button>
+  </div>
+</div>
+
+<script>
+let isRunning = false;
+let timerInterval;
+let timeRemaining = 600;
+let currentSection = 1;
+let totalSections = 4;
+let pendingLog = null;
+
+function updateTimeDisplay() {
+  const minutes = String(Math.floor(timeRemaining / 60)).padStart(2, '0');
+  const seconds = String(timeRemaining % 60).padStart(2, '0');
+  document.getElementById('spielzeit').value = minutes + ":" + seconds;
+}
+
+function parseTimeInput() {
+  const [min, sec] = document.getElementById("spielzeit").value.split(":").map(Number);
+  timeRemaining = min * 60 + sec;
+}
+
+document.getElementById("startStopBtn").addEventListener("click", () => {
+  const btn = document.getElementById("startStopBtn");
+  parseTimeInput();
+  isRunning = !isRunning;
+
+  if (isRunning) {
+    btn.textContent = "Stopp";
+    btn.classList.remove("green");
+    btn.classList.add("red");
+    timerInterval = setInterval(() => {
+      if (timeRemaining > 0) {
+        timeRemaining--;
+        updateTimeDisplay(); syncDisplays();
+      } else {
+        clearInterval(timerInterval);
+        btn.textContent = "Start";
+        btn.classList.remove("red");
+        btn.classList.add("green");
+        isRunning = false;
+      }
+    }, 1000);
+  } else {
+    clearInterval(timerInterval);
+    btn.textContent = "Start";
+    btn.classList.remove("red");
+    btn.classList.add("green");
+  }
+});
+
+function nextSection() {
+  currentSection += 1;
+  document.getElementById("sectionDisplay").textContent = currentSection + " / " + totalSections;
+  currentJerseySetting = comp.trikot;
+}
+
+function returnToStart() {
+  document.getElementById("mainSection").style.display = "none";
+  document.getElementById("setupSection").style.display = "block";
+}
+
+function getCurrentGameTime() {
+  return currentSection + "/4 " + document.getElementById("spielzeit").value;
+}
+
+function getScore() {
+  return document.getElementById("punkteA").value + " : " + document.getElementById("punkteB").value;
+}
+
+function handlePoints(team, points) {
+  document.getElementById("punkte" + team).value =
+    parseInt(document.getElementById("punkte" + team).value) + points;
+  syncDisplays();
+  return;
+    parseInt(document.getElementById("punkte" + team).value) + points;
+  const eventText = points + " Punkt(e) Team " + team;
+  processLogEntry(eventText, team);
+}
+
+function handleFoul(team) {
+  document.getElementById("fouls" + team).value =
+    parseInt(document.getElementById("fouls" + team).value) + 1;
+  const eventText = "Foul Team " + team;
+  processLogEntry(eventText, team);
+}
+
+function resetFoul(team) {
+  document.getElementById("fouls" + team).value = 0;
+}
+
+function processLogEntry(eventText, team) {
+  const jerseyOn = currentJerseySetting;
+  if (jerseyOn) {
+    pendingLog = { eventText, team };
+    document.getElementById("jerseyInput").value = "";
+    document.getElementById("jerseyModal").style.display = "block";
+  } else {
+    addLogEntry(eventText, "");
+  }
+}
+
+function confirmJersey() {
+  const jersey = document.getElementById("jerseyInput").value;
+  if (pendingLog) {
+    addLogEntry(pendingLog.eventText, jersey);
+    pendingLog = null;
+  }
+  document.getElementById("jerseyModal").style.display = "none";
+}
+
+function addLogEntry(eventText, jersey) {
+  const table = document.getElementById("logTable").getElementsByTagName("tbody")[0];
+  const row = table.insertRow(0);
+  const timeCell = row.insertCell(0);
+  const eventCell = row.insertCell(1);
+  const scoreCell = row.insertCell(2);
+  const jerseyCell = row.insertCell(3);
+  const actionCell = row.insertCell(4);
+  timeCell.contentEditable = true;
+  eventCell.contentEditable = true;
+  scoreCell.contentEditable = true;
+  jerseyCell.contentEditable = true;
+  timeCell.textContent = getCurrentGameTime();
+  eventCell.textContent = eventText;
+  scoreCell.textContent = getScore();
+  jerseyCell.textContent = jersey;
+  const deleteBtn = document.createElement("button");
+  deleteBtn.textContent = "Löschen";
+  deleteBtn.onclick = () => table.deleteRow(row.rowIndex - 1);
+  actionCell.appendChild(deleteBtn);
+  exportLogbuch();
+}
+
+function startGame() {
+  applyTeamColors();
+  document.getElementById("setupSection").style.display = "none";
+  document.getElementById("mainSection").style.display = "block";
+  updateTimeDisplay(); syncDisplays();
+  document.getElementById("sectionDisplay").textContent = currentSection + " / " + totalSections;
+  currentJerseySetting = comp.trikot;
+}
+
+function checkNewTeam(select) {}
+
+function saveTeam() {
+  const name = document.getElementById("teamName").value;
+  if (!name) return;
+  const teamSelects = [document.getElementById("teamASelect"), document.getElementById("teamBSelect")];
+  teamSelects.forEach(sel => {
+    const option = new Option(name, name);
+    sel.add(option);
+    sel.value = name;
+  });
+  document.getElementById("teamModal").style.display = "none";
+  document.getElementById("teamName").value = "";
+}
+
+function checkNewCompetition(select) {
+  if (select.value === "Neuer Wettbewerb") {
+    document.getElementById("competitionModal").style.display = "block";
+  }
+}
+
+function saveCompetition() {
+  const name = document.getElementById("compName").value;
+  const sections = parseInt(document.getElementById("compSections").value);
+  const duration = parseInt(document.getElementById("compDuration").value);
+  const trikot = document.getElementById("jerseyCheckbox").checked;
+  if (!name || isNaN(sections) || isNaN(duration)) return;
+  const select = document.getElementById("competitionSelect");
+  const option = new Option(name, name);
+  select.add(option);
+  select.value = name;
+  totalSections = sections;
+  timeRemaining = duration;
+  currentJerseySetting = trikot;
+  updateTimeDisplay(); syncDisplays();
+  document.getElementById("sectionDisplay").textContent = currentSection + " / " + totalSections;
+  currentJerseySetting = comp.trikot;
+  document.getElementById("competitionModal").style.display = "none";
+  document.getElementById("compName").value = "";
+  document.getElementById("compSections").value = "";
+  document.getElementById("compDuration").value = "";
+}
+
+// === Daten aus Verwaltung laden ===
+function loadFromLocalStorage() {
+  const data = JSON.parse(localStorage.getItem("vereinData"));
+  if (!data) return;
+
+  const teamSelects = [document.getElementById("teamASelect"), document.getElementById("teamBSelect")];
+  teamSelects.forEach(sel => {
+    // Alle Optionen außer Standardoptionen entfernen
+    for (let i = sel.options.length - 1; i >= 0; i--) {
+      if (sel.options[i].value !== "- bitte wählen -") {
+        sel.remove(i);
+      }
+    }
+    // Neue Teams einfügen
+    teamCache = data.teams || [];
+    data.teams.forEach(team => {
+      const opt = new Option(team.name, team.name);
+      sel.add(opt);
+    });
+  });
+
+  const compSelect = document.getElementById("competitionSelect");
+  for (let i = compSelect.options.length - 1; i >= 0; i--) {
+    if (compSelect.options[i].value !== "- bitte wählen -") {
+      compSelect.remove(i);
+    }
+  }
+  data.competitions.forEach(comp => {
+    const opt = new Option(comp.name, comp.name);
+    compSelect.add(opt);
+  });
+}
+
+window.onload = () => {
+  loadFromLocalStorage();
+};
+
+
+let competitionCache = [];
+let currentJerseySetting = false;
+
+function loadFromLocalStorage() {
+  const data = JSON.parse(localStorage.getItem("vereinData"));
+  if (!data) return;
+
+  const teamSelects = [document.getElementById("teamASelect"), document.getElementById("teamBSelect")];
+  teamSelects.forEach(sel => {
+    for (let i = sel.options.length - 1; i >= 0; i--) {
+      if (sel.options[i].value !== "- bitte wählen -") {
+        sel.remove(i);
+      }
+    }
+    teamCache = data.teams || [];
+    data.teams.forEach(team => {
+      const opt = new Option(team.name, team.name);
+      sel.add(opt);
+    });
+  });
+
+  const compSelect = document.getElementById("competitionSelect");
+  for (let i = compSelect.options.length - 1; i >= 0; i--) {
+    if (compSelect.options[i].value !== "- bitte wählen -") {
+      compSelect.remove(i);
+    }
+  }
+  competitionCache = data.competitions || [];
+  competitionCache.forEach(comp => {
+    const opt = new Option(comp.name, comp.name);
+    compSelect.add(opt);
+  });
+}
+
+function checkNewCompetition(select) {
+  applyCompetitionSettings(select.value);
+}
+
+function applyCompetitionSettings(name) {
+  const comp = competitionCache.find(c => c.name === name);
+  if (!comp) return;
+  totalSections = comp.sections;
+  timeRemaining = comp.duration;
+  currentSection = 1;
+  currentJerseySetting = comp.trikot;
+  updateTimeDisplay(); syncDisplays();
+  document.getElementById("sectionDisplay").textContent = currentSection + " / " + totalSections;
+  currentJerseySetting = comp.trikot;
+}
+
+window.onload = () => {
+  loadFromLocalStorage();
+};
+
+
+let teamCache = [];
+
+function applyTeamColors() {
+  const teamAName = document.getElementById("teamASelect").value;
+  const teamBName = document.getElementById("teamBSelect").value;
+
+  const teamA = teamCache.find(t => t.name === teamAName);
+  const teamB = teamCache.find(t => t.name === teamBName);
+
+  if (teamA) {
+    document.querySelectorAll(".score-buttons button.blue").forEach(btn => {
+      btn.style.backgroundColor = teamA.color;
+    });
+  }
+
+  if (teamB) {
+    document.querySelectorAll(".score-buttons button.orange").forEach(btn => {
+      btn.style.backgroundColor = teamB.color;
+    });
+  }
+}
+
+
+function toggleInput(id) {
+  const input = document.getElementById(id);
+  input.style.display = input.style.display === "none" ? "inline-block" : "none";
+}
+
+function syncDisplays() {
+  document.getElementById("punkteA_display").textContent = document.getElementById("punkteA").value;
+  document.getElementById("punkteB_display").textContent = document.getElementById("punkteB").value;
+  document.getElementById("spielzeit_display").textContent = document.getElementById("spielzeit").value;
+}
+
+
+function exportLogbuch() {
+  const table = document.getElementById("logTable");
+  let csv = "";
+  for (let row of table.rows) {
+    let cells = Array.from(row.cells).map(td => `"${td.innerText.replace(/"/g, '""')}"`);
+    csv += cells.join(",") + "\n";
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "logbuch.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+function old_exportStatistik_disabled() {
+  const rows = Array.from(document.querySelectorAll("#logTable tbody tr"));
+  const statistik = {};
+
+  rows.forEach(row => {
+    const ereignis = row.cells[1].textContent;
+    const trikot = row.cells[3].textContent.trim();
+    if (!trikot) return;
+
+    if (!statistik[trikot]) statistik[trikot] = { punkte: 0, fouls: 0 };
+
+    if (ereignis.includes("Punkt")) {
+      const match = ereignis.match(/(\d+)/);
+      if (match) statistik[trikot].punkte += parseInt(match[1]);
+    }
+
+    if (ereignis.includes("Foul")) {
+      statistik[trikot].fouls += 1;
+    }
+  });
+
+  let csv = "Trikotnummer,Punkte,Fouls\n";
+  for (let num in statistik) {
+    const s = statistik[num];
+    csv += `${num},${s.punkte},${s.fouls}\n`;
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "statistik.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+function exportStatistik() {
+  const rows = Array.from(document.querySelectorAll("#logTable tbody tr"));
+  const statistik = {};
+
+  rows.forEach(row => {
+    const ereignis = row.cells[1].textContent;
+    const trikot = row.cells[3].textContent.trim();
+    if (!trikot) return;
+
+    const teamMatch = ereignis.match(/Team ([AB])/);
+    const team = teamMatch ? teamMatch[1] : "?";
+
+    const key = team + "_" + trikot;
+    if (!statistik[key]) statistik[key] = { trikot, team, punkte: 0, fouls: 0 };
+
+    if (ereignis.includes("Punkt")) {
+      const match = ereignis.match(/(\d+)/);
+      if (match) statistik[key].punkte += parseInt(match[1]);
+    }
+
+    if (ereignis.includes("Foul")) {
+      statistik[key].fouls += 1;
+    }
+  });
+
+  let csv = "Trikotnummer,Team,Punkte,Fouls\n";
+  for (let key in statistik) {
+    const s = statistik[key];
+    csv += `${s.trikot},${s.team},${s.punkte},${s.fouls}\n`;
+  }
+
+  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "statistik_pro_team.csv";
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+
+let jerseyState = { A: [], B: [] };
+let currentGridTeam = null;
+
+function openJerseyGrid(team) {
+  currentGridTeam = team;
+  const grid = document.getElementById("jerseyGrid");
+  document.getElementById("teamTitle").textContent = "Trikotnummer wählen (Team " + team + ")";
+  grid.innerHTML = "";
+
+  jerseyState[team].sort((a, b) => parseInt(a) - parseInt(b));
+
+  for (let i = 0; i < 16; i++) {
+    const btn = document.createElement("button");
+    btn.className = "trikot-btn";
+    const nummer = jerseyState[team][i];
+    if (nummer !== undefined) {
+      btn.textContent = nummer;
+      btn.style.backgroundColor = teamColors[team];
+    } else {
+      btn.textContent = "+";
+    }
+    btn.onclick = () => defineJersey(i);
+    grid.appendChild(btn);
+  }
+  document.getElementById("jerseyModalGrid").style.display = "block";
+}
+
+function defineJersey(index) {
+  const nummer = prompt("Trikotnummer eingeben:");
+  if (nummer === null || nummer.trim() === "") return;
+
+  jerseyState[currentGridTeam][index] = nummer.trim();
+  openJerseyGrid(currentGridTeam);  // neu sortieren
+}
+
+function closeJerseyGrid() {
+  document.getElementById("jerseyModalGrid").style.display = "none";
+}
+
+</script>
+
+
+<div id="jerseyModalGrid" class="modal" style="display:none;">
+  <div class="modal-content">
+    <h3 id="teamTitle">Trikotnummer wählen (Team)</h3>
+    <div id="jerseyGrid" class="trikot-grid"></div>
+    <button onclick="closeJerseyGrid()">Schließen</button>
+  </div>
+</div>
+
+<button onclick="öffneAnzeige()">Anzeige öffnen</button>
+<script>
+let anzeigeFenster = null;
+
+function öffneAnzeige() {
+  anzeigeFenster = window.open("anzeige.html", "Anzeige", "width=1000,height=600");
+}
+
+function sendeAnzeigeDaten() {
+  if (!anzeigeFenster) return;
+
+  const teamAName = document.getElementById("teamASelect")?.value;
+  const teamBName = document.getElementById("teamBSelect")?.value;
+  const compName = document.getElementById("competitionSelect")?.value;
+
+  const teamA = teamCache.find(t => t.name === teamAName);
+  const teamB = teamCache.find(t => t.name === teamBName);
+  const comp = competitionCache.find(c => c.name === compName);
+
+  const daten = {
+    scoreA: parseInt(document.getElementById("punkteA")?.value || 0),
+    scoreB: parseInt(document.getElementById("punkteB")?.value || 0),
+    foulsA: parseInt(document.getElementById("foulsA")?.value || 0),
+    foulsB: parseInt(document.getElementById("foulsB")?.value || 0),
+    spielzeit: document.getElementById("spielzeit")?.value || "00:00",
+    abschnitt: currentSection,
+    maxAbschnitte: totalSections,
+    logoA: teamA?.logo || "",
+    logoB: teamB?.logo || "",
+    logoLiga: comp?.logo || ""
+  };
+  anzeigeFenster.postMessage(daten, "*");
+}
+
+setInterval(sendeAnzeigeDaten, 500);
+</script>
+</body>
+</html>
