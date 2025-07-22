@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Scoreboard Controller mit Logbuch</title>
-  <style>
+<meta charset="utf-8"/>
+<title>Scoreboard Controller mit Logbuch</title>
+<style>
     body { font-family: Arial, sans-serif; margin: 20px; }
     .flex-container {
       display: flex; justify-content: space-between; align-items: flex-start; margin-top: 20px;
@@ -27,7 +28,6 @@
       width: 300px; border-radius: 5px;
     }
   </style>
-
 <style>
 .trikot-grid {
   display: grid;
@@ -44,140 +44,116 @@
   border: 1px solid #999;
 }
 </style>
-
 </head>
 <body>
-
 <div id="setupSection">
-  <label>Team A wählen:</label>
-  <select id="teamASelect" onchange="checkNewTeam(this)">
-    <option>- bitte wählen -</option>
-    
-  </select>
-  
-
-  <br><br>
-
-  <label>Team B wählen:</label>
-  <select id="teamBSelect" onchange="checkNewTeam(this)">
-    <option>- bitte wählen -</option>
-    
-  </select>
-  
-
-  <br><br>
-
-  <label>Wettbewerb wählen:</label>
-  <select id="competitionSelect" onchange="checkNewCompetition(this)">
-    <option>- bitte wählen -</option>
-    
-  </select>
-
-  <br><br>
-  <button onclick="startGame()">zum Spiel</button>
+<label>Team A wählen:</label>
+<select id="teamASelect" onchange="checkNewTeam(this)">
+<option>- bitte wählen -</option>
+</select>
+<br/><br/>
+<label>Team B wählen:</label>
+<select id="teamBSelect" onchange="checkNewTeam(this)">
+<option>- bitte wählen -</option>
+</select>
+<br/><br/>
+<label>Wettbewerb wählen:</label>
+<select id="competitionSelect" onchange="checkNewCompetition(this)">
+<option>- bitte wählen -</option>
+</select>
+<br/><br/>
+<button onclick="startGame()">zum Spiel</button>
 </div>
-
 <div id="mainSection" style="display:none;">
-  
-
-  <div class="flex-container">
-    <div class="score-box">
-      <div>
-        <h3>Team A</h3>
-        <div onclick="toggleInput('punkteA')" id="punkteA_display" style="font-size:80px; font-weight:bold;"></div>
-<input type="number" id="punkteA" value="0" style="font-size:80px; width:200px; text-align:center; display:none;" />
-      </div>
-      <div class="score-buttons">
-        <button class="blue" onclick="handlePoints('A', 1)">+1</button>
-        <button class="blue" onclick="handlePoints('A', 2)">+2</button>
-        <button class="blue" onclick="handlePoints('A', 3)">+3</button>
-      </div>
-      <br>
-      <label>Fouls:</label>
-      <input type="number" id="foulsA" value="0" />
-      <button onclick="handleFoul('A')">+1</button>
-      <button onclick="resetFoul('A')">Reset</button>
-    </div>
-
-    <div class="time-box">
-      <h3>Zeit</h3>
-      <div onclick="toggleInput('spielzeit')" id="spielzeit_display" style="font-size:80px; font-weight:bold;"></div>
-<input type="text" id="spielzeit" value="10:00" style="font-size:80px; width:200px; text-align:center; display:none;" />
-      <div id="sectionDisplay">1 / 4</div>
-      <button id="startStopBtn" class="green">Start</button>
-      <br>
-      <button onclick="nextSection()">Nächster Abschnitt</button>
-      <br><button onclick="returnToStart()">Einstellungen</button>
-    </div>
-
-    <div class="score-box">
-      <div>
-        <h3>Team B</h3>
-        <div onclick="toggleInput('punkteB')" id="punkteB_display" style="font-size:80px; font-weight:bold;"></div>
-<input type="number" id="punkteB" value="0" style="font-size:80px; width:200px; text-align:center; display:none;" />
-      </div>
-      <div class="score-buttons">
-        <button class="orange" onclick="handlePoints('B', 1)">+1</button>
-        <button class="orange" onclick="handlePoints('B', 2)">+2</button>
-        <button class="orange" onclick="handlePoints('B', 3)">+3</button>
-      </div>
-      <br>
-      <label>Fouls:</label>
-      <input type="number" id="foulsB" value="0" />
-      <button onclick="handleFoul('B')">+1</button>
-      <button onclick="resetFoul('B')">Reset</button>
-    </div>
-  </div>
-
-  
+<div class="flex-container">
+<div class="score-box">
+<div>
+<h3>Team A</h3>
+<div id="punkteA_display" onclick="toggleInput('punkteA')" style="font-size:80px; font-weight:bold;"></div>
+<input id="punkteA" style="font-size:80px; width:200px; text-align:center; display:none;" type="number" value="0"/>
+</div>
+<div class="score-buttons">
+<button class="blue" onclick="handlePoints('A', 1)">+1</button>
+<button class="blue" onclick="handlePoints('A', 2)">+2</button>
+<button class="blue" onclick="handlePoints('A', 3)">+3</button>
+</div>
+<br/>
+<label>Fouls:</label>
+<input id="foulsA" type="number" value="0"/>
+<button onclick="handleFoul('A')">+1</button>
+<button onclick="resetFoul('A')">Reset</button>
+</div>
+<div class="time-box">
+<h3>Zeit</h3>
+<div id="spielzeit_display" onclick="toggleInput('spielzeit')" style="font-size:80px; font-weight:bold;"></div>
+<input id="spielzeit" style="font-size:80px; width:200px; text-align:center; display:none;" type="text" value="10:00"/>
+<div id="sectionDisplay">1 / 4</div>
+<button class="green" id="startStopBtn">Start</button>
+<br/>
+<button onclick="nextSection()">Nächster Abschnitt</button>
+<br/><button onclick="returnToStart()">Einstellungen</button>
+</div>
+<div class="score-box">
+<div>
+<h3>Team B</h3>
+<div id="punkteB_display" onclick="toggleInput('punkteB')" style="font-size:80px; font-weight:bold;"></div>
+<input id="punkteB" style="font-size:80px; width:200px; text-align:center; display:none;" type="number" value="0"/>
+</div>
+<div class="score-buttons">
+<button class="orange" onclick="handlePoints('B', 1)">+1</button>
+<button class="orange" onclick="handlePoints('B', 2)">+2</button>
+<button class="orange" onclick="handlePoints('B', 3)">+3</button>
+</div>
+<br/>
+<label>Fouls:</label>
+<input id="foulsB" type="number" value="0"/>
+<button onclick="handleFoul('B')">+1</button>
+<button onclick="resetFoul('B')">Reset</button>
+</div>
+</div>
 <h3>Logbuch</h3>
 <button onclick="exportLogbuch()">Logbuch exportieren</button>
 <button onclick="exportStatistik()">Statistik exportieren</button>
 <table id="logTable">
-
-    <thead>
-      <tr>
-        <th>Zeit</th>
-        <th>Ereignis</th>
-        <th>Spielstand</th>
-        <th>Trikotnummer</th>
-        <th>Aktion</th>
-      </tr>
-    </thead>
-    <tbody></tbody>
-  </table>
+<thead>
+<tr>
+<th>Zeit</th>
+<th>Ereignis</th>
+<th>Spielstand</th>
+<th>Trikotnummer</th>
+<th>Aktion</th>
+</tr>
+</thead>
+<tbody></tbody>
+</table>
 </div>
-
 <!-- Modals -->
-<div id="jerseyModal" class="modal">
-  <div class="modal-content">
-    <h3>Trikotnummer eingeben</h3>
-    <input type="text" id="jerseyInput" placeholder="z. B. 12" />
-    <button onclick="confirmJersey()">OK</button>
-  </div>
+<div class="modal" id="jerseyModal">
+<div class="modal-content">
+<h3>Trikotnummer eingeben</h3>
+<input id="jerseyInput" placeholder="z. B. 12" type="text"/>
+<button onclick="confirmJersey()">OK</button>
 </div>
-
-<div id="teamModal" class="modal">
-  <div class="modal-content">
-    <h3>Team speichern</h3>
-    <input type="text" id="teamName" placeholder="Name" />
-    <input type="file" />
-    <button onclick="saveTeam()">Speichern</button>
-  </div>
 </div>
-
-<div id="competitionModal" class="modal">
-  <div class="modal-content">
-    <h3>Wettbewerb speichern</h3>
-    <input type="text" id="compName" placeholder="Name" />
-    <input type="file" />
-    <input type="number" id="compSections" placeholder="Anzahl Abschnitte" />
-    <input type="number" id="compDuration" placeholder="Dauer Abschnitte (Sekunden)" />
-    <label><input type="checkbox" id="jerseyCheckbox" checked /> Trikotnummer abfragen</label>
-    <button onclick="saveCompetition()">Speichern</button>
-  </div>
+<div class="modal" id="teamModal">
+<div class="modal-content">
+<h3>Team speichern</h3>
+<input id="teamName" placeholder="Name" type="text"/>
+<input type="file"/>
+<button onclick="saveTeam()">Speichern</button>
 </div>
-
+</div>
+<div class="modal" id="competitionModal">
+<div class="modal-content">
+<h3>Wettbewerb speichern</h3>
+<input id="compName" placeholder="Name" type="text"/>
+<input type="file"/>
+<input id="compSections" placeholder="Anzahl Abschnitte" type="number"/>
+<input id="compDuration" placeholder="Dauer Abschnitte (Sekunden)" type="number"/>
+<label><input checked="" id="jerseyCheckbox" type="checkbox"/> Trikotnummer abfragen</label>
+<button onclick="saveCompetition()">Speichern</button>
+</div>
+</div>
 <script>
 let isRunning = false;
 let timerInterval;
@@ -245,15 +221,16 @@ function getScore() {
   return document.getElementById("punkteA").value + " : " + document.getElementById("punkteB").value;
 }
 
+
 function handlePoints(team, points) {
-  document.getElementById("punkte" + team).value =
-    parseInt(document.getElementById("punkte" + team).value) + points;
+  const scoreInput = document.getElementById("punkte" + team);
+  scoreInput.value = parseInt(scoreInput.value) + points;
   syncDisplays();
-  return;
-    parseInt(document.getElementById("punkte" + team).value) + points;
+
   const eventText = points + " Punkt(e) Team " + team;
   processLogEntry(eventText, team);
 }
+
 
 function handleFoul(team) {
   document.getElementById("fouls" + team).value =
@@ -625,16 +602,13 @@ function closeJerseyGrid() {
 }
 
 </script>
-
-
-<div id="jerseyModalGrid" class="modal" style="display:none;">
-  <div class="modal-content">
-    <h3 id="teamTitle">Trikotnummer wählen (Team)</h3>
-    <div id="jerseyGrid" class="trikot-grid"></div>
-    <button onclick="closeJerseyGrid()">Schließen</button>
-  </div>
+<div class="modal" id="jerseyModalGrid" style="display:none;">
+<div class="modal-content">
+<h3 id="teamTitle">Trikotnummer wählen (Team)</h3>
+<div class="trikot-grid" id="jerseyGrid"></div>
+<button onclick="closeJerseyGrid()">Schließen</button>
 </div>
-
+</div>
 <button onclick="öffneAnzeige()">Anzeige öffnen</button>
 <script>
 let anzeigeFenster = null;
@@ -671,5 +645,282 @@ function sendeAnzeigeDaten() {
 
 setInterval(sendeAnzeigeDaten, 500);
 </script>
+<!-- Verwaltung integriert -->
+<!DOCTYPE html>
+
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Verwaltung – Teams &amp; Wettbewerbe</title>
+<style>
+    body { font-family: Arial, sans-serif; padding: 20px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+    th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+    img { max-height: 40px; }
+    .modal { display: none; position: fixed; top: 0; left: 0; width: 100%;
+             height: 100%; background-color: rgba(0,0,0,0.5); align-items: center; justify-content: center; }
+    .modal-content { background: white; padding: 20px; border-radius: 5px; width: 300px; }
+    input[type="color"] { width: 60px; height: 30px; }
+  </style>
+</meta></head>
+<body>
+
+
+
+
+
+
+
+<!-- Team Modal -->
+
+<!-- Wettbewerb Modal -->
+
+
 </body>
+</html>
+<script>
+function refreshDropdowns() {
+  const data = JSON.parse(localStorage.getItem("vereinData"));
+  if (!data) return;
+
+  const teamSelects = [document.getElementById("teamASelect"), document.getElementById("teamBSelect")];
+  teamSelects.forEach(sel => {
+    sel.innerHTML = '<option>- bitte wählen -</option>';
+    data.teams?.forEach(team => {
+      const opt = new Option(team.name, team.name);
+      sel.add(opt);
+    });
+  });
+
+  const compSelect = document.getElementById("competitionSelect");
+  compSelect.innerHTML = '<option>- bitte wählen -</option>';
+  data.competitions?.forEach(comp => {
+    const opt = new Option(comp.name, comp.name);
+    compSelect.add(opt);
+  });
+}
+</script>
+
+<div style="margin-top:40px;">
+<label><input id="toggleVerwaltung" onchange="document.getElementById('verwaltungBlock').style.display = this.checked ? 'none' : 'block'" type="checkbox"/>
+    Verwaltung ausblenden
+  </label>
+</div>
+<div id="verwaltungBlock" style="display: none;"><h1>Verwaltung</h1><h2>Teams</h2><button onclick="document.getElementById('teamModal').style.display = 'flex'">+ Neues Team</button><table id="teamTable">
+<thead><tr><th>Name</th><th>Farbe</th><th>Logo</th><th>Aktion</th></tr></thead>
+<tbody></tbody>
+</table><h2>Wettbewerbe</h2><button onclick="document.getElementById('compModal').style.display = 'flex'">+ Neuer Wettbewerb</button><table id="competitionTable">
+<thead><tr><th>Name</th><th>Abschnitte</th><th>Dauer (Sek)</th><th>Trikotpflicht</th><th>Logo</th><th>Aktion</th></tr></thead>
+<tbody></tbody>
+</table><div class="modal" id="teamModal">
+<div class="modal-content">
+<h3>Neues Team</h3>
+<input id="teamName" placeholder="Teamname" type="text"/><br/><br/>
+<label>Farbe: <input id="teamColor" type="color" value="#000000"/></label><br/><br/>
+<label>Logo: <input id="teamLogo" type="file"/></label><br/><br/>
+<button onclick="saveTeam()">Speichern</button>
+<button onclick="closeModal('teamModal')">Abbrechen</button>
+</div>
+</div><div class="modal" id="compModal">
+<div class="modal-content">
+<h3>Neuer Wettbewerb</h3>
+<input id="compName" placeholder="Name" type="text"/><br/><br/>
+<input id="compSections" placeholder="Abschnitte" type="number"/><br/><br/>
+<input id="compDuration" placeholder="Dauer (Sekunden)" type="number"/><br/><br/>
+<label><input checked="" id="jerseyCheckbox" type="checkbox"/> Trikotnummer abfragen</label><br/><br/>
+<label>Logo: <input id="compLogo" type="file"/></label><br/><br/>
+<button onclick="saveCompetition()">Speichern</button>
+<button onclick="closeModal('compModal')">Abbrechen</button>
+</div>
+</div><script>
+let teamData = [];
+let competitionData = [];
+
+function loadFromStorage() {
+  const data = JSON.parse(localStorage.getItem("vereinData"));
+  if (data) {
+    teamData = data.teams || [];
+    competitionData = data.competitions || [];
+  }
+}
+
+function saveToStorage() {
+  const data = { teams: teamData, competitions: competitionData };
+  localStorage.setItem("vereinData", JSON.stringify(data));
+}
+
+function closeModal(id) {
+  document.getElementById(id).style.display = "none";
+}
+
+function renderTables() {
+  const teamTable = document.getElementById("teamTable").getElementsByTagName("tbody")[0];
+  teamTable.innerHTML = "";
+  teamData.forEach((team, i) => {
+    const row = teamTable.insertRow();
+    row.insertCell(0).textContent = team.name;
+    const colorCell = row.insertCell(1);
+    colorCell.style.backgroundColor = team.color;
+    colorCell.textContent = team.color;
+    const logoCell = row.insertCell(2);
+    if (team.logo) {
+      const img = document.createElement("img");
+      img.src = team.logo;
+      logoCell.appendChild(img);
+    } else {
+      logoCell.textContent = "-";
+    }
+    
+    row.insertCell(3).innerHTML = `
+      <button onclick="editTeam(${i})">Bearbeiten</button>
+      <button onclick="deleteTeam(${i})">Löschen</button>
+    `;
+
+  });
+
+  const compTable = document.getElementById("competitionTable").getElementsByTagName("tbody")[0];
+  compTable.innerHTML = "";
+  competitionData.forEach((comp, i) => {
+    const row = compTable.insertRow();
+    row.insertCell(0).textContent = comp.name;
+    row.insertCell(1).textContent = comp.sections;
+    row.insertCell(2).textContent = comp.duration;
+    row.insertCell(3).textContent = comp.trikot ? "Ja" : "Nein";
+    const logoCell = row.insertCell(4);
+    if (comp.logo) {
+      const img = document.createElement("img");
+      img.src = comp.logo;
+      logoCell.appendChild(img);
+    } else {
+      logoCell.textContent = "-";
+    }
+    
+    row.insertCell(5).innerHTML = `
+      <button onclick="editCompetition(${i})">Bearbeiten</button>
+      <button onclick="deleteCompetition(${i})">Löschen</button>
+    `;
+
+  });
+}
+
+function getBase64(file, callback) {
+  const reader = new FileReader();
+  reader.onloadend = () => callback(reader.result);
+  reader.readAsDataURL(file);
+}
+
+function saveTeam() {
+  const name = document.getElementById("teamName").value;
+  const color = document.getElementById("teamColor").value;
+  const file = document.getElementById("teamLogo").files[0];
+  if (!name) return;
+  const finish = (logo) => {
+    teamData.push({ name, color, logo });
+    saveToStorage();
+    renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+    closeModal("teamModal");
+    document.getElementById("teamName").value = "";
+    document.getElementById("teamLogo").value = "";
+  };
+  if (file) getBase64(file, finish); else finish(null);
+}
+
+function saveCompetition() {
+  const name = document.getElementById("compName").value;
+  const sections = parseInt(document.getElementById("compSections").value);
+  const duration = parseInt(document.getElementById("compDuration").value);
+  const trikot = document.getElementById("jerseyCheckbox").checked;
+  const file = document.getElementById("compLogo").files[0];
+  if (!name || isNaN(sections) || isNaN(duration)) return;
+  const finish = (logo) => {
+    competitionData.push({ name, sections, duration, trikot, logo });
+    saveToStorage();
+    renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+    closeModal("compModal");
+    document.getElementById("compName").value = "";
+    document.getElementById("compSections").value = "";
+    document.getElementById("compDuration").value = "";
+    document.getElementById("compLogo").value = "";
+  };
+  if (file) getBase64(file, finish); else finish(null);
+}
+
+function deleteTeam(index) {
+  teamData.splice(index, 1);
+  saveToStorage();
+  renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+}
+
+function deleteCompetition(index) {
+  competitionData.splice(index, 1);
+  saveToStorage();
+  renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+}
+
+window.onload = () => {
+  loadFromStorage();
+  renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+};
+
+function editTeam(index) {
+  const team = teamData[index];
+  document.getElementById("teamName").value = team.name;
+  document.getElementById("teamColor").value = team.color;
+  document.getElementById("teamModal").style.display = "flex";
+  document.getElementById("teamLogo").value = "";
+  // Beim Speichern ersetzen wir den Eintrag
+  saveTeam = function() {
+    const name = document.getElementById("teamName").value;
+    const color = document.getElementById("teamColor").value;
+    const file = document.getElementById("teamLogo").files[0];
+    if (!name) return;
+    const finish = (logo) => {
+      teamData[index] = { name, color, logo: logo || team.logo };
+      saveToStorage();
+      renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+      closeModal("teamModal");
+      document.getElementById("teamName").value = "";
+      document.getElementById("teamLogo").value = "";
+    };
+    if (file) getBase64(file, finish); else finish(null);
+  };
+}
+
+function editCompetition(index) {
+  const comp = competitionData[index];
+  document.getElementById("compName").value = comp.name;
+  document.getElementById("compSections").value = comp.sections;
+  document.getElementById("compDuration").value = comp.duration;
+  document.getElementById("jerseyCheckbox").checked = comp.trikot;
+  document.getElementById("compModal").style.display = "flex";
+  document.getElementById("compLogo").value = "";
+  saveCompetition = function() {
+    const name = document.getElementById("compName").value;
+    const sections = parseInt(document.getElementById("compSections").value);
+    const duration = parseInt(document.getElementById("compDuration").value);
+    const trikot = document.getElementById("jerseyCheckbox").checked;
+    const file = document.getElementById("compLogo").files[0];
+    if (!name || isNaN(sections) || isNaN(duration)) return;
+    const finish = (logo) => {
+      competitionData[index] = { name, sections, duration, trikot, logo: logo || comp.logo };
+      saveToStorage();
+      renderTables();
+  if (window.parent && typeof window.parent.refreshDropdowns === 'function') window.parent.refreshDropdowns();
+      closeModal("compModal");
+      document.getElementById("compName").value = "";
+      document.getElementById("compSections").value = "";
+      document.getElementById("compDuration").value = "";
+      document.getElementById("compLogo").value = "";
+    };
+    if (file) getBase64(file, finish); else finish(null);
+  };
+}
+
+</script></div></body>
 </html>
