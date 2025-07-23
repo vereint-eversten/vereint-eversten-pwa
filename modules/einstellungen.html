@@ -1,1 +1,172 @@
-<h2>Einstellungen Modul</h2><p>Inhalt des Moduls einstellungen.</p>
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Einstellungen</title>
+  <link rel="stylesheet" href="/styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <style>
+    body {
+      background-color: #1a1a1a;
+      color: #e0e0e0;
+      font-family: Roboto, sans-serif;
+      padding: 20px;
+    }
+    input, button, select, label {
+      width: 100%;
+      padding: 10px;
+      margin: 5px 0 15px 0;
+      border-radius: 5px;
+      border: none;
+    }
+    input[type="checkbox"] {
+      width: auto;
+      margin-right: 10px;
+    }
+    .green-btn {
+      background-color: #4caf50;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .green-btn:hover {
+      background-color: #45a049;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h2>🔐 Login & Registrierung</h2>
+
+  <!-- Login-Formular -->
+  <div id="login-form">
+    <input type="email" id="login-email" placeholder="E-Mail" required />
+    <input type="password" id="login-password" placeholder="Passwort" required />
+    <button class="green-btn" onclick="login()">Login</button>
+    <button class="green-btn" onclick="toggleRegisterForm()">Jetzt registrieren</button>
+    <button onclick="passwordReset()">Passwort vergessen?</button>
+  </div>
+
+  <!-- Registrierungsmaske -->
+  <div id="register-form" class="hidden">
+    <input type="email" id="register-email" placeholder="E-Mail" required />
+    <input type="password" id="register-password" placeholder="Passwort" required />
+    <input type="text" id="register-name" placeholder="Name des Teilnehmers" required />
+    <input type="text" id="register-birthyear" placeholder="Geburtsjahr (z. B. 2013)" required />
+    <input type="text" id="register-language" placeholder="Sprache (z. B. Deutsch)" required />
+    <input type="text" id="register-teams" placeholder="Team(s) (z. B. U12, Schul-AG)" required />
+    <label><input type="checkbox" id="register-datenschutz" required /> Ich akzeptiere die Datenschutzerklärung.</label>
+    <label><input type="checkbox" id="register-foto" required /> Ich stimme der Fotoverwendung zu.</label>
+    <label><input type="checkbox" id="register-haftung" required /> Ich akzeptiere die Haftungsregelungen.</label>
+    <button class="green-btn" onclick="register()">Registrieren</button>
+    <button onclick="toggleRegisterForm()">Zurück zum Login</button>
+  </div>
+
+  <!-- Nach Login: Logout-Button -->
+  <div id="after-login" class="hidden">
+    <p>✅ Eingeloggt. <a href="/dashboard.html">Zum Dashboard</a></p>
+    <button class="green-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <p id="status-msg"></p>
+
+  <script>
+    const supabase = supabase.createClient(
+      'https://ntccnkvpxrpwgxmiherf.supabase.co',
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc'
+    );
+
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session) {
+        document.getElementById('login-form').classList.add('hidden');
+        document.getElementById('after-login').classList.remove('hidden');
+      }
+    });
+
+    function toggleRegisterForm() {
+      document.getElementById('register-form').classList.toggle('hidden');
+      document.getElementById('login-form').classList.toggle('hidden');
+      document.getElementById('status-msg').innerText = "";
+    }
+
+    async function login() {
+      const email = document.getElementById('login-email').value;
+      const password = document.getElementById('login-password').value;
+
+      const { error } = await supabase.auth.signInWithPassword({ email, password });
+
+      if (error) {
+        document.getElementById('status-msg').innerText = "❌ Login fehlgeschlagen: " + error.message;
+      } else {
+        window.location.href = "/dashboard.html";
+      }
+    }
+
+    async function register() {
+      const email = document.getElementById('register-email').value;
+      const password = document.getElementById('register-password').value;
+      const name = document.getElementById('register-name').value;
+      const birthyear = document.getElementById('register-birthyear').value;
+      const language = document.getElementById('register-language').value;
+      const teams = document.getElementById('register-teams').value;
+
+      const ds = document.getElementById('register-datenschutz').checked;
+      const foto = document.getElementById('register-foto').checked;
+      const haftung = document.getElementById('register-haftung').checked;
+
+      if (!ds || !foto || !haftung) {
+        document.getElementById('status-msg').innerText = "⚠️ Bitte alle Einverständnisse bestätigen.";
+        return;
+      }
+
+      const { error } = await supabase.auth.signUp({ email, password });
+
+      if (error) {
+        document.getElementById('status-msg').innerText = "❌ Registrierung fehlgeschlagen: " + error.message;
+      } else {
+        await supabase.from('user_profiles').insert([{
+          email,
+          name,
+          geburtsjahr: birthyear,
+          sprache: language,
+          teams: teams ? teams.split(",").map(t => t.trim()) : [],
+          rolle: 'wartend',
+          datenschutz: ds,
+          foto_ok: foto,
+          haftung_ok: haftung
+        }]);
+
+        document.getElementById('status-msg').innerText = "✅ Registrierung erfolgreich. Bitte E-Mail bestätigen.";
+        toggleRegisterForm();
+      }
+    }
+
+    async function passwordReset() {
+      const email = prompt("Bitte gib deine E-Mail-Adresse ein:");
+
+      if (email) {
+        const { error } = await supabase.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin + "/einstellungen.html"
+        });
+
+        if (error) {
+          document.getElementById('status-msg').innerText = "❌ Fehler beim Senden: " + error.message;
+        } else {
+          document.getElementById('status-msg').innerText = "📧 Passwort-Reset-Link gesendet.";
+        }
+      }
+    }
+
+    async function logout() {
+      await supabase.auth.signOut();
+      document.getElementById('status-msg').innerText = "🔓 Erfolgreich ausgeloggt.";
+      document.getElementById('after-login').classList.add('hidden');
+      document.getElementById('login-form').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
