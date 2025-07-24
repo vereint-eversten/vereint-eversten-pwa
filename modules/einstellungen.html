@@ -151,14 +151,17 @@
         return;
       }
 
-      const { error } = await supabase.auth.signUp({ email, password });
+      const { data: signUpData, error } = await supabase.auth.signUp({ email, password });
 
       if (error) {
         document.getElementById('status-msg').innerText = "❌ Registrierung fehlgeschlagen: " + error.message;
       } else {
-        await supabase.from('user_profiles').insert([{
+        const user_id = signUpData?.user?.id;
+
+        const { error: insertError } = await supabase.from('user_profiles').insert([{
+          user_id,
           email,
-          name,
+          vorname: name,
           geburtsjahr: birthyear,
           rolle: 'wartend',
           datenschutz: ds,
@@ -166,8 +169,12 @@
           haftung_ok: haftung
         }]);
 
-        document.getElementById('status-msg').innerText = "✅ Registrierung erfolgreich. Bitte E-Mail bestätigen.";
-        toggleRegisterForm();
+        if (insertError) {
+          document.getElementById('status-msg').innerText = "⚠️ Profil konnte nicht gespeichert werden: " + insertError.message;
+        } else {
+          document.getElementById('status-msg').innerText = "✅ Registrierung erfolgreich. Bitte E-Mail bestätigen.";
+          toggleRegisterForm();
+        }
       }
     }
 
