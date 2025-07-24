@@ -34,6 +34,16 @@
     .green-btn:hover {
       background-color: #45a049;
     }
+    .small-link {
+      background: none;
+      color: #4caf50;
+      border: none;
+      cursor: pointer;
+      text-align: left;
+      padding: 0;
+      font-size: 0.9em;
+      text-decoration: underline;
+    }
     .hidden {
       display: none;
     }
@@ -57,11 +67,22 @@
     <input type="password" id="register-password" placeholder="Passwort" required />
     <input type="text" id="register-name" placeholder="Name des Teilnehmers" required />
     <input type="text" id="register-birthyear" placeholder="Geburtsjahr (z. B. 2013)" required />
-    <input type="text" id="register-language" placeholder="Sprache (z. B. Deutsch)" required />
-    <input type="text" id="register-teams" placeholder="Team(s) (z. B. U12, Schul-AG)" required />
-    <label><input type="checkbox" id="register-datenschutz" required /> Ich akzeptiere die Datenschutzerklärung.</label>
-    <label><input type="checkbox" id="register-foto" required /> Ich stimme der Fotoverwendung zu.</label>
-    <label><input type="checkbox" id="register-haftung" required /> Ich akzeptiere die Haftungsregelungen.</label>
+
+    <label>
+      <input type="checkbox" id="register-datenschutz" required />
+      Ich akzeptiere die <button class="small-link" onclick="openInfo('datenschutz')">Datenschutzerklärung</button>.
+    </label>
+
+    <label>
+      <input type="checkbox" id="register-foto" required />
+      Ich stimme der <button class="small-link" onclick="openInfo('fotos')">Fotoverwendung</button> zu.
+    </label>
+
+    <label>
+      <input type="checkbox" id="register-haftung" required />
+      Ich akzeptiere die <button class="small-link" onclick="openInfo('haftung')">Haftungsregelungen</button>.
+    </label>
+
     <button class="green-btn" onclick="register()">Registrieren</button>
     <button onclick="toggleRegisterForm()">Zurück zum Login</button>
   </div>
@@ -93,6 +114,15 @@
       document.getElementById('status-msg').innerText = "";
     }
 
+    function openInfo(topic) {
+      const urls = {
+        datenschutz: "/infos/datenschutz.html",
+        fotos: "/infos/fotos.html",
+        haftung: "/infos/haftung.html"
+      };
+      window.open(urls[topic], "_blank");
+    }
+
     async function login() {
       const email = document.getElementById('login-email').value;
       const password = document.getElementById('login-password').value;
@@ -111,8 +141,6 @@
       const password = document.getElementById('register-password').value;
       const name = document.getElementById('register-name').value;
       const birthyear = document.getElementById('register-birthyear').value;
-      const language = document.getElementById('register-language').value;
-      const teams = document.getElementById('register-teams').value;
 
       const ds = document.getElementById('register-datenschutz').checked;
       const foto = document.getElementById('register-foto').checked;
@@ -132,8 +160,6 @@
           email,
           name,
           geburtsjahr: birthyear,
-          sprache: language,
-          teams: teams ? teams.split(",").map(t => t.trim()) : [],
           rolle: 'wartend',
           datenschutz: ds,
           foto_ok: foto,
