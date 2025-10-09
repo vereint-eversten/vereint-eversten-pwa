@@ -1,0 +1,18 @@
+{
+  "title": "Liga & Training",
+  "subtitle": "Spielbetrieb im Stadtteil – niedrigschwellig, fair, inklusiv.",
+  "blocks": [
+    {
+      "heading": "Modus",
+      "text": "Spielrunden in Gruppen, jeder gegen jeden. Punktewertung: Sieg=3, Unentschieden=2, Niederlage=1."
+    },
+    {
+      "heading": "Training",
+      "text": "Regelmäßige Trainingszeiten nach Schule/Gruppe. Ort und Zeiten folgen."
+    },
+    {
+      "heading": "Termine",
+      "text": "Die nächsten Spieltage werden hier veröffentlicht."
+    }
+  ]
+}
