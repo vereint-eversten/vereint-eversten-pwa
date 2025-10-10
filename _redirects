@@ -1,0 +1,5 @@
+# Erlaube Let's Encrypt den Zugriff auf Challenge-Dateien
+/.well-known/acme-challenge/*  /:splat  200
+
+# Standard-Redirect für Einzelseiten-Navigation (z. B. PWA oder JS-Routing)
+ /*  /index.html  200
