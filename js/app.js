@@ -2,15 +2,7 @@
   // Build desktop nav
   const NAV = [
     { label:'Idee & Konzept', items:[
-      { label:'Konzept', action:()=>setStatic('Idee & Konzept – Ziele','Das Projekt „verein[t] – Schule. Basketball. Für Alle.“ verbindet Schule, Sportverein und Familie durch Basketball als gemeinsamen Lern- und Begegnungsraum. Ziel ist es, Teilhabe, Demokratiebildung und soziale Integration durch Sport zu fördern. Kinder aus unterschiedlichen sozialen, kulturellen und sprachlichen Hintergründen spielen, lernen und wachsen gemeinsam, wobei der Teamgedanke im Mittelpunkt steht – auf und neben dem Spielfeld.
-
-Getragen wird das Projekt vom TuS Eversten e.V. in Kooperation mit acht Oldenburger Grundschulen sowie weiteren Bildungs- und Sozialpartnern. Im Schuljahr 2025/26 nehmen rund 400 Kinder teil. Neben regelmäßigem Schultraining werden Turniere, Feriencamps und Familienaktionen organisiert, um Begegnung und Austausch über den Schulsport hinaus zu fördern. Ehrenamtliche, Studierende und Eltern werden aktiv in die Umsetzung eingebunden, um Verantwortungsbewusstsein und Teilhabe auf allen Ebenen zu stärken.
-
-Ein zentrales Element ist die digitale Plattform „verein[t]“, die Organisation, Kommunikation und Transparenz zwischen Schulen, Trainer*innen, Eltern und Kindern ermöglicht. Sie dient als digitales Herzstück des Projekts, ohne die analogen Begegnungen zu ersetzen. Pädagogisch steht das Lernen in Gemeinschaft im Vordergrund: Fairness, Respekt, Mitbestimmung und Verantwortung werden gezielt gefördert, um Kinder in ihrer sozialen und persönlichen Entwicklung zu stärken.
-
-Das Projekt richtet sich bewusst an alle Kinder – unabhängig von Herkunft, Sprache oder Vereinszugehörigkeit – und schafft durch kostenfreie Teilnahme niedrigschwellige Zugänge. Spezielle Angebote unterstützen sozial benachteiligte Familien zusätzlich. Ergänzend werden Workshops zu Vielfalt, Antidiskriminierung und demokratischem Miteinander angeboten. Durch die enge Zusammenarbeit mit Schulen und lokalen Partnern wird das Projekt nachhaltig im Bildungssystem verankert.
-
-Gefördert wird „verein[t] – Schule. Basketball. Für Alle.“ im Rahmen des Bundesprogramms „Demokratie leben!“ und durch kommunale Partnerschaften. Ziel ist es, ein dauerhaftes Modell für Sport, Bildung und gesellschaftlichen Zusammenhalt zu schaffen, das Schule, Verein und Familie langfristig verbindet.') },
+      { label:'Konzept', action:()=>setStatic('Idee & Konzept – Ziele','???') },
       { label:'Bausteine', action:()=>setStatic('Idee & Konzept – Bausteine','Module, PWA, Teilhabe…') },
       { label:'Öffentlichkeitsarbeit', action:()=>setStatic('Idee & Konzept – Datenschutz','Eure Datenschutz-Prinzipien…') }
     ]},
