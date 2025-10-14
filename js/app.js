@@ -14,11 +14,9 @@
       { label:'Modul-Paten', action:()=>setStatic('Paten – Unterstützer','Patenliste…') },
       { label:'Team-Paten', action:()=>setStatic('Paten – Mitmachen','So wirst du Pate…') }
     ]},
-    { 
-    label:'Termine', 
+    {label:'Termine', 
      items:[
-     action:()=>renderCalendar() 
-       }
+     action:()=>renderCalendar()}
     ]
     },
     { label:'SchulVereinsliga', items:[
