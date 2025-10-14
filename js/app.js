@@ -39,9 +39,6 @@
     { label:'Kontakt', items:[
       { label:'Ansprechpersonen', action:()=>setStatic('Kontakt – Team','Namen, Mail…') }
     ]},
-    { label:'Impressum', items:[
-      { label:'Rechtliches', action:()=>setStatic('Impressum','Angaben gemäß § 5 TMG…') }
-    ]},
   ];
 
   // Desktop nav build
