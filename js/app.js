@@ -170,11 +170,17 @@
       for(let d=1; d<=days; d++){
         const c=document.createElement('div'); c.className='cell';
         c.innerHTML=`<div class="date">${String(d).padStart(2,'0')}.${m+1}.</div>`;
-        const todays=state.events.filter(e=>
-          e.start>=from && e.start<=to &&
-          e.start.getDate()===d && e.start.getMonth()===m && e.start.getFullYear()===y &&
-          (!tf || e.teams.includes(tf)) && (!ty || e.event_type===ty)
-        );
+        // --- Mehrtages-Event-Logik ---
+const cellStart = new Date(y, m, d, 0, 0, 0, 0);
+const cellEnd   = new Date(y, m, d, 23, 59, 59, 999);
+
+const todays = state.events.filter(e =>
+  // Event überlappt diesen Kalendertag?
+  e.start <= cellEnd && e.end >= cellStart &&
+  // und liegt im sichtbaren Monatszeitraum
+  e.end   >= from && e.start <= to &&
+  (!tf || e.teams.includes(tf)) && (!ty || e.event_type === ty)
+);
         todays.forEach(e=>{
           const el=document.createElement('div'); el.className='event';
           const time=e.start.toLocaleTimeString(DE,{hour:'2-digit',minute:'2-digit'});
