@@ -1,23 +1,11 @@
 {
   "events": [
     {
-      "title": "U12 Training",
-      "description": "Ballhandling & Spielformen",
-      "event_type": "training",
-      "start": "2025-11-12T17:00:00+01:00",
-      "end": "2025-11-12T18:30:00+01:00",
-      "location": "Halle A",
-      "address": "Musterstraße 1, 26131 Oldenburg",
-      "teams": [
-        "U12"
-      ]
-    },
-      {
       "title": "SchulVereinsliga - Spieltag 2",
       "description": "???",
       "event_type": "turnier",
       "start": "2025-11-09T10:00:00+01:00",
-      "end": "2025-11-09T14:30:00+01:00",
+      "end": "2025-11-12T14:30:00+01:00",
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
