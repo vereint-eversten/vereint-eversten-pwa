@@ -25,7 +25,7 @@ collections:
               - {label: "Überschrift", name: "heading", widget: "string"}
               - {label: "Text", name: "text", widget: "text"}
       - file: "content/liga.json"
-        label: "Liga & Training"
+        label: "SchulVereinsliga"
         name: "liga"
         fields:
           - {label: "Titel", name: "title", widget: "string"}
