@@ -29,12 +29,12 @@
       { label:'Regeln', action:()=>setStatic('3x3-Serie – Regeln','FIBA 3x3 Basics…') }
     ]},
     { label:'Camps', items:[
-      { label:'5-Tages-Camp', action:()=>setStatic('Camps – Sommercamp','Infos, Packing-List…') },
-      { label:'3-Tages-Camp', action:()=>setStatic('Camps – Sommercamp','Infos, Packing-List…') },
-      { label:'2-Tages-Camp', action:()=>setStatic('Camps – Sommercamp','Infos, Packing-List…') },
-      { label:'Wochenendcamp', action:()=>setStatic('Camps – Sommercamp','Infos, Packing-List…') },
-      { label:'Übernachtungscamp', action:()=>setStatic('Camps – Sommercamp','Infos, Packing-List…') },
-      { label:'Schnuppercamp', action:()=>setStatic('Camps – Herbstcamp','…') }
+      { label:'5-Tages-Camp', action:()=>setStatic('Camps – 5-Tage','Anmeldegebühr: Mitmach-Preis 60€ / Fairer Preis 120€ / Solidarischer Preis 180€') },
+      { label:'3-Tages-Camp', action:()=>setStatic('Camps – 3-Tage','Infos, Packing-List…') },
+      { label:'2-Tages-Camp', action:()=>setStatic('Camps – 2-Tage','Infos, Packing-List…') },
+      { label:'Wochenendcamp', action:()=>setStatic('Camps – Wochenendcamp','Infos, Packing-List…') },
+      { label:'Übernachtungscamp', action:()=>setStatic('Camps – Übernachtungscamp','Infos, Packing-List…') },
+      { label:'Schnuppercamp', action:()=>setStatic('Camps – Schnuppercamp','…') }
     ]},
     { label:'Kontakt', items:[
       { label:'Ansprechpersonen', action:()=>setStatic('Kontakt','Fabian Lühring - fabian.luehring@vereint-eversten.de - 0151/68439975') }
