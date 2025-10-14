@@ -92,11 +92,9 @@
             <select id="teamFilter" aria-label="Teamfilter"><option value="">Alle Teams</option></select>
             <select id="typeFilter" aria-label="Typfilter">
               <option value="">Alle Arten</option>
-              <option value="training">Training</option>
-              <option value="turnier">Turnier</option>
-              <option value="heimspiel">Heimspiel</option>
-              <option value="auswaertsspiel">Auswärtsspiel</option>
-              <option value="camp">Camp</option>
+              <option value="training">Turnier</option>
+              <option value="turnier">camp</option>
+              <option value="camp">3x3</option>
               <option value="sonstiges">Sonstiges</option>
             </select>
           </div>
