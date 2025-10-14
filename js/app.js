@@ -19,8 +19,10 @@
       { label:'Hinweise', action:()=>setStatic('Termine – Hinweise','z. B. Treffzeiten, Hallenregeln…') }
     ]},
     { label:'SchulVereinsliga', items:[
-      { label:'Überblick', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
-      { label:'Tabellen', action:()=>setStatic('SchulVereinsliga – Tabellen','…') }
+      { label:'Letzter Spieltag', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
+      { label:'Nächster Spieltag', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
+      { label:'Tabellenstand', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
+      { label:'Regeln', action:()=>setStatic('SchulVereinsliga – Tabellen','…') }
     ]},
     { label:'3x3-Serie', items:[
       { label:'Events', action:()=>setStatic('3x3-Serie – Events','Turniere & Termine…') },
