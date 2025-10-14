@@ -30,11 +30,11 @@
     ]},
     { label:'Camps', items:[
       { label:'5-Tages-Camp', action:()=>setStatic('Camps – 5-Tage','Anmeldegebühr: Mitmach-Preis 60€ / Fairer Preis 120€ / Solidarischer Preis 180€') },
-      { label:'3-Tages-Camp', action:()=>setStatic('Camps – 3-Tage','Infos, Packing-List…') },
-      { label:'2-Tages-Camp', action:()=>setStatic('Camps – 2-Tage','Infos, Packing-List…') },
-      { label:'Wochenendcamp', action:()=>setStatic('Camps – Wochenendcamp','Infos, Packing-List…') },
-      { label:'Übernachtungscamp', action:()=>setStatic('Camps – Übernachtungscamp','Infos, Packing-List…') },
-      { label:'Schnuppercamp', action:()=>setStatic('Camps – Schnuppercamp','…') }
+      { label:'3-Tages-Camp', action:()=>setStatic('Camps – 3-Tage','Anmeldegebühr: Mitmach-Preis 40€ / Fairer Preis 80€ / Solidarischer Preis 120€') },
+      { label:'2-Tages-Camp', action:()=>setStatic('Camps – 2-Tage','Anmeldegebühr: Mitmach-Preis 30€ / Fairer Preis 60€ / Solidarischer Preis 90€') },
+      { label:'Wochenendcamp', action:()=>setStatic('Camps – Wochenendcamp','Anmeldegebühr: Mitmach-Preis 25€ / Fairer Preis 50€ / Solidarischer Preis 75€') },
+      { label:'Übernachtungscamp', action:()=>setStatic('Camps – Übernachtungscamp','Anmeldegebühr: Mitmach-Preis 15€ / Fairer Preis 30€ / Solidarischer Preis 45€') },
+      { label:'Schnuppercamp', action:()=>setStatic('Camps – Schnuppercamp','Anmeldegebühr: Mitmach-Preis 15€ / Fairer Preis 30€ / Solidarischer Preis 45€') }
     ]},
     { label:'Kontakt', items:[
       { label:'Ansprechpersonen', action:()=>setStatic('Kontakt','Fabian Lühring - fabian.luehring@vereint-eversten.de - 0151/68439975') }
