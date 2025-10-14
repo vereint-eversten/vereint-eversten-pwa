@@ -37,7 +37,7 @@
       { label:'Schnuppercamp', action:()=>setStatic('Camps – Herbstcamp','…') }
     ]},
     { label:'Kontakt', items:[
-      { label:'Ansprechpersonen', action:()=>setStatic('Kontakt','Fabian Lühring, fabian.luehring@vereint-eversten.de, 0151/68439975') }
+      { label:'Ansprechpersonen', action:()=>setStatic('Kontakt','Fabian Lühring - fabian.luehring@vereint-eversten.de - 0151/68439975') }
     ]},
   ];
 
