@@ -2,17 +2,17 @@
   // Build desktop nav
   const NAV = [
     { label:'Idee & Konzept', items:[
-      { label:'Ziele', action:()=>setStatic('Idee & Konzept – Ziele','Kurzbeschreibung eurer Leitidee…') },
+      { label:'Konzept', action:()=>setStatic('Idee & Konzept – Ziele','Kurzbeschreibung eurer Leitidee…') },
       { label:'Bausteine', action:()=>setStatic('Idee & Konzept – Bausteine','Module, PWA, Teilhabe…') },
-      { label:'DSGVO', action:()=>setStatic('Idee & Konzept – Datenschutz','Eure Datenschutz-Prinzipien…') }
+      { label:'Öffentlichkeitsarbeit', action:()=>setStatic('Idee & Konzept – Datenschutz','Eure Datenschutz-Prinzipien…') }
     ]},
     { label:'Netzwerk (Schule & Verein)', items:[
       { label:'Partnerschulen', action:()=>setStatic('Netzwerk – Partnerschulen','Liste & Logos…') },
       { label:'Vereine', action:()=>setStatic('Netzwerk – Vereine','Kooperationspartner…') }
     ]},
     { label:'Paten', items:[
-      { label:'Unterstützer', action:()=>setStatic('Paten – Unterstützer','Patenliste…') },
-      { label:'Mitmachen', action:()=>setStatic('Paten – Mitmachen','So wirst du Pate…') }
+      { label:'Modul-Paten', action:()=>setStatic('Paten – Unterstützer','Patenliste…') },
+      { label:'Team-Paten', action:()=>setStatic('Paten – Mitmachen','So wirst du Pate…') }
     ]},
     { label:'Termine', items:[
       { label:'Kalender', action:()=>renderCalendar() },
