@@ -16,12 +16,12 @@
       "title": "SchulVereinsliga – Spieltag 3",
       "description": "Zwei Vierergruppen, jeder gegen jeden",
       "event_type": "turnier",
-      "start": "2025-12-29T10:00:00+01:00",
-      "end": "2025-12-31T14:30:00+01:00",
+      "start": "2025-12-14T10:00:00+01:00",
+      "end": "2025-12-14T14:30:00+01:00",
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
-        "U11"
+        "1.-4.Klasse"
       ]
     },
     {
@@ -33,15 +33,15 @@
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
-        "U11"
+        "1.-4.Klasse"
       ]
     },
         {
       "title": "Weihnachtscamp",
       "description": "3-Tages-Camp",
       "event_type": "camp",
-      "start": "2025-12-14T10:00:00+01:00",
-      "end": "2025-12-14T14:30:00+01:00",
+      "start": "2025-12-29T10:00:00+01:00",
+      "end": "2025-12-31T15:30:00+01:00",
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
