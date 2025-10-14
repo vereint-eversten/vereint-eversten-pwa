@@ -16,8 +16,7 @@
     ]},
     { label:'Termine', 
      action:()=>renderCalendar() }
-    ]
-    },
+    ]},
     { label:'SchulVereinsliga', items:[
       { label:'Letzter Spieltag', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
       { label:'Nächster Spieltag', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
