@@ -17,6 +17,40 @@
       ]
     },
     {
+      "title": "Zeugniscamp",
+      "description": "2-Tages-Camp",
+      "event_type": "camp",
+      "start": "2025-02-02T07:30:00+01:00",
+      "end": "2025-02-03T15:30:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse"
+      ]
+    },
+    {
+      "title": "Schnuppercamp",
+      "description": "1-Tages-Camp",
+      "event_type": "camp",
+      "start": "2025-01-05T07:30:00+01:00",
+      "end": "2025-01-05T15:30:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse"
+      ]
+    },
+    {
       "title": "SchulVereinsliga – Spieltag 3",
       "description": "Zwei Vierergruppen, jeder gegen jeden",
       "event_type": "turnier",
