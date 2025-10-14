@@ -9,8 +9,9 @@
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
+        "1./2.Klasse",
         "3./4.Klasse",
-        "1./2.Klasse"
+        "5.Klasse"
       ]
     },
     {
@@ -22,7 +23,9 @@
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
-        "1.-4.Klasse"
+        "1./2.Klasse",
+        "3./4.Klasse",
+        "5.Klasse"
       ]
     },
     {
@@ -34,7 +37,9 @@
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
-        "1.-4.Klasse"
+        "1./2.Klasse",
+        "3./4.Klasse",
+        "5.Klasse"
       ]
     },
         {
@@ -46,7 +51,9 @@
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
-        "1.-6.Klasse"
+        "1./2.Klasse",
+        "3./4.Klasse",
+        "5./6.Klasse"
       ]
     }
   ]
