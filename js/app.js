@@ -93,7 +93,7 @@
             <select id="typeFilter" aria-label="Typfilter">
               <option value="">Alle Arten</option>
               <option value="training">Turnier</option>
-              <option value="turnier">camp</option>
+              <option value="turnier">Camp</option>
               <option value="camp">3x3</option>
               <option value="sonstiges">Sonstiges</option>
             </select>
