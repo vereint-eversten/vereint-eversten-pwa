@@ -1,0 +1,30 @@
+{
+  "events": [
+    {
+      "title": "U12 Training",
+      "description": "Ballhandling & Spielformen",
+      "event_type": "training",
+      "start": "2025-11-12T17:00:00+01:00",
+      "end": "2025-11-12T18:30:00+01:00",
+      "location": "Halle A",
+      "address": "Musterstraße 1, 26131 Oldenburg",
+      "teams": [
+        "U12"
+      ]
+    },
+    {
+      "title": "SchulVereinsliga – Spieltag 3",
+      "description": "Zwei Vierergruppen, jeder gegen jeden",
+      "event_type": "turnier",
+      "start": "2025-11-22T10:00:00+01:00",
+      "end": "2025-11-22T16:00:00+01:00",
+      "location": "Sporthalle Eversten",
+      "address": "Hauptstraße 5, 26131 Oldenburg",
+      "teams": [
+        "U10",
+        "U12",
+        "U14"
+      ]
+    }
+  ]
+}

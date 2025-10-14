@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verein[t] – Übersicht</title>
+  <link rel="stylesheet" href="css/base.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="inner container">
+      <div class="brand">Verein[t]</div>
+      <nav class="nav" id="nav" aria-label="Hauptnavigation"></nav>
+      <button id="burger" class="burger" aria-label="Menü umschalten">☰ Menü</button>
+    </div>
+    <div id="mobileMenu" class="mobile-menu" aria-label="Mobiles Menü"></div>
+  </header>
+
+  <main class="container">
+    <h1 id="contentTitle">Willkommen</h1>
+    <div id="contentBody" class="content"></div>
+    <div class="footer">© Verein[t] – Schule. Basketball. Für Alle.</div>
+  </main>
+
+  <!-- Detail-Dialog für Events -->
+  <div class="dialog" id="viewerDialog" role="dialog" aria-modal="true">
+    <div class="card">
+      <h3 id="vTitle">Titel</h3>
+      <div id="vTime" class="muted"></div>
+      <div id="vLocation" class="muted" style="margin-top:6px"></div>
+      <p id="vDesc" style="margin-top:12px"></p>
+      <div id="vTeams" class="muted"></div>
+      <div style="text-align:right; margin-top:10px;">
+        <button id="vClose" style="background:#123; color:#fff; border:1px solid var(--border); padding:8px 12px; border-radius:8px;">Schließen</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/app.js"></script>
+</body>
+</html>
