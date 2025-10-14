@@ -19,9 +19,117 @@
      {
       "title": "3x3-Serie Spieltag 1 (Xmas-Event)",
       "description": "3 gegen 3",
-      "event_type": "turnier",
+      "event_type": "3x3",
       "start": "2025-12-21T10:00:00+01:00",
       "end": "2025-12-21T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 2",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-01-25T10:00:00+01:00",
+      "end": "2025-01-25T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 3",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-03-01T10:00:00+01:00",
+      "end": "2025-03-01T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 4",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-03-22T10:00:00+01:00",
+      "end": "2025-03-22T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 5",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-04-26T10:00:00+01:00",
+      "end": "2025-04-26T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 6",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-05-17T10:00:00+01:00",
+      "end": "2025-05-17T16:00:00+01:00",
+      "location": "Tegelkamphalle",
+      "address": "Tegelkamp 32, Oldenburg-Eversten",
+      "teams": [
+        "1.Klasse",
+        "2.Klasse",
+        "3.Klasse",
+        "4.Klasse",
+        "5.Klasse",
+        "6.Klasse",
+        "7.Klasse"
+      ]
+    },
+    {
+      "title": "3x3-Serie Spieltag 7",
+      "description": "3 gegen 3",
+      "event_type": "3x3",
+      "start": "2025-06-21T10:00:00+01:00",
+      "end": "2025-06-21T16:00:00+01:00",
       "location": "Tegelkamphalle",
       "address": "Tegelkamp 32, Oldenburg-Eversten",
       "teams": [
