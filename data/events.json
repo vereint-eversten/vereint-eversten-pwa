@@ -19,7 +19,7 @@
      {
       "title": "3x3-Serie Spieltag 1 (Xmas-Event)",
       "description": "3 gegen 3",
-      "event_type": "Turnier",
+      "event_type": "turnier",
       "start": "2025-12-21T10:00:00+01:00",
       "end": "2025-12-21T16:00:00+01:00",
       "location": "Tegelkamphalle",
