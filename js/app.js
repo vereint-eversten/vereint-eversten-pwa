@@ -70,26 +70,6 @@
   });
   function closeAllDropdowns(){ [...navEl.children].forEach(c => { c.classList.remove('open'); c.querySelector('.nav-btn')?.setAttribute('aria-expanded','false'); }); }
 
-  // Mobile menu build
-  const mob = document.getElementById('mobileMenu');
-  NAV.forEach(group => {
-    const acc = document.createElement('div'); acc.className='mobile-acc';
-    const head = document.createElement('button'); head.type='button'; head.innerHTML = `<span>${group.label}</span><span>›</span>`;
-    head.addEventListener('click', ()=> acc.classList.toggle('open'));
-    const sub = document.createElement('div'); sub.className='mobile-sub';
-    group.items.forEach(link => {
-      const a=document.createElement('a'); a.href='#'; a.textContent=link.label;
-      a.addEventListener('click', (e)=>{ e.preventDefault(); closeMobile(); link.action(); });
-      sub.appendChild(a);
-    });
-    acc.appendChild(head); acc.appendChild(sub); mob.appendChild(acc);
-  });
-
-  // Burger
-  const burger = document.getElementById('burger');
-  burger.addEventListener('click', ()=> mob.classList.toggle('open'));
-  function closeMobile(){ mob.classList.remove('open'); }
-
   // Content helpers
   const contentTitle = document.getElementById('contentTitle');
   const contentBody  = document.getElementById('contentBody');
