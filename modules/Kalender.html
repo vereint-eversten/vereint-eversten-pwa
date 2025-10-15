@@ -1,55 +1,4 @@
-<!-- /modules/kalender.html -->
-<section class="calendar">
-  <div class="top">
-    <button id="prevBtn" aria-label="Vorheriger Monat">‹</button>
-    <h2 id="monthTitle" style="margin:0; font-size:18px;">Monat</h2>
-    <button id="nextBtn" aria-label="Nächster Monat">›</button>
-
-    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-      <select id="teamFilter" aria-label="Teamfilter">
-        <option value="">Alle Teams</option>
-      </select>
-      <select id="typeFilter" aria-label="Typfilter">
-        <option value="">Alle Arten</option>
-        <option value="training">Training</option>
-        <option value="spiel">Spiel</option>
-        <option value="camp">Camp</option>
-        <option value="3x3">3x3</option>
-        <option value="sonstiges">Sonstiges</option>
-      </select>
-    </div>
-  </div>
-
-  <!-- Kalenderraster -->
-  <div id="calendarGrid" class="grid" aria-live="polite"></div>
-</section>
-
-<!-- Popup-Dialog für Event-Details -->
-<div class="dialog" id="eventDialog">
-  <div class="card">
-    <h3 id="eventTitle">Titel</h3>
-    <p id="eventDate" class="muted"></p>
-    <p id="eventDescription"></p>
-
-    <hr style="margin:16px 0; border:1px solid var(--border);" />
-
-    <p>
-      <a href="/modules/anmeldung.html" id="eventSignupLink"
-         style="display:inline-block; background:var(--green-700);
-                color:var(--text); padding:8px 12px; border-radius:8px;
-                text-decoration:none;">
-        Zur Anmeldung
-      </a>
-    </p>
-
-    <div style="text-align:right; margin-top:12px;">
-      <button onclick="closeDialog()">Schließen</button>
-    </div>
-  </div>
-</div>
-
 <script>
-  // --- einfacher Beispiel-Kalender ---
   const calendarGrid = document.getElementById("calendarGrid");
   const monthTitle = document.getElementById("monthTitle");
   const dialog = document.getElementById("eventDialog");
@@ -63,20 +12,18 @@
     const year = date.getFullYear();
     const month = date.getMonth();
 
-    // Monatstitel anzeigen
     const monthNames = [
       "Januar","Februar","März","April","Mai","Juni",
       "Juli","August","September","Oktober","November","Dezember"
     ];
     monthTitle.textContent = ${monthNames[month]} ${year};
 
-    // Kalenderzellen erzeugen
     const firstDay = new Date(year, month, 1);
-    const startDay = firstDay.getDay() === 0 ? 7 : firstDay.getDay(); // Montag als 1
+    const startDay = firstDay.getDay() === 0 ? 7 : firstDay.getDay(); // Montag = 1
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     let html = "";
-    // Leere Felder vor Monatsanfang
+    // leere Felder vor Monatsanfang
     for (let i = 1; i < startDay; i++) html += <div class="cell"></div>;
     // Tage
     for (let d = 1; d <= daysInMonth; d++) {
@@ -85,11 +32,9 @@
           <div class="date">${d}.</div>
         </div>`;
     }
-
     calendarGrid.innerHTML = html;
   }
 
-  // Popup öffnen
   calendarGrid.addEventListener("click", (e) => {
     const cell = e.target.closest(".cell");
     if (!cell) return;
@@ -103,7 +48,6 @@
     dialog.style.display = "flex";
   });
 
-  // Popup schließen
   function closeDialog() {
     dialog.style.display = "none";
   }
@@ -117,6 +61,5 @@
     renderCalendar(currentDate);
   };
 
-  // Beim Laden starten
   renderCalendar(currentDate);
 </script>
