@@ -44,8 +44,9 @@ async function loadModule(path) {
     {
       label: 'Netzwerk (Schule & Verein)',
       items: [
-        { label: 'Partnerschulen', action: () => loadModule('modules/partnerschulen.html') },
-        { label: 'Vereine', action: () => loadModule('modules/vereine.html') },
+        { label: 'TuS Eversten', action: () => loadModule('modules/eversten.html') },
+        { label: 'Partnervereine', action: () => loadModule('modules/vereine.html') },
+        { label: 'Partnerschulen', action: () => loadModule('modules/schulen.html') },
       ],
     },
     {
