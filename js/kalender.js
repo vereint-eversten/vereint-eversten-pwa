@@ -79,7 +79,7 @@ async function renderCalendar(date = new Date()) {
   // Kopfzeile mit Wochentagen
   const WDS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
   for (const wd of WDS) {
-    html += <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>;
+    html += `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`;
   }
 
   // Leere Felder vor Monatsanfang
