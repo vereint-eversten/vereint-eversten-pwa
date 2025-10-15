@@ -118,7 +118,6 @@ async function loadModule(path) {
     {
       label: 'Kontakt',
       action: () => loadModule('modules/kontakt.html'),
-      ],
     },
   ];
 
