@@ -58,12 +58,8 @@ async function loadModule(path) {
 (() => {
   const NAV = [
     {
-      label: "Idee & Konzept",
-      items: [
-        { label: "Konzept", action: () => loadModule("modules/konzept.html") },
-        { label: "Bausteine", action: () => loadModule("modules/bausteine.html") },
-        { label: "Öffentlichkeitsarbeit", action: () => loadModule("modules/datenschutz.html") },
-      ],
+      label: "Konzept",
+      action: () => loadModule("modules/datenschutz.html"),
     },
     {
       label: "News",
@@ -98,10 +94,7 @@ async function loadModule(path) {
     },
     {
       label: "3x3-Serie",
-      items: [
-        { label: "Events", action: () => loadModule("modules/3x3-events.html") },
-        { label: "Regeln", action: () => loadModule("modules/3x3-regeln.html") },
-      ],
+      action: () => loadModule("modules/3x3.html"),
     },
     {
       label: "Camps",
@@ -120,9 +113,7 @@ async function loadModule(path) {
     },
     {
       label: "Kontakt",
-      items: [
-        { label: "Ansprechpersonen", action: () => loadModule("modules/kontakt.html") },
-      ],
+      action: () => loadModule("modules/kontakt.html"),
     },
   ];
 
