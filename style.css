@@ -38,6 +38,9 @@ body {
   flex-direction: column;
 }
 
+/* Hilfsklassen */
+.muted { color: var(--muted); }
+
 /* --------------------------------------------------
    HEADER
 -------------------------------------------------- */
@@ -86,6 +89,15 @@ header .subtitle {
 .nav-btn:hover {
   background: var(--green-600);
 }
+.nav-item.open .nav-btn {
+  background: var(--green-600);
+}
+
+/* Pfeil */
+.chev {
+  margin-left: 6px;
+  opacity: 0.8;
+}
 
 /* Dropdown */
 .dropdown {
@@ -114,6 +126,9 @@ header .subtitle {
 }
 .dropdown a:hover {
   background: var(--green-700);
+}
+.dropdown a:last-child {
+  border-bottom: none;
 }
 
 /* --------------------------------------------------
