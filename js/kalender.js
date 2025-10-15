@@ -1,4 +1,51 @@
 // -----------------------------------------------------------
+// Kalendermodul – Start
+// -----------------------------------------------------------
+
+// Warten, bis das DOM vollständig geladen ist
+document.addEventListener("DOMContentLoaded", () => {
+  initCalendar();
+});
+
+let currentDate = new Date();
+const monthNames = [
+  "Januar","Februar","März","April","Mai","Juni",
+  "Juli","August","September","Oktober","November","Dezember"
+];
+
+// -----------------------------------------------------------
+// Kalender initialisieren
+// -----------------------------------------------------------
+function initCalendar() {
+  const calendarGrid     = document.getElementById("calendarGrid");
+  const monthTitle       = document.getElementById("monthTitle");
+  const dialog           = document.getElementById("eventDialog");
+  const eventTitle       = document.getElementById("eventTitle");
+  const eventDate        = document.getElementById("eventDate");
+  const eventDescription = document.getElementById("eventDescription");
+  const eventSignupLink  = document.getElementById("eventSignupLink");
+
+  // Falls das HTML noch nicht fertig ist (sollte jetzt nicht mehr vorkommen)
+  if (!calendarGrid) {
+    console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
+    return;
+  }
+
+  const prev = document.getElementById("prevBtn");
+  const next = document.getElementById("nextBtn");
+
+  if (prev) prev.onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar(currentDate);
+  };
+  if (next) next.onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate);
+  };
+
+  renderCalendar(currentDate);
+}
+// -----------------------------------------------------------
 // Kalendermodul mit Eventdaten aus /data/events.json
 // -----------------------------------------------------------
 
@@ -146,9 +193,3 @@ function closeDialog() {
 }
 window.closeDialog = closeDialog;
 
-// -----------------------------------------------------------
-// Init-Hook, den app.js nach dem Modul-Laden aufruft
-// -----------------------------------------------------------
-window.__initModule = () => {
-  initCalendar();
-};
