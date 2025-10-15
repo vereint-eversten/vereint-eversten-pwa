@@ -59,7 +59,7 @@ async function loadModule(path) {
   const NAV = [
     {
       label: "Konzept",
-      action: () => loadModule("modules/datenschutz.html"),
+      action: () => loadModule("modules/konzept.html"),
     },
     {
       label: "News",
