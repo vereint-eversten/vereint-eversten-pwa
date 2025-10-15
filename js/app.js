@@ -1,8 +1,21 @@
+// Lädt ein Modul (HTML-Datei) dynamisch in den Hauptbereich
+async function loadModule(path) {
+  const main = document.getElementById('main-content');
+  main.innerHTML = '<p>Lädt...</p>';
+  try {
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(Fehler beim Laden: ${path});
+    const html = await response.text();
+    main.innerHTML = html;
+  } catch (err) {
+    main.innerHTML = <p style="color:red;">${err.message}</p>;
+  }
+}
 (() => {
   // Build desktop nav
   const NAV = [
     { label:'Idee & Konzept', items:[
-      { label:'Konzept', action:()=>setStatic('Idee & Konzept – Ziele','???') },
+      { label:'Konzept', action:()=>loadModule('modules/konzept.html') },
       { label:'Bausteine', action:()=>setStatic('Idee & Konzept – Bausteine','Module, PWA, Teilhabe…') },
       { label:'Öffentlichkeitsarbeit', action:()=>setStatic('Idee & Konzept – Datenschutz','Eure Datenschutz-Prinzipien…') }
     ]},
