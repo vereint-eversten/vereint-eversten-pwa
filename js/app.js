@@ -62,12 +62,8 @@ async function loadModule(path) {
 (() => {
   const NAV = [
     {
-      label: 'Idee & Konzept',
-      items: [
-        { label: 'Konzept', action: () => loadModule('modules/konzept.html') },
-        { label: 'Bausteine', action: () => loadModule('modules/bausteine.html') },
-        { label: 'Öffentlichkeitsarbeit', action: () => loadModule('modules/datenschutz.html') },
-      ],
+      label: 'Konzept',
+      action: () => loadModule('modules/konzept.html'),
     },
     {
       label: 'News',
