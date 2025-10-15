@@ -83,7 +83,7 @@ async function renderCalendar(date = new Date()) {
   }
 
   // Leere Felder vor Monatsanfang
-  for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
+  for (let i = 0; i < startDay; i++) html += `<div class="cell empty"></div>`;
 
   for (let d = 1; d <= daysInMonth; d++) {
     const thisDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
