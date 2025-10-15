@@ -119,7 +119,7 @@ async function loadModule(path) {
         group.action();
       });
     } else {
-      btn.innerHTML = ${group.label} <span class="chev">▾</span>;
+      btn.innerHTML = '${group.label} <span class="chev">▾</span>';
       btn.addEventListener('click', () => {
         [...navEl.children].forEach((c) => {
           if (c !== item) c.classList.remove('open');
