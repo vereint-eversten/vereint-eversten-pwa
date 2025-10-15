@@ -52,6 +52,7 @@ async function loadModule(path) {
         { label: 'Partnervereine', action: () => loadModule('modules/vereine.html') },
         { label: 'Partnerschulen', action: () => loadModule('modules/schulen.html') },
         { label: 'Förderer / Paten', action: () => loadModule('modules/paten.html') },
+    ],   
     },
     {
       label: 'Termine',
