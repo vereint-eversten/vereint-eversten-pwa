@@ -26,11 +26,11 @@ function initCalendar() {
   const prev = document.getElementById("prevBtn");
   const next = document.getElementById("nextBtn");
 
-  prev.onclick = () => {
+  if (prev) prev.onclick = () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar(currentDate);
   };
-  next.onclick = () => {
+  if (next) next.onclick = () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar(currentDate);
   };
@@ -58,7 +58,14 @@ async function renderCalendar(date = new Date()) {
   try {
     const res = await fetch("../data/events.json", { cache: "no-store" });
     if (res.ok) {
-      events = await res.json();
+      const json = await res.json();
+      // Unterstütze sowohl { events: [...] } als auch direkt ein Array
+      const raw = Array.isArray(json) ? json : (json.events || []);
+      events = raw.map(ev => ({
+        ...ev,
+        // Normalisiere Datum als YYYY-MM-DD
+        date: ev.date ? ev.date : (ev.start ? ev.start.substring(0, 10) : null)
+      })).filter(ev => !!ev.date);
     } else {
       console.warn("events.json nicht gefunden (Status:", res.status, ")");
     }
@@ -69,7 +76,7 @@ async function renderCalendar(date = new Date()) {
   // Kalenderzellen erzeugen
   let html = "";
 
-  // (optional) Kopfzeile mit Wochentagen
+  // Kopfzeile mit Wochentagen
   const WDS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
   for (const wd of WDS) {
     html += <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>;
@@ -86,6 +93,7 @@ async function renderCalendar(date = new Date()) {
     dayEvents.forEach(ev => {
       const safeTitle = ev.title ?? "Termin";
       const safeDesc  = ev.description ?? "";
+      // Für das Popup über data-* bereitstellen
       eventsHTML += `
         <div class="event"
              data-title="${safeTitle}"
@@ -118,10 +126,14 @@ async function renderCalendar(date = new Date()) {
 function showEventPopup({ title, date, description }) {
   if (!dialog) return;
 
-  eventTitle.textContent       = title || "Ohne Titel";
-  eventDate.textContent        = date  || "";
-  eventDescription.textContent = description || "Keine Beschreibung vorhanden.";
-  if (eventSignupLink) eventSignupLink.href = "../modules/anmeldung.html";
+  eventTitle.textContent = title || "Termin";
+  eventDate.textContent  = date || "";
+  eventDescription.textContent = description || "";
+
+  // Optional: Link zur Anmeldung – hier ggf. dynamisch setzen
+  if (eventSignupLink) {
+    eventSignupLink.href = "../modules/anmeldung.html";
+  }
 
   dialog.classList.add("open");
 }
