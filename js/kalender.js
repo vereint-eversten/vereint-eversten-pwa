@@ -46,7 +46,7 @@ async function renderCalendar(date = new Date()) {
   const month = date.getMonth();
 
   if (window.monthTitle) {
-    window.monthTitle.textContent = ${monthNames[month]} ${year};
+    window.monthTitle.textContent = `${monthNames[month]} ${year}`;
   }
 
   const firstDay    = new Date(year, month, 1);
