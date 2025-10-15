@@ -1,27 +1,44 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>verein[t]</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>verein[t] – Schule. Basketball. Für Alle.</title>
+
+  <!-- Basis-Design -->
   <link rel="stylesheet" href="style.css" />
+
+  <!-- PWA-Metadaten (optional, kannst du später aktivieren) -->
+  <meta name="theme-color" content="#2e7d32" />
+  <link rel="manifest" href="manifest.json" />
 </head>
 
 <body>
-  <header>
-    <h1>verein[t] – Schule. Basketball. Für Alle.</h1>
+  <!-- HEADER -->
+  <header id="header">
+    <h1>verein[t]</h1>
+    <p class="subtitle">Schule. Basketball. Für Alle.</p>
   </header>
 
-  <!-- Navigation (Pflicht: id="nav") -->
-  <nav id="nav"></nav>
+  <!-- NAVIGATIONSBEREICH -->
+  <nav id="nav" class="main-nav"></nav>
 
-  <!-- Hauptinhalt -->
-  <main>
-    <h2 id="contentTitle"></h2>
-    <div id="contentBody"></div>
+  <!-- HAUPTBEREICH -->
+  <main id="main">
+    <h2 id="contentTitle">Willkommen</h2>
+    <div id="contentBody">
+      <div class="panel">
+        <p>Wähle oben ein Modul, um zu starten.</p>
+      </div>
+    </div>
   </main>
 
-  <!-- Script: Pfad stimmt, da app.js im Unterordner /js liegt -->
+  <!-- FOOTER -->
+  <footer id="footer">
+    <p>© 2025 verein[t] – TuS Eversten e.V.</p>
+  </footer>
+
+  <!-- JAVASCRIPT -->
   <script src="js/app.js"></script>
 </body>
 </html>
