@@ -65,10 +65,11 @@ async function loadModule(path) {
     {
       label: 'SchulVereinsliga',
       items: [
-        { label: 'Letzter Spieltag', action: () => loadModule('modules/spieltag.html') },
-        { label: 'Nächster Spieltag', action: () => loadModule('modules/naechster-spieltag.html') },
-        { label: 'Tabellenstand', action: () => loadModule('modules/tabellen.html') },
-        { label: 'Regeln', action: () => loadModule('modules/regeln.html') },
+        { label: 'U9 Mixed', action: () => loadModule('modules/U9.html') },
+        { label: 'U11 Mixed', action: () => loadModule('modules/U11m.html') },
+        { label: 'U11 Mädchen', action: () => loadModule('modules/U11w.html') },
+        { label: 'U13 Mixed', action: () => loadModule('modules/U13m.html') },
+        { label: 'U13 Mädchen', action: () => loadModule('modules/U13w.html') },
       ],
     },
     {
