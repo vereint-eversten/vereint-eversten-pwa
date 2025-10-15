@@ -2,6 +2,7 @@
 // App.js – Dynamische Modulnavigation für PWA
 // --------------------------------------------
 
+// Lädt ein Modul (HTML-Datei) dynamisch in den Hauptbereich
 async function loadModule(path) {
   const main =
     document.getElementById('main-content') ||
@@ -15,9 +16,36 @@ async function loadModule(path) {
 
   try {
     const response = await fetch(path, { cache: 'no-store' });
-    if (!response.ok) throw new Error(`Modul nicht gefunden: ${path}`);
+    if (!response.ok) throw new Error(Modul nicht gefunden: ${path});
     const html = await response.text();
+
+    // HTML einsetzen
     main.innerHTML = html;
+
+    // 👉 WICHTIG: Skripte im eingefügten HTML werden von innerHTML NICHT ausgeführt.
+    // Daher extrahieren und neu anhängen (inline & externe Skripte).
+    const scripts = main.querySelectorAll('script');
+    scripts.forEach((old) => {
+      const s = document.createElement('script');
+
+      // Attribute übernehmen (z. B. type="module", defer, src)
+      for (const attr of old.attributes) s.setAttribute(attr.name, attr.value);
+
+      if (old.src) {
+        // Externes Skript neu laden (relative Pfade bleiben relativ zur Seite)
+        s.src = old.getAttribute('src');
+      } else {
+        // Inline-Skript ausführen
+        s.textContent = old.textContent;
+      }
+
+      // Anhängen löst die Ausführung aus
+      document.body.appendChild(s);
+
+      // Aufräumen (optional):
+      old.remove();
+      // s.remove(); // falls du keine Script-Tags im DOM behalten möchtest
+    });
   } catch (err) {
     console.error('Fehler beim Laden des Moduls:', err);
     main.innerHTML = `
@@ -41,7 +69,7 @@ async function loadModule(path) {
         { label: 'Öffentlichkeitsarbeit', action: () => loadModule('modules/datenschutz.html') },
       ],
     },
-     {
+    {
       label: 'News',
       action: () => loadModule('modules/news.html'),
     },
@@ -52,7 +80,7 @@ async function loadModule(path) {
         { label: 'Partnervereine', action: () => loadModule('modules/vereine.html') },
         { label: 'Partnerschulen', action: () => loadModule('modules/schulen.html') },
         { label: 'Förderer / Paten', action: () => loadModule('modules/paten.html') },
-    ],   
+      ],
     },
     {
       label: 'Termine',
@@ -127,7 +155,7 @@ async function loadModule(path) {
         group.action();
       });
     } else {
-      btn.innerHTML = `${group.label} <span class="chev">▾</span>`;
+      btn.innerHTML = ${group.label} <span class="chev">▾</span>;
       btn.addEventListener('click', () => {
         [...navEl.children].forEach((c) => {
           if (c !== item) c.classList.remove('open');
