@@ -20,19 +20,29 @@
     </div>
   </div>
 
+  <!-- Kalenderraster -->
   <div id="calendarGrid" class="grid" aria-live="polite"></div>
 </section>
 
+<!-- Popup-Dialog für Event-Details -->
 <div class="dialog" id="eventDialog">
   <div class="card">
-    <button class="close-btn" onclick="document.getElementById('eventDialog').classList.remove('open')">×</button>
+    <button class="close-btn" onclick="closeDialog()">×</button>
+
     <h3 id="eventTitle">Titel</h3>
     <p id="eventDate" class="muted"></p>
     <p id="eventDescription"></p>
-    <hr style="margin:16px 0; border:1px solid var(--border)" />
-    <a href="modules/anmeldung.html" id="eventSignupLink" class="button">Zur Anmeldung</a>
+
+    <hr style="margin:16px 0; border:1px solid var(--border);" />
+
+    <p style="text-align:center;">
+      <a href="../modules/anmeldung.html" id="eventSignupLink"
+         class="button">
+        ➕ Zur Anmeldung
+      </a>
+    </p>
   </div>
 </div>
 
-<!-- Wichtig: externes Skript -->
-<script src="js/kalender.js"></script>
+<!-- Kalenderlogik -->
+<script src="../js/kalender.js"></script>
