@@ -17,7 +17,7 @@ async function loadModule(path) {
 
   try {
     const response = await fetch(path, { cache: "no-store" });
-    if (!response.ok) throw new Error(Modul nicht gefunden: ${path});
+    if (!response.ok) throw new Error(`Modul nicht gefunden: ${path}`);
     const html = await response.text();
     main.innerHTML = html;
 
