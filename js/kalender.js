@@ -49,7 +49,6 @@ function initCalendar() {
 // Kalendermodul mit Eventdaten aus /data/events.json
 // -----------------------------------------------------------
 
-let currentDate = new Date();
 const monthNames = [
   "Januar","Februar","März","April","Mai","Juni",
   "Juli","August","September","Oktober","November","Dezember"
