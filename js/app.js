@@ -8,9 +8,7 @@ async function loadModule(path) {
     document.getElementById('main-content') ||
     document.getElementById('contentBody');
   if (!main) {
-    console.error(
-      'Kein Element mit id="main-content" oder "contentBody" gefunden!'
-    );
+    console.error('Kein Element mit id="main-content" oder "contentBody" gefunden!');
     return;
   }
 
@@ -105,6 +103,12 @@ async function loadModule(path) {
   const contentTitle = document.getElementById('contentTitle');
   const contentBody = document.getElementById('contentBody');
 
+  // Sicherheit: Falls kein nav vorhanden
+  if (!navEl) {
+    console.error('⚠ Kein Navigationselement mit id="nav" gefunden!');
+    return;
+  }
+
   NAV.forEach((group) => {
     const item = document.createElement('div');
     item.className = 'nav-item';
@@ -132,12 +136,9 @@ async function loadModule(path) {
         const isOpen = item.classList.toggle('open');
         btn.setAttribute('aria-expanded', String(isOpen));
       });
-    }
 
-    const dd = document.createElement('div');
-    dd.className = 'dropdown';
-
-    if (group.items) {
+      const dd = document.createElement('div');
+      dd.className = 'dropdown';
       group.items.forEach((link) => {
         const a = document.createElement('a');
         a.href = '#';
