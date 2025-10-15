@@ -49,11 +49,6 @@ function initCalendar() {
 // Kalendermodul mit Eventdaten aus /data/events.json
 // -----------------------------------------------------------
 
-const monthNames = [
-  "Januar","Februar","März","April","Mai","Juni",
-  "Juli","August","September","Oktober","November","Dezember"
-];
-
 // DOM-Elemente finden (nachdem kalender.html geladen ist)
 function initCalendar() {
   window.calendarGrid       = document.getElementById("calendarGrid");
