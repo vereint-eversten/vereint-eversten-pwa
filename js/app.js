@@ -46,20 +46,20 @@ async function loadModule(path) {
       action: () => loadModule('modules/news.html'),
     },
     {
-      label: 'Netzwerk (Schule & Verein)',
+      label: 'Netzwerk',
       items: [
         { label: 'TuS Eversten', action: () => loadModule('modules/eversten.html') },
         { label: 'Partnervereine', action: () => loadModule('modules/vereine.html') },
         { label: 'Partnerschulen', action: () => loadModule('modules/schulen.html') },
-      ],
-    },
-    {
-      label: 'Paten',
-      action: () => loadModule('modules/paten.html'),
+        { label: 'Förderer / Paten', action: () => loadModule('modules/paten.html') },
     },
     {
       label: 'Termine',
       action: () => loadModule('modules/kalender.html'),
+    },
+    {
+      label: 'Messenger',
+      action: () => loadModule('modules/messenger.html'),
     },
     {
       label: 'SchulVereinsliga',
@@ -87,6 +87,10 @@ async function loadModule(path) {
         { label: 'Übernachtungscamp', action: () => loadModule('modules/camp-uebernachtung.html') },
         { label: 'Schnuppercamp', action: () => loadModule('modules/camp-schnupper.html') },
       ],
+    },
+    {
+      label: 'Shop',
+      action: () => loadModule('modules/shop.html'),
     },
     {
       label: 'Kontakt',
