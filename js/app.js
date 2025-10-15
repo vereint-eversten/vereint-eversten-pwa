@@ -14,8 +14,7 @@
       { label:'Modul-Paten', action:()=>setStatic('Paten – Unterstützer','Patenliste…') },
       { label:'Team-Paten', action:()=>setStatic('Paten – Mitmachen','So wirst du Pate…') }
     ]},
-    { label:'Termine', items:[
-      { label:'Kalender', action:()=>renderCalendar() },
+    { label:'Termine', action:()=>renderCalendar() },
     ]},
     { label:'SchulVereinsliga', items:[
       { label:'Letzter Spieltag', action:()=>setStatic('SchulVereinsliga – Überblick','Modus, Spieltage…') },
