@@ -1,189 +1,136 @@
-// -----------------------------------------------------------
-// Kalendermodul – Start
-// -----------------------------------------------------------
+// modules/kalender.js
 
-// Warten, bis das DOM vollständig geladen ist
-document.addEventListener("DOMContentLoaded", () => {
-  initCalendar();
-});
+(() => {
+  // Verhindert doppelte Ausführung, falls das Script versehentlich zweimal geladen wird
+  if (window._calendarLoaded_) return;
+  window._calendarLoaded_ = true;
 
-let currentDate = new Date();
-const monthNames = [
-  "Januar","Februar","März","April","Mai","Juni",
-  "Juli","August","September","Oktober","November","Dezember"
-];
+  // --- privater Modulzustand (keine Globals) ---
+  let currentDate = new Date();
+  const monthNames = [
+    "Januar","Februar","März","April","Mai","Juni",
+    "Juli","August","September","Oktober","November","Dezember"
+  ];
 
-// -----------------------------------------------------------
-// Kalender initialisieren
-// -----------------------------------------------------------
-function initCalendar() {
-  const calendarGrid     = document.getElementById("calendarGrid");
-  const monthTitle       = document.getElementById("monthTitle");
-  const dialog           = document.getElementById("eventDialog");
-  const eventTitle       = document.getElementById("eventTitle");
-  const eventDate        = document.getElementById("eventDate");
-  const eventDescription = document.getElementById("eventDescription");
-  const eventSignupLink  = document.getElementById("eventSignupLink");
+  // DOM-Refs
+  let $grid, $monthTitle, $dialog, $evTitle, $evDate, $evDesc, $evSignup;
 
-  // Falls das HTML noch nicht fertig ist (sollte jetzt nicht mehr vorkommen)
-  if (!calendarGrid) {
-    console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
-    return;
-  }
+  document.addEventListener("DOMContentLoaded", init);
 
-  const prev = document.getElementById("prevBtn");
-  const next = document.getElementById("nextBtn");
+  function init() {
+    // DOM holen (einmal)
+    $grid      = document.getElementById("calendarGrid");
+    $monthTitle= document.getElementById("monthTitle");
+    $dialog    = document.getElementById("eventDialog");
+    $evTitle   = document.getElementById("eventTitle");
+    $evDate    = document.getElementById("eventDate");
+    $evDesc    = document.getElementById("eventDescription");
+    $evSignup  = document.getElementById("eventSignupLink");
 
-  if (prev) prev.onclick = () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar(currentDate);
-  };
-  if (next) next.onclick = () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar(currentDate);
-  };
-
-  renderCalendar(currentDate);
-}
-// -----------------------------------------------------------
-// Kalendermodul mit Eventdaten aus /data/events.json
-// -----------------------------------------------------------
-
-// DOM-Elemente finden (nachdem kalender.html geladen ist)
-function initCalendar() {
-  window.calendarGrid       = document.getElementById("calendarGrid");
-  window.monthTitle         = document.getElementById("monthTitle");
-  window.dialog             = document.getElementById("eventDialog");
-  window.eventTitle         = document.getElementById("eventTitle");
-  window.eventDate          = document.getElementById("eventDate");
-  window.eventDescription   = document.getElementById("eventDescription");
-  window.eventSignupLink    = document.getElementById("eventSignupLink");
-
-  if (!calendarGrid) {
-    console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
-    return;
-  }
-
-  const prev = document.getElementById("prevBtn");
-  const next = document.getElementById("nextBtn");
-
-  if (prev) prev.onclick = () => {
-    currentDate.setMonth(currentDate.getMonth() - 1);
-    renderCalendar(currentDate);
-  };
-  if (next) next.onclick = () => {
-    currentDate.setMonth(currentDate.getMonth() + 1);
-    renderCalendar(currentDate);
-  };
-
-  renderCalendar(currentDate);
-}
-
-// -----------------------------------------------------------
-// Kalender rendern + Events laden
-// -----------------------------------------------------------
-async function renderCalendar(date = new Date()) {
-  const year  = date.getFullYear();
-  const month = date.getMonth();
-
-  if (window.monthTitle) {
-    window.monthTitle.textContent = `${monthNames[month]} ${year}`;
-  }
-
-  const firstDay    = new Date(year, month, 1);
-  const startDay    = (firstDay.getDay() + 6) % 7; // Montag = 0
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-  // Events laden
-  let events = [];
-  try {
-    const res = await fetch("../data/events.json", { cache: "no-store" });
-    if (res.ok) {
-      const json = await res.json();
-      // Unterstütze sowohl { events: [...] } als auch direkt ein Array
-      const raw = Array.isArray(json) ? json : (json.events || []);
-      events = raw.map(ev => ({
-        ...ev,
-        // Normalisiere Datum als YYYY-MM-DD
-        date: ev.date ? ev.date : (ev.start ? ev.start.substring(0, 10) : null)
-      })).filter(ev => !!ev.date);
-    } else {
-      console.warn("events.json nicht gefunden (Status:", res.status, ")");
+    if (!$grid) {
+      console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
+      return;
     }
-  } catch (e) {
-    console.warn("⚠ Konnte events.json nicht laden:", e);
+
+    const prev = document.getElementById("prevBtn");
+    const next = document.getElementById("nextBtn");
+    prev && (prev.onclick = () => { currentDate.setMonth(currentDate.getMonth() - 1); render(currentDate); });
+    next && (next.onclick = () => { currentDate.setMonth(currentDate.getMonth() + 1); render(currentDate); });
+
+    render(currentDate);
   }
 
-  // Kalenderzellen erzeugen
-  let html = "";
+  async function render(date = new Date()) {
+    const year  = date.getFullYear();
+    const month = date.getMonth();
 
-  // Kopfzeile mit Wochentagen
-  const WDS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
-  for (const wd of WDS) {
-    html += `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`;
-  }
+    if ($monthTitle) $monthTitle.textContent = ${monthNames[month]} ${year};
 
-  // Leere Felder vor Monatsanfang
-  for (let i = 0; i < startDay; i++) html += `<div class="cell empty"></div>`;
+    const firstDay    = new Date(year, month, 1);
+    const startDay    = (firstDay.getDay() + 6) % 7; // Mo=0
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  for (let d = 1; d <= daysInMonth; d++) {
-    const thisDate = `${year}-${String(month + 1).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
-    const dayEvents = events.filter(ev => ev.date === thisDate);
+    // Events laden
+    let events = [];
+    try {
+      const res = await fetch("../data/events.json", { cache: "no-store" });
+      if (res.ok) {
+        const json = await res.json();
+        const raw = Array.isArray(json) ? json : (json.events || []);
+        events = raw.map(ev => ({
+          ...ev,
+          date: ev.date ? ev.date : (ev.start ? ev.start.substring(0, 10) : null)
+        })).filter(ev => !!ev.date);
+      } else {
+        console.warn("events.json nicht gefunden (Status:", res.status, ")");
+      }
+    } catch (e) {
+      console.warn("⚠ Konnte events.json nicht laden:", e);
+    }
 
-    let eventsHTML = "";
-    dayEvents.forEach(ev => {
-      const safeTitle = ev.title ?? "Termin";
-      const safeDesc  = ev.description ?? "";
-      // Für das Popup über data-* bereitstellen
-      eventsHTML += `
-        <div class="event"
-             data-title="${safeTitle}"
-             data-date="${thisDate}"
-             data-description="${safeDesc}">
-          ${safeTitle}
+    // Kalenderzellen
+    const WDS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+    let html = WDS.map(wd => (
+      <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>
+    )).join("");
+
+    for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
+
+    for (let d = 1; d <= daysInMonth; d++) {
+      const thisDate = ${year}-${String(month + 1).padStart(2,"0")}-${String(d).padStart(2,"0")};
+      const dayEvents = events.filter(ev => ev.date === thisDate);
+
+      const eventsHTML = dayEvents.map(ev => {
+        const safeTitle = ev.title ?? "Termin";
+        const safeDesc  = ev.description ?? "";
+        return `
+          <div class="event"
+               data-title="${escapeHtml(safeTitle)}"
+               data-date="${thisDate}"
+               data-description="${escapeHtml(safeDesc)}">
+            ${escapeHtml(safeTitle)}
+          </div>`;
+      }).join("");
+
+      html += `
+        <div class="cell" data-day="${d}">
+          <div class="date">${d}.</div>
+          ${eventsHTML}
         </div>`;
-    });
+    }
 
-    html += `
-      <div class="cell" data-day="${d}">
-        <div class="date">${d}.</div>
-        ${eventsHTML}
-      </div>`;
+    $grid.innerHTML = html;
+
+    // Klick-Handler für Events
+    $grid.querySelectorAll(".event").forEach(el => {
+      el.addEventListener("click", () => {
+        showEventPopup({
+          title: el.dataset.title,
+          date: el.dataset.date,
+          description: el.dataset.description
+        });
+      });
+    });
   }
 
-  calendarGrid.innerHTML = html;
-
-  // Klick-Events für Termine
-  calendarGrid.querySelectorAll(".event").forEach(el => {
-    el.addEventListener("click", () => {
-      showEventPopup(el.dataset);
-    });
-  });
-}
-
-// -----------------------------------------------------------
-// Popup anzeigen
-// -----------------------------------------------------------
-function showEventPopup({ title, date, description }) {
-  if (!dialog) return;
-
-  eventTitle.textContent = title || "Termin";
-  eventDate.textContent  = date || "";
-  eventDescription.textContent = description || "";
-
-  // Optional: Link zur Anmeldung – hier ggf. dynamisch setzen
-  if (eventSignupLink) {
-    eventSignupLink.href = "../modules/anmeldung.html";
+  function showEventPopup({ title, date, description }) {
+    if (!$dialog) return;
+    $evTitle.textContent = title || "Termin";
+    $evDate.textContent  = date  || "";
+    $evDesc.textContent  = description || "";
+    if ($evSignup) $evSignup.href = "../modules/anmeldung.html";
+    $dialog.classList.add("open");
   }
 
-  dialog.classList.add("open");
-}
+  // Public Close (wenn du es im HTML onclick="closeCalendarDialog()" nutzt)
+  window.closeCalendarDialog = function () {
+    if ($dialog) $dialog.classList.remove("open");
+  };
 
-// -----------------------------------------------------------
-// Popup schließen
-// -----------------------------------------------------------
-function closeDialog() {
-  if (dialog) dialog.classList.remove("open");
-}
-window.closeDialog = closeDialog;
-
+  // kleine Hilfsfunktion gegen XSS in data-Attributen
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, m =>
+      ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m])
+    );
+  }
+})();
