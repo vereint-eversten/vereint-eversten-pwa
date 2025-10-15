@@ -55,7 +55,10 @@ async function loadModule(path) {
       </div>`;
   }
 }
-
+// ... in loadModule(), direkt NACH dem Ausführen der <script>-Tags:
+if (typeof window.__initModule === 'function') {
+  try { window.__initModule(); } catch (e) { console.error(e); }
+}
 // --------------------------------------------
 // Hauptnavigation
 // --------------------------------------------
