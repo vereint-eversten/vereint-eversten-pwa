@@ -41,6 +41,10 @@ async function loadModule(path) {
         { label: 'Öffentlichkeitsarbeit', action: () => loadModule('modules/datenschutz.html') },
       ],
     },
+     {
+      label: 'News',
+      action: () => loadModule('modules/news.html'),
+    },
     {
       label: 'Netzwerk (Schule & Verein)',
       items: [
