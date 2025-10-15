@@ -1,19 +1,19 @@
 <!-- /modules/U9.html -->
-<section class="panel" aria-labelledby="u9-title">
-  <h2 id="u9-title" style="margin-top:0;">SchulVereinsliga – U9</h2>
+<section class="panel" aria-labelledby="u11m-title">
+  <h2 id="u11m-title" style="margin-top:0;">SchulVereinsliga – U11m</h2>
 
   <!-- Tab-Leiste -->
   <div class="u9-tabs" role="tablist" aria-label="U9 Navigation">
-    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="u9-tab-tabelle" id="u9-tabbtn-tabelle">Tabelle</button>
-    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u9-tab-teams" id="u9-tabbtn-teams">Teams</button>
-    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u9-tab-ergebnisse" id="u9-tabbtn-ergebnisse">Ergebnisse</button>
-    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u9-tab-spielplan" id="u9-tabbtn-spielplan">Spielplan</button>
-    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u9-tab-regeln" id="u9-tabbtn-regeln">Regeln</button>
+    <button class="tab-btn active" role="tab" aria-selected="true" aria-controls="u11m-tab-tabelle" id="u11m-tabbtn-tabelle">Tabelle</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u11m-tab-teams" id="u11m-tabbtn-teams">Teams</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u11m-tab-ergebnisse" id="u11m-tabbtn-ergebnisse">Ergebnisse</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u11m-tab-spielplan" id="u11m-tabbtn-spielplan">Spielplan</button>
+    <button class="tab-btn" role="tab" aria-selected="false" aria-controls="u11m-tab-regeln" id="u11m-tabbtn-regeln">Regeln</button>
   </div>
 
   <div class="tab-panels">
     <!-- TAB 1: Tabelle -->
-    <div class="tab-panel active" id="u9-tab-tabelle" role="tabpanel" aria-labelledby="u9-tabbtn-tabelle">
+    <div class="tab-panel active" id="u11m-tab-tabelle" role="tabpanel" aria-labelledby="u11m-tabbtn-tabelle">
       <div class="table-wrap">
         <table class="table">
           <thead>
@@ -43,7 +43,7 @@
     </div>
 
     <!-- TAB 2: Teams -->
-    <div class="tab-panel" id="u9-tab-teams" role="tabpanel" aria-labelledby="u9-tabbtn-teams" hidden>
+    <div class="tab-panel" id="u11m-tab-teams" role="tabpanel" aria-labelledby="u11m-tabbtn-teams" hidden>
       <ul class="team-list">
         <li><strong>Staakenweg Sharks</strong> – Trainer: NN</li>
         <li><strong>VfL Rastede</strong> – Trainer: NN</li>
@@ -60,19 +60,19 @@
     </div>
 
     <!-- TAB 3: Ergebnisse -->
-    <div class="tab-panel" id="u9-tab-ergebnisse" role="tabpanel" aria-labelledby="u9-tabbtn-ergebnisse" hidden>
+    <div class="tab-panel" id="u11m-tab-ergebnisse" role="tabpanel" aria-labelledby="u11m-tabbtn-ergebnisse" hidden>
       <p>Ergebnisse folgen nach dem nächsten Spieltag.</p>
     </div>
 
     <!-- TAB 4: Spielplan -->
-    <div class="tab-panel" id="u9-tab-spielplan" role="tabpanel" aria-labelledby="u9-tabbtn-spielplan" hidden>
+    <div class="tab-panel" id="u11m-tab-spielplan" role="tabpanel" aria-labelledby="11m9-tabbtn-spielplan" hidden>
       <p>Spielplan wird derzeit aktualisiert.</p>
     </div>
 
     <!-- TAB 5: Regeln -->
-    <div class="tab-panel" id="u9-tab-regeln" role="tabpanel" aria-labelledby="u9-tabbtn-regeln" hidden>
+    <div class="tab-panel" id="u11m-tab-regeln" role="tabpanel" aria-labelledby="u11m-tabbtn-regeln" hidden>
       <ol class="rules">
-        <li>Spielzeit: 4×6 Minuten, durchlaufend (letzte 2 Minuten gestoppt).</li>
+        <li>Spielzeit: 2 × 15 Minuten, durchlaufend (letzte Minute gestoppt).</li>
         <li>Ballgröße 5, Korbhöhe 2,60 m.</li>
         <li>Manndeckung empfohlen, Pressing erst ab Mittellinie.</li>
         <li>Alle Kinder sollen in jedem Spiel Einsatzzeit bekommen.</li>
@@ -100,7 +100,7 @@
 
 <script>
   (function(){
-    const tablist=document.querySelector('.u9-tabs');
+    const tablist=document.querySelector('.u11m-tabs');
     const buttons=Array.from(tablist.querySelectorAll('.tab-btn'));
     const panels=Array.from(document.querySelectorAll('.tab-panel'));
     function activate(id){
@@ -116,6 +116,6 @@
       });
     }
     buttons.forEach(btn=>btn.addEventListener('click',()=>activate(btn.getAttribute('aria-controls'))));
-    activate('u9-tab-tabelle');
+    activate('u11m-tab-tabelle');
   })();
 </script>
