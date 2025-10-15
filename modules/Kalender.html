@@ -1,16 +1,18 @@
-<section id="kalenderModul">
-  <h2>Termine – Kalender</h2>
-
-  <div class="calendar-top">
+<!-- /modules/kalender.html -->
+<section class="calendar">
+  <div class="top">
     <button id="prevBtn" aria-label="Vorheriger Monat">‹</button>
-    <h3 id="monthTitle" style="margin:0;font-size:18px;"></h3>
+    <h2 id="monthTitle" style="margin:0; font-size:18px;">Monat</h2>
     <button id="nextBtn" aria-label="Nächster Monat">›</button>
-    <div class="filters">
-      <select id="teamFilter" aria-label="Teamfilter"><option value="">Alle Teams</option></select>
+
+    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+      <select id="teamFilter" aria-label="Teamfilter">
+        <option value="">Alle Teams</option>
+      </select>
       <select id="typeFilter" aria-label="Typfilter">
         <option value="">Alle Arten</option>
         <option value="training">Training</option>
-        <option value="turnier">Turnier</option>
+        <option value="spiel">Spiel</option>
         <option value="camp">Camp</option>
         <option value="3x3">3x3</option>
         <option value="sonstiges">Sonstiges</option>
@@ -18,229 +20,103 @@
     </div>
   </div>
 
-  <div id="calendarGrid" class="calendar-grid" aria-live="polite"></div>
+  <!-- Kalenderraster -->
+  <div id="calendarGrid" class="grid" aria-live="polite"></div>
+</section>
 
-  <!-- Popup -->
-  <div id="eventPopup" class="calendar-popup" style="display:none;">
-    <div class="popup-content">
-      <button id="popupClose" class="close-btn" aria-label="Schließen">×</button>
-      <h3 id="popupTitle"></h3>
-      <p id="popupTime"></p>
-      <p id="popupLocation"></p>
-      <p id="popupDesc"></p>
-      <a id="popupSignup" href="#" class="popup-link">➡ Zur Anmeldung</a>
+<!-- Popup-Dialog für Event-Details -->
+<div class="dialog" id="eventDialog">
+  <div class="card">
+    <h3 id="eventTitle">Titel</h3>
+    <p id="eventDate" class="muted"></p>
+    <p id="eventDescription"></p>
+
+    <hr style="margin:16px 0; border:1px solid var(--border);" />
+
+    <p>
+      <a href="/modules/anmeldung.html" id="eventSignupLink"
+         style="display:inline-block; background:var(--green-700);
+                color:var(--text); padding:8px 12px; border-radius:8px;
+                text-decoration:none;">
+        Zur Anmeldung
+      </a>
+    </p>
+
+    <div style="text-align:right; margin-top:12px;">
+      <button onclick="closeDialog()">Schließen</button>
     </div>
   </div>
+</div>
 
-  <style>
-    .calendar-top {
-      display: flex;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 10px;
+<script>
+  // --- einfacher Beispiel-Kalender ---
+  const calendarGrid = document.getElementById("calendarGrid");
+  const monthTitle = document.getElementById("monthTitle");
+  const dialog = document.getElementById("eventDialog");
+  const eventTitle = document.getElementById("eventTitle");
+  const eventDate = document.getElementById("eventDate");
+  const eventDescription = document.getElementById("eventDescription");
+
+  let currentDate = new Date();
+
+  function renderCalendar(date = new Date()) {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+
+    // Monatstitel anzeigen
+    const monthNames = [
+      "Januar","Februar","März","April","Mai","Juni",
+      "Juli","August","September","Oktober","November","Dezember"
+    ];
+    monthTitle.textContent = ${monthNames[month]} ${year};
+
+    // Kalenderzellen erzeugen
+    const firstDay = new Date(year, month, 1);
+    const startDay = firstDay.getDay() === 0 ? 7 : firstDay.getDay(); // Montag als 1
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+    let html = "";
+    // Leere Felder vor Monatsanfang
+    for (let i = 1; i < startDay; i++) html += <div class="cell"></div>;
+    // Tage
+    for (let d = 1; d <= daysInMonth; d++) {
+      html += `
+        <div class="cell" data-day="${d}">
+          <div class="date">${d}.</div>
+        </div>`;
     }
-    .filters { margin-left:auto; display:flex; gap:8px; flex-wrap:wrap; }
-    .calendar-grid {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      gap: 4px;
-    }
-    .calendar-grid .cell {
-      border: 1px solid #555;
-      min-height: 80px;
-      padding: 4px;
-      background: #1c1c1c;
-      color: #fff;
-      font-size: 13px;
-      border-radius: 4px;
-    }
-    .calendar-grid .event {
-      background: #2e7d32;
-      border-radius: 4px;
-      padding: 2px 4px;
-      margin-top: 3px;
-      cursor: pointer;
-      font-size: 12px;
-    }
-    .calendar-popup {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 9999;
-    }
-    .popup-content {
-      background: #fff;
-      color: #000;
-      padding: 20px;
-      border-radius: 8px;
-      width: 90%;
-      max-width: 400px;
-      position: relative;
-    }
-    .close-btn {
-      position: absolute;
-      right: 10px;
-      top: 8px;
-      background: none;
-      border: none;
-      font-size: 20px;
-      cursor: pointer;
-    }
-    .popup-link {
-      display: inline-block;
-      margin-top: 10px;
-      padding: 8px 12px;
-      background: #2e7d32;
-      color: #fff;
-      text-decoration: none;
-      border-radius: 4px;
-    }
-    .popup-link:hover { background: #43a047; }
-  </style>
 
-  <script>
-    (async function initCalendar() {
-      const DE = 'de-DE';
-      const grid = document.getElementById('calendarGrid');
-      const title = document.getElementById('monthTitle');
-      const teamFilter = document.getElementById('teamFilter');
-      const typeFilter = document.getElementById('typeFilter');
-      const popup = document.getElementById('eventPopup');
-      const popupTitle = document.getElementById('popupTitle');
-      const popupTime = document.getElementById('popupTime');
-      const popupLocation = document.getElementById('popupLocation');
-      const popupDesc = document.getElementById('popupDesc');
-      const popupSignup = document.getElementById('popupSignup');
-      const popupClose = document.getElementById('popupClose');
+    calendarGrid.innerHTML = html;
+  }
 
-      const state = { current: new Date(), events: [], teams: new Set() };
+  // Popup öffnen
+  calendarGrid.addEventListener("click", (e) => {
+    const cell = e.target.closest(".cell");
+    if (!cell) return;
 
-      popupClose.onclick = () => popup.style.display = 'none';
-      popup.addEventListener('click', e => { if (e.target === popup) popup.style.display = 'none'; });
+    const day = cell.dataset.day;
+    if (!day) return;
 
-      document.getElementById('prevBtn').onclick = () => shiftMonth(-1);
-      document.getElementById('nextBtn').onclick = () => shiftMonth(1);
-      teamFilter.onchange = renderGrid;
-      typeFilter.onchange = renderGrid;
+    eventTitle.textContent = Beispieltermin am ${day}.;
+    eventDate.textContent = ${day}. ${monthTitle.textContent};
+    eventDescription.textContent = "Dies ist eine Vorschau für einen Beispieltermin.";
+    dialog.style.display = "flex";
+  });
 
-      async function loadEvents() {
-        try {
-          const res = await fetch('data/events.json', { cache: 'no-store' });
-          const json = await res.json();
-          state.events = (json.events || []).map(e => ({
-            ...e,
-            start: new Date(e.start),
-            end: new Date(e.end),
-            teams: Array.isArray(e.teams) ? e.teams : []
-          }));
-          state.events.forEach(e => e.teams.forEach(t => state.teams.add(t)));
-          fillTeamFilter();
-          renderGrid();
-        } catch (err) {
-          grid.innerHTML = '<div style="grid-column:1/8;color:red;">Kalender konnte nicht geladen werden.</div>';
-        }
-      }
+  // Popup schließen
+  function closeDialog() {
+    dialog.style.display = "none";
+  }
 
-      function fillTeamFilter() {
-        teamFilter.innerHTML = '<option value="">Alle Teams</option>' +
-          Array.from(state.teams).sort().map(t => <option>${t}</option>).join('');
-      }
+  document.getElementById("prevBtn").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() - 1);
+    renderCalendar(currentDate);
+  };
+  document.getElementById("nextBtn").onclick = () => {
+    currentDate.setMonth(currentDate.getMonth() + 1);
+    renderCalendar(currentDate);
+  };
 
-      function shiftMonth(n) {
-        state.current.setMonth(state.current.getMonth() + n);
-        renderGrid();
-      }
-
-      function renderGrid() {
-        grid.innerHTML = '';
-        const y = state.current.getFullYear(), m = state.current.getMonth();
-        title.textContent = state.current.toLocaleString(DE, { month: 'long', year: 'numeric' });
-        const first = new Date(y, m, 1);
-        const startW = (first.getDay() + 6) % 7; // Montag = 0
-        const days = new Date(y, m + 1, 0).getDate();
-
-        ['Mo','Di','Mi','Do','Fr','Sa','So'].forEach(wd => {
-          const h = document.createElement('div');
-          h.className = 'cell';
-          h.style.background = 'transparent';
-          h.style.border = '0';
-          h.style.minHeight = 'auto';
-          h.innerHTML = <strong>${wd}</strong>;
-          grid.appendChild(h);
-        });
-
-        for (let i = 0; i < startW; i++) {
-          const c = document.createElement('div');
-          c.className = 'cell';
-          c.style.visibility = 'hidden';
-          grid.appendChild(c);
-        }
-
-        const tf = teamFilter.value;
-        const ty = typeFilter.value;
-        const from = new Date(y, m, 1);
-        const to = new Date(y, m + 1, 0, 23, 59, 59, 999);
-
-        for (let d = 1; d <= days; d++) {
-          const c = document.createElement('div');
-          c.className = 'cell';
-          c.innerHTML = <div class="date">${String(d).padStart(2,'0')}.${m+1}.</div>;
-
-          const cellStart = new Date(y, m, d, 0, 0, 0);
-          const cellEnd = new Date(y, m, d, 23, 59, 59);
-          const todays = state.events.filter(e =>
-            e.start <= cellEnd &&
-            e.end >= cellStart &&
-            e.end >= from &&
-            e.start <= to &&
-            (!tf || e.teams.includes(tf)) &&
-            (!ty || e.event_type === ty)
-          );
-
-          todays.forEach(e => {
-            const el = document.createElement('div');
-            el.className = 'event';
-            const time = e.start.toLocaleTimeString(DE, { hour: '2-digit', minute: '2-digit' });
-            el.textContent = ${time} ${labelForType(e.event_type)} — ${e.title};
-            el.onclick = () => openPopup(e);
-            c.appendChild(el);
-          });
-
-          grid.appendChild(c);
-        }
-      }
-
-      function labelForType(t) {
-        return (
-          {
-            training: 'Training',
-            turnier: 'Turnier',
-            heimspiel: 'Heim',
-            auswaertsspiel: 'Auswärts',
-            camp: 'Camp',
-            sonstiges: '—',
-          }[t] || t
-        );
-      }
-
-      function openPopup(e) {
-        popupTitle.textContent = e.title;
-        popupTime.textContent = `${e.start.toLocaleString(DE, {
-          dateStyle: 'medium',
-          timeStyle: 'short',
-        })} – ${e.end.toLocaleString(DE, { timeStyle: 'short' })}`;
-        popupLocation.textContent = [e.location, e.address].filter(Boolean).join(' · ');
-        popupDesc.textContent = e.description || '';
-        popupSignup.href = anmeldung.html?event=${encodeURIComponent(e.title)};
-        popup.style.display = 'flex';
-      }
-
-      // Start
-      await loadEvents();
-    })();
-  </script>
-</section>
+  // Beim Laden starten
+  renderCalendar(currentDate);
+</script>
