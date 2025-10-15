@@ -2,7 +2,6 @@
 // App.js – Dynamische Modulnavigation für PWA
 // --------------------------------------------
 
-// Lädt ein Modul (HTML-Datei) dynamisch in den Hauptbereich
 async function loadModule(path) {
   const main =
     document.getElementById('main-content') ||
@@ -56,7 +55,6 @@ async function loadModule(path) {
         { label: 'Team-Paten', action: () => loadModule('modules/teampaten.html') },
       ],
     },
-    // Termine hat KEIN Dropdown mehr
     {
       label: 'Termine',
       action: () => loadModule('modules/kalender.html'),
@@ -96,14 +94,10 @@ async function loadModule(path) {
     },
   ];
 
-  // --------------------------------------------
-  // Navigation rendern
-  // --------------------------------------------
   const navEl = document.getElementById('nav');
   const contentTitle = document.getElementById('contentTitle');
   const contentBody = document.getElementById('contentBody');
 
-  // Sicherheit: Falls kein nav vorhanden
   if (!navEl) {
     console.error('⚠ Kein Navigationselement mit id="nav" gefunden!');
     return;
@@ -119,14 +113,12 @@ async function loadModule(path) {
     btn.textContent = group.label;
     btn.setAttribute('aria-expanded', 'false');
 
-    // Wenn kein Dropdown: direkt laden
     if (group.action) {
       btn.addEventListener('click', () => {
         closeAllDropdowns();
         group.action();
       });
     } else {
-      // Dropdown-Menü mit Unterpunkten
       btn.innerHTML = ${group.label} <span class="chev">▾</span>;
       btn.addEventListener('click', () => {
         [...navEl.children].forEach((c) => {
@@ -164,11 +156,10 @@ async function loadModule(path) {
     });
   }
 
-  // --------------------------------------------
-  // Standardanzeige beim Laden
-  // --------------------------------------------
   if (contentTitle) contentTitle.textContent = 'Willkommen';
   if (contentBody)
-    contentBody.innerHTML =
-      '<div class="panel">Wähle oben ein Modul, um zu starten.</div>';
+    contentBody.innerHTML = `
+      <div class="panel">
+        <p>Wähle oben ein Modul, um zu starten.</p>
+      </div>`;
 })();
