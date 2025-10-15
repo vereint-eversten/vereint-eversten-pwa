@@ -10,24 +10,27 @@ const monthNames = [
 
 // DOM-Elemente finden (nachdem kalender.html geladen ist)
 function initCalendar() {
-  window.calendarGrid = document.getElementById("calendarGrid");
-  window.monthTitle = document.getElementById("monthTitle");
-  window.dialog = document.getElementById("eventDialog");
-  window.eventTitle = document.getElementById("eventTitle");
-  window.eventDate = document.getElementById("eventDate");
-  window.eventDescription = document.getElementById("eventDescription");
-  window.eventSignupLink = document.getElementById("eventSignupLink");
+  window.calendarGrid       = document.getElementById("calendarGrid");
+  window.monthTitle         = document.getElementById("monthTitle");
+  window.dialog             = document.getElementById("eventDialog");
+  window.eventTitle         = document.getElementById("eventTitle");
+  window.eventDate          = document.getElementById("eventDate");
+  window.eventDescription   = document.getElementById("eventDescription");
+  window.eventSignupLink    = document.getElementById("eventSignupLink");
 
   if (!calendarGrid) {
-    console.warn("⚠ Kalendercontainer nicht gefunden – vermutlich falsches Timing beim Laden.");
+    console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
     return;
   }
 
-  document.getElementById("prevBtn").onclick = () => {
+  const prev = document.getElementById("prevBtn");
+  const next = document.getElementById("nextBtn");
+
+  prev.onclick = () => {
     currentDate.setMonth(currentDate.getMonth() - 1);
     renderCalendar(currentDate);
   };
-  document.getElementById("nextBtn").onclick = () => {
+  next.onclick = () => {
     currentDate.setMonth(currentDate.getMonth() + 1);
     renderCalendar(currentDate);
   };
@@ -39,27 +42,40 @@ function initCalendar() {
 // Kalender rendern + Events laden
 // -----------------------------------------------------------
 async function renderCalendar(date = new Date()) {
-  const year = date.getFullYear();
+  const year  = date.getFullYear();
   const month = date.getMonth();
 
-  if (window.monthTitle)
+  if (window.monthTitle) {
     window.monthTitle.textContent = ${monthNames[month]} ${year};
+  }
 
-  const firstDay = new Date(year, month, 1);
-  const startDay = (firstDay.getDay() + 6) % 7; // Montag = 0
+  const firstDay    = new Date(year, month, 1);
+  const startDay    = (firstDay.getDay() + 6) % 7; // Montag = 0
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
   // Events laden
   let events = [];
   try {
     const res = await fetch("../data/events.json", { cache: "no-store" });
-    if (res.ok) events = await res.json();
+    if (res.ok) {
+      events = await res.json();
+    } else {
+      console.warn("events.json nicht gefunden (Status:", res.status, ")");
+    }
   } catch (e) {
     console.warn("⚠ Konnte events.json nicht laden:", e);
   }
 
   // Kalenderzellen erzeugen
   let html = "";
+
+  // (optional) Kopfzeile mit Wochentagen
+  const WDS = ["Mo","Di","Mi","Do","Fr","Sa","So"];
+  for (const wd of WDS) {
+    html += <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>;
+  }
+
+  // Leere Felder vor Monatsanfang
   for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
 
   for (let d = 1; d <= daysInMonth; d++) {
@@ -68,9 +84,15 @@ async function renderCalendar(date = new Date()) {
 
     let eventsHTML = "";
     dayEvents.forEach(ev => {
-      eventsHTML += `<div class="event" data-title="${ev.title}" data-date="${ev.date}" data-description="${ev.description}">
-        ${ev.title}
-      </div>`;
+      const safeTitle = ev.title ?? "Termin";
+      const safeDesc  = ev.description ?? "";
+      eventsHTML += `
+        <div class="event"
+             data-title="${safeTitle}"
+             data-date="${thisDate}"
+             data-description="${safeDesc}">
+          ${safeTitle}
+        </div>`;
     });
 
     html += `
@@ -96,10 +118,10 @@ async function renderCalendar(date = new Date()) {
 function showEventPopup({ title, date, description }) {
   if (!dialog) return;
 
-  eventTitle.textContent = title || "Ohne Titel";
-  eventDate.textContent = date || "";
+  eventTitle.textContent       = title || "Ohne Titel";
+  eventDate.textContent        = date  || "";
   eventDescription.textContent = description || "Keine Beschreibung vorhanden.";
-  eventSignupLink.href = "../modules/anmeldung.html";
+  if (eventSignupLink) eventSignupLink.href = "../modules/anmeldung.html";
 
   dialog.classList.add("open");
 }
@@ -113,7 +135,7 @@ function closeDialog() {
 window.closeDialog = closeDialog;
 
 // -----------------------------------------------------------
-// Initialisierung beim Nachladen durch app.js
+// Init-Hook, den app.js nach dem Modul-Laden aufruft
 // -----------------------------------------------------------
 window.__initModule = () => {
   initCalendar();
