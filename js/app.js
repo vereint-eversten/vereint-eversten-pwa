@@ -204,3 +204,41 @@ const todays = state.events.filter(e =>
   // default landing
   setStatic('Willkommen', 'Wähle oben ein Modul. „Termine → Kalender“ zeigt den Kalender.');
 })();
+// Fügt dem Kalender-Popup einen Anmelde-Link hinzu – ohne die Originalstelle ändern zu müssen.
+(function attachSignupLinkToCalendarPopup(){
+  const POPUP_SELECTOR = '.calendar-popup, .popup';      // ggf. an deine Popup-Klasse anpassen
+  const TITLE_SELECTOR = 'h3, .title, [data-event-title]'; // worin der Eventname steht
+
+  const addCtaIfNeeded = (node) => {
+    if (!(node instanceof HTMLElement)) return;
+    if (!node.matches(POPUP_SELECTOR)) return;
+    if (node.dataset.ctaAdded === '1') return; // doppelt vermeiden
+
+    // Eventname aus dem Titel ziehen (fallback: leerer String)
+    const titleEl = node.querySelector(TITLE_SELECTOR);
+    const eventName = (titleEl?.textContent || '').trim();
+
+    const a = document.createElement('a');
+    a.className = 'popup-link';
+    a.textContent = '➡ Zur Anmeldung';
+    a.href = 'anmeldung.html?event=' + encodeURIComponent(eventName || 'event');
+
+    // etwas Abstand nach unten
+    a.style.display = 'inline-block';
+    a.style.marginTop = '10px';
+
+    node.appendChild(a);
+    node.dataset.ctaAdded = '1';
+  };
+
+  // Bereits offene Popups behandeln
+  document.querySelectorAll(POPUP_SELECTOR).forEach(addCtaIfNeeded);
+
+  // Künftige Popups beobachten
+  const mo = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      m.addedNodes.forEach(addCtaIfNeeded);
+    }
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
+})();
