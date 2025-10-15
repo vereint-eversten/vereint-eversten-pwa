@@ -50,10 +50,7 @@ async function loadModule(path) {
     },
     {
       label: 'Paten',
-      items: [
-        { label: 'Modul-Paten', action: () => loadModule('modules/modulpaten.html') },
-        { label: 'Team-Paten', action: () => loadModule('modules/teampaten.html') },
-      ],
+      action: () => loadModule('modules/paten.html'),
     },
     {
       label: 'Termine',
