@@ -13,7 +13,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
      {
@@ -31,7 +33,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -49,7 +53,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -67,7 +73,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -85,7 +93,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -103,7 +113,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -121,7 +133,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -139,7 +153,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -156,7 +172,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -173,7 +191,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -190,7 +210,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -207,7 +229,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -224,7 +248,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -242,7 +268,9 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse"
+        "7.Klasse",
+        "age_min": "6",
+        "age_max": "12"
       ]
     },
     {
@@ -259,7 +287,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -276,7 +306,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "11"
       ]
     },
     {
@@ -292,7 +324,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -308,7 +342,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -324,7 +360,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -340,7 +378,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -356,7 +396,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -372,7 +414,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -388,7 +432,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -404,7 +450,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -420,7 +468,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
     {
@@ -436,7 +486,9 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse"
+        "5.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     },
         {
@@ -453,7 +505,9 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse"
+        "6.Klasse",
+        "age_min": "6",
+        "age_max": "10"
       ]
     }
   ]
