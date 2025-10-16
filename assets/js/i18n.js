@@ -67,7 +67,7 @@
     const res = await fetch(url, { cache: "no-store" });
 
     // ✅ Fehlertext als Template-String
-    if (!res.ok) throw new Error(missing i18n file: ${url} (${res.status}));
+    if (!res.ok) throw new Error(missing i18n file: ${url} (${res.status};
 
     dict = await res.json();
 
