@@ -13,10 +13,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
      {
       "title": "3x3-Serie Spieltag 1 (Xmas-Event)",
@@ -33,10 +33,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 2",
@@ -53,10 +53,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 3",
@@ -73,10 +73,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 4",
@@ -93,10 +93,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 5",
@@ -113,10 +113,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 6",
@@ -133,10 +133,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "3x3-Serie Spieltag 7",
@@ -153,10 +153,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "Zeugniscamp",
@@ -172,10 +172,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Pfingstcamp",
@@ -191,10 +191,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Sommercamp",
@@ -210,10 +210,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Sommercamp",
@@ -229,10 +229,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Sommercamp",
@@ -248,10 +248,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Übernachtungscamp",
@@ -268,10 +268,10 @@
         "4.Klasse",
         "5.Klasse",
         "6.Klasse",
-        "7.Klasse",
+        "7.Klasse"
+        ],
         "age_min": "6",
         "age_max": "12"
-      ]
     },
     {
       "title": "Schnuppercamp",
@@ -287,10 +287,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "Ostercamp",
@@ -306,10 +306,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "11"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 3",
@@ -324,10 +324,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 5",
@@ -342,10 +342,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 6",
@@ -360,10 +360,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 7",
@@ -378,10 +378,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 8",
@@ -396,10 +396,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 9",
@@ -414,10 +414,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 10",
@@ -432,10 +432,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 11",
@@ -450,10 +450,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Finaltag",
@@ -468,10 +468,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
     {
       "title": "SchulVereinsliga – Spieltag 3",
@@ -486,10 +486,10 @@
         "2.Klasse",
         "3.Klasse",
         "4.Klasse",
-        "5.Klasse",
+        "5.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     },
         {
       "title": "Weihnachtscamp",
@@ -505,10 +505,10 @@
         "3.Klasse",
         "4.Klasse",
         "5.Klasse",
-        "6.Klasse",
+        "6.Klasse"
+        ],
         "age_min": "6",
         "age_max": "10"
-      ]
     }
   ]
 }
