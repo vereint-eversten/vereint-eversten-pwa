@@ -1,0 +1,146 @@
+{
+  "app": {
+    "title": "Verein[t] – School. Basketball. For Everyone.",
+    "description": "Digital platform connecting schools, clubs, and families through basketball.",
+    "loading": "Loading content...",
+    "offline": "No internet connection",
+    "error": "An error occurred. Please try again."
+  },
+
+  "nav": {
+    "home": "Home",
+    "project": "Project",
+    "network": "Network",
+    "calendar": "Calendar",
+    "messenger": "Messenger",
+    "donate": "Donate & Support",
+    "settings": "Settings",
+    "admin": "Administration",
+    "login": "Login"
+  },
+
+  "home": {
+    "heading": "Verein[t] – School. Basketball. For Everyone.",
+    "intro": "Welcome to the Verein[t] App! Use the navigation below to access all modules.",
+    "modules": {
+      "title": "Current Modules",
+      "desc": "The bottom navigation connects all sections:",
+      "list": {
+        "home": "🏠 Home",
+        "project": "📚 Project",
+        "network": "🌐 Network",
+        "calendar": "🗓 Calendar",
+        "messenger": "💬 Messenger",
+        "donate": "💚 Donate & Support"
+      }
+    },
+    "note": "All pages use the same style.css and nav.js."
+  },
+
+  "project": {
+    "title": "Project: Verein[t]",
+    "intro": "The project connects schools, clubs, and families – with basketball as a bridge.",
+    "modules": "Project Modules",
+    "schools": "Partner Schools",
+    "partners": "Partners & Supporters",
+    "more": "Learn more"
+  },
+
+  "network": {
+    "title": "Network",
+    "intro": "Here you can find all participating organizations, clubs, and supporters.",
+    "schools": "Schools",
+    "clubs": "Clubs",
+    "supporters": "Supporters"
+  },
+
+  "calendar": {
+    "title": "Calendar",
+    "add_event": "Add new event",
+    "edit_event": "Edit event",
+    "no_events": "No events found.",
+    "loading": "Loading events...",
+    "event_types": {
+      "training": "Training",
+      "tournament": "Tournament",
+      "home_game": "Home game",
+      "away_game": "Away game",
+      "camp": "Camp",
+      "other": "Other"
+    },
+    "feedback": {
+      "yes": "Attending",
+      "maybe": "Maybe",
+      "no": "Not available",
+      "comment": "Add a comment"
+    }
+  },
+
+  "messenger": {
+    "title": "Messages",
+    "placeholder": "Type a message...",
+    "send": "Send",
+    "loading": "Loading messages...",
+    "empty": "No messages yet.",
+    "translate": "Auto-translate",
+    "translated_from": "Translated from {lang}"
+  },
+
+  "donate": {
+    "title": "Donate & Support",
+    "intro": "Support the Verein[t] project and enable participation for all children.",
+    "button": "Donate now",
+    "membership": "Become a supporting member",
+    "thank_you": "Thank you for your support!"
+  },
+
+  "settings": {
+    "title": "Settings",
+    "language": "Language",
+    "theme": "Theme",
+    "logout": "Logout",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "darkmode": "Enable Dark Mode"
+  },
+
+  "login": {
+    "title": "Login",
+    "email": "Email address",
+    "password": "Password",
+    "login": "Log in",
+    "register": "Register",
+    "forgot": "Forgot password?",
+    "logout": "Logout",
+    "success": "Login successful!",
+    "error": "Login failed. Please check your credentials."
+  },
+
+  "roles": {
+    "admin": "Administrator",
+    "coach": "Coach",
+    "guardian": "Guardian",
+    "player": "Participant",
+    "public": "Public"
+  },
+
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK",
+    "continue": "Continue",
+    "confirm": "Confirm"
+  },
+
+  "errors": {
+    "missing_data": "Missing or invalid data.",
+    "not_found": "Page not found.",
+    "forbidden": "Access denied.",
+    "server_error": "Server error. Please try again later."
+  }
+}
