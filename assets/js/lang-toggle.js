@@ -121,6 +121,7 @@
       `;
     }).join("");
 
+    // ✅ Backticks hier waren das Problem
     list.innerHTML = rows || <div class="muted" style="padding:8px 6px;">Keine Treffer</div>;
   }
 
