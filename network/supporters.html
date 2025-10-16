@@ -1,22 +1,137 @@
-<!doctype html><html lang="de"><head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Paten & Förderer – Netzwerk</title>
-<link rel="stylesheet" href="/style.css">
-  <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
-<script defer src="/assets/js/nav.js"></script>
-</head><body>
-<main>
-  <h1>Paten &amp; Förderer</h1>
-  <p>Unterstützer, Sponsoren und Förderpartnerschaften.</p>
-</main>
-</body></html>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title>Paten & Förderer – Netzwerk</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function(){});
+      });
+    }
+  </script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
+  <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main {
+      padding: 16px 16px 84px;
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .intro {
+      color: var(--muted, #9aa0a6);
+      margin-bottom: 1.2rem;
+    }
+    .grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: 1fr;
+    }
+    @media (min-width: 680px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 980px) {
+      .grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 16px;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,.35);
+      border-color: #2ea44f;
+    }
+    .card h3 {
+      margin: .25rem 0 .5rem;
+      font-size: 1.05rem;
+    }
+    .meta {
+      font-size: .85rem;
+      color: var(--muted, #9aa0a6);
+    }
+    .badge {
+      display: inline-block;
+      border: 1px solid #2ea44f;
+      padding: 2px 8px;
+      border-radius: 999px;
+      font-size: .75rem;
+      color: #cfead6;
+    }
+    .actions {
+      margin-top: 12px;
+    }
+    .button {
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #2ea44f;
+      background: #13351e;
+      text-decoration: none;
+    }
+    .button:hover {
+      filter: brightness(1.1);
+    }
+  </style>
+</head>
+
+<body>
+  <main aria-labelledby="supportersTitle">
+    <h1 id="supportersTitle">Paten &amp; Förderer</h1>
+    <p class="intro">Unterstützer, Sponsoren und Förderpartnerschaften.</p>
+
+    <section class="grid" aria-label="Förderstufen">
+      <article class="card">
+        <h3><span class="badge">Bronze</span> Förderer</h3>
+        <p class="meta">Beispielunternehmen A • Platzhalter seit 2024</p>
+        <p>Platzhaltertext – hier erscheint später eine Kurzbeschreibung der Förderung.</p>
+      </article>
+
+      <article class="card">
+        <h3><span class="badge">Silber</span> Förderer</h3>
+        <p class="meta">Beispielunternehmen B • Platzhalter</p>
+        <p>Platzhaltertext – z. B. Zweckbindung für Jugendcamps oder Material.</p>
+      </article>
+
+      <article class="card">
+        <h3><span class="badge">Gold</span> Förderer</h3>
+        <p class="meta">Beispielunternehmen C • Platzhalter</p>
+        <p>Platzhaltertext – Hauptpartner, regelmäßige Unterstützung, gemeinsame Aktionen.</p>
+      </article>
+    </section>
+
+    <section class="card" style="margin-top:2rem;" aria-labelledby="joinTitle">
+      <h2 id="joinTitle">Mitmachen</h2>
+      <p>Du möchtest das Projekt unterstützen? Werde Förderpartner oder Pate.</p>
+      <div class="actions">
+        <a href="/donate/" class="button">Jetzt Förderer werden</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>
