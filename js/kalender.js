@@ -15,7 +15,11 @@
   // DOM-Refs
   let $grid, $monthTitle, $dialog, $evTitle, $evDate, $evDesc, $evSignup;
 
+if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", init);
+} else {
+  init();
+}
 
   function init() {
     // DOM holen (einmal)
