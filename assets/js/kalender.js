@@ -240,7 +240,7 @@
 
     // Kalenderzellen
     let html = ["Mo","Di","Mi","Do","Fr","Sa","So"].map(wd =>
-      <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>
+      `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`
     ).join("");
 
     for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
