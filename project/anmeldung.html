@@ -3,135 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Anmeldung – Verein[t]</title>
+  <title data-i18n="register.title">Anmeldung – Verein[t]</title>
 
-  <!-- PWA Meta & Manifest -->
   <link rel="manifest" href="/manifest.webmanifest">
   <meta name="theme-color" content="#0b0b0b">
-  <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-  <link rel="icon" href="/assets/pwa/icon-192.png" type="image/png">
+  <meta name="app-build" content="2025-10-16">
 
-  <!-- Styles & Navigation -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js').catch(function(){}); });
+    }
+  </script>
+
   <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
   <script defer src="/assets/js/nav.js"></script>
 
-  <!-- Supabase SDK + Client -->
-  <script src="https://unpkg.com/@supabase/supabase-js@2.45.1/dist/umd/supabase.js" defer></script>
-  <script src="/assets/js/supabaseClient.js" defer></script>
-
   <style>
-    .form-card{background:#111;border:1px solid #333;border-radius:10px;padding:16px;max-width:520px;margin:24px auto;display:flex;flex-direction:column;gap:12px}
-    .form-card label{display:flex;flex-direction:column;font-size:.95rem;color:#ddd}
-    .form-card input,.form-card select,.form-card textarea{margin-top:4px;background:#1a1a1a;color:#fff;border:1px solid #444;border-radius:6px;padding:10px}
-    .form-card .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-    @media(max-width:560px){.form-card .row{grid-template-columns:1fr}}
-    .button{background:var(--accent,#2ea44f);color:#fff;border:0;border-radius:8px;padding:12px 14px;font-weight:700;cursor:pointer}
-    .muted{color:#9aa0a6}
-    .error{color:#ff6b6b}
-    .hidden{display:none}
+    main{ padding:16px 16px 84px; }
+    form{ display:grid; gap:12px; max-width:680px }
+    label{ display:block; font-weight:600; margin-bottom:6px }
+    input, select, textarea{ width:100%; padding:10px; border-radius:10px; border:1px solid #262626; background:#121212; color:#fff }
+    .row{ display:grid; gap:12px }
+    @media(min-width:640px){ .row{ grid-template-columns:1fr 1fr } }
   </style>
 </head>
 <body>
   <main>
-    <h1 style="text-align:center">Anmeldung</h1>
-    <p class="muted" style="text-align:center;margin-top:-4px">Für Camps, Liga, 3x3 etc.</p>
+    <h1 data-i18n="register.header">Anmeldung</h1>
+    <p data-i18n="register.intro">Melde dich oder dein Team für Camp, 3x3 oder Liga an.</p>
 
-    <form id="signupForm" class="form-card" novalidate>
-      <div class="row">
-        <label>Vorname* <input name="first_name" required autocomplete="given-name"></label>
-        <label>Nachname* <input name="last_name" required autocomplete="family-name"></label>
-      </div>
-
-      <label>E-Mail* <input type="email" name="email" required autocomplete="email"></label>
+    <form action="#" method="post" novalidate aria-labelledby="formLegend">
+      <h2 id="formLegend" class="visually-hidden" data-i18n="register.formLegend">Anmeldeformular</h2>
 
       <div class="row">
-        <label>Geburtsdatum <input type="date" name="birthdate" max="2100-12-31"></label>
-        <label>Klassenstufe <input type="number" name="grade" min="1" max="13" inputmode="numeric" placeholder="z. B. 5"></label>
+        <div>
+          <label for="first" data-i18n="register.first">Vorname</label>
+          <input id="first" name="first" type="text" required aria-required="true">
+        </div>
+        <div>
+          <label for="last" data-i18n="register.last">Nachname</label>
+          <input id="last" name="last" type="text" required aria-required="true">
+        </div>
       </div>
 
-      <label>Veranstaltung* 
-        <select name="event_type" required>
-          <option value="">Bitte wählen</option>
-          <option value="camp">Camp</option>
-          <option value="liga">Liga</option>
-          <option value="3x3">3×3</option>
-          <option value="sonstiges">Sonstiges</option>
-        </select>
-      </label>
+      <div class="row">
+        <div>
+          <label for="email" data-i18n="register.email">E-Mail</label>
+          <input id="email" name="email" type="email" required aria-required="true">
+        </div>
+        <div>
+          <label for="phone" data-i18n="register.phone">Telefon</label>
+          <input id="phone" name="phone" type="tel">
+        </div>
+      </div>
 
-      <label>Nachricht / Bemerkung 
-        <textarea name="message" rows="3" placeholder="Allergien, Trikotgröße etc."></textarea>
-      </label>
+      <div class="row">
+        <div>
+          <label for="type" data-i18n="register.type">Veranstaltung</label>
+          <select id="type" name="type" required aria-required="true">
+            <option value="camp" data-i18n="register.type_camp">Camp</option>
+            <option value="three" data-i18n="register.type_three">3x3</option>
+            <option value="league" data-i18n="register.type_league">Liga</option>
+          </select>
+        </div>
+        <div>
+          <label for="age" data-i18n="register.age">Alter / Klasse</label>
+          <input id="age" name="age" type="text" placeholder="10 / Klasse 4">
+        </div>
+      </div>
 
-      <label style="display:flex;gap:.6rem;align-items:flex-start;flex-direction:row">
-        <input type="checkbox" id="consent" required style="margin-top:4px">
-        <span>Ich stimme der Datenverarbeitung zu und habe die <a href="/datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> gelesen.*</span>
-      </label>
+      <div>
+        <label for="msg" data-i18n="register.note">Bemerkungen</label>
+        <textarea id="msg" name="message" rows="4"></textarea>
+      </div>
 
-      <input type="text" name="company" class="hidden" tabindex="-1" autocomplete="off"> <!-- Honeypot -->
-
-      <button type="submit" class="button">Absenden</button>
-      <p id="status" class="muted"></p>
+      <button class="button" type="submit" data-i18n="register.submit">Absenden</button>
     </form>
   </main>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const form = document.getElementById('signupForm');
-      const status = document.getElementById('status');
-
-      form.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        status.textContent = '';
-        status.classList.remove('error');
-
-        // Honeypot
-        if (form.company && form.company.value.trim() !== '') {
-          status.textContent = 'Fehler.';
-          return;
-        }
-        if (!form.first_name.value.trim() || !form.last_name.value.trim() || !form.email.value.trim() || !form.event_type.value) {
-          status.textContent = 'Bitte alle Pflichtfelder ausfüllen.';
-          return;
-        }
-        if (!document.getElementById('consent').checked) {
-          status.textContent = 'Zustimmung benötigt.';
-          status.classList.add('error');
-          return;
-        }
-
-        const payload = {
-          first_name: form.first_name.value.trim(),
-          last_name:  form.last_name.value.trim(),
-          email:      form.email.value.trim().toLowerCase(),
-          birthdate:  form.birthdate.value || null,
-          grade:      form.grade.value ? Number(form.grade.value) : null,
-          event_type: form.event_type.value,
-          message:    form.message.value.trim() || null,
-          source_page: location.pathname
-        };
-
-        try {
-          const client = window.sbClient;
-          if (!client) throw new Error('Supabase Client fehlt');
-          const { data, error } = await client.from('registrations').insert(payload).select().single();
-          if (error) throw error;
-
-          form.reset();
-          status.textContent = '✅ Anmeldung erfolgreich.';
-        } catch (err) {
-          console.error(err);
-          status.classList.add('error');
-          status.textContent = '❌ Fehler beim Speichern.';
-        }
-      });
-    });
-  </script>
 </body>
 </html>
