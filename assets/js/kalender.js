@@ -2,7 +2,8 @@
 // - Absolute Pfade
 // - Klasse "open" wie im HTML/CSS
 // - i18n für Monate/Wochentage/Filterlabels (Fallback DE)
-// - CTA nur bei camp/3x3 und vorhandener signup_url
+// - Popup zeigt Start/Ende/Ort/Alter/Kapazität
+// - CTA NUR wenn Typ camp/3x3 UND signup_url vorhanden
 (function () {
   if (window.calendarLoaded) return;
   window.calendarLoaded = true;
@@ -85,7 +86,25 @@
     return dt ? dayKeyLocal(dt) : "";
   }
 
-  // "5", "5.", "5. Klasse", "class_5" → "5"
+  function formatDateTime(iso) {
+    var d = parseDate(iso);
+    if (!d) return "–";
+    try {
+      return new Intl.DateTimeFormat("de-DE", {
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit"
+      }).format(d);
+    } catch (_e) {
+      var y = d.getFullYear();
+      var m = pad2(d.getMonth()+1);
+      var dd = pad2(d.getDate());
+      var hh = pad2(d.getHours());
+      var mm = pad2(d.getMinutes());
+      return dd + "." + m + "." + y + " " + hh + ":" + mm + " Uhr";
+    }
+  }
+
+  // "5", "5.", "5. Klasse", "class_5" -> "5"
   function normGrade(v) {
     var s = (v == null ? "" : String(v)).trim().toLowerCase();
     var m = s.match(/^class_(\d{1,2})$/);
@@ -312,17 +331,32 @@
           tagInfo = ' <span class="muted">(Tag ' + (idx + 1) + '/' + spanDays.length + ')</span>';
         }
 
-        var signup = evi && evi.signup_url ? String(evi.signup_url) : "";
-        var typeLower = normType(evi && (evi.event_type || evi.type));
-        // CTA nur für camp/3x3
+        var startISO = evi && (evi.start || evi.date) ? String(evi.start || evi.date) : "";
+        var endISO   = evi && (evi.end   || evi.start || evi.date) ? String(evi.end || evi.start || evi.date) : "";
+        var typeLower= normType(evi && (evi.event_type || evi.type));
+        var signup   = evi && evi.signup_url ? String(evi.signup_url) : "";
+        // CTA nur, wenn camp/3x3 UND signup_url vorhanden
         var signupForPopup = (typeLower === "camp" || typeLower === "3x3") && signup ? signup : "";
+
+        var ageMin   = (evi && evi.age_min != null) ? String(evi.age_min) : "";
+        var ageMax   = (evi && evi.age_max != null) ? String(evi.age_max) : "";
+        var ageSingle= (evi && evi.age != null)     ? String(evi.age)     : "";
+        var capacity = (evi && evi.capacity != null)? String(evi.capacity): "";
 
         eventsHTML += ''
           + '<div class="event"'
           + ' data-title="' + escapeHtml(evi.title || "") + '"'
-          + ' data-date="' + escapeHtml(extractDayFromISO(evi.start) || "") + '"'
-          + ' data-description="' + escapeHtml(evi.description || "") + '"'
-          + ' data-signup="' + escapeHtml(signupForPopup) + '">'
+          + ' data-type="' + escapeHtml(typeLower) + '"'
+          + ' data-start="' + escapeHtml(startISO) + '"'
+          + ' data-end="' + escapeHtml(endISO) + '"'
+          + ' data-location="' + escapeHtml(evi.location || "") + '"'
+          + ' data-address="' + escapeHtml(evi.address || "") + '"'
+          + ' data-age-min="' + escapeHtml(ageMin) + '"'
+          + ' data-age-max="' + escapeHtml(ageMax) + '"'
+          + ' data-age="' + escapeHtml(ageSingle) + '"'
+          + ' data-capacity="' + escapeHtml(capacity) + '"'
+          + ' data-signup="' + escapeHtml(signupForPopup) + '"'
+          + ' data-description="' + escapeHtml(evi.description || "") + '">'
           + escapeHtml(evi.title || "Event")
           + tagInfo
           + '</div>';
@@ -343,7 +377,15 @@
       evEls[h].addEventListener("click", function () {
         showEventPopup({
           title: this.dataset.title,
-          date: this.dataset.date,
+          type: this.dataset.type,
+          start: this.dataset.start,
+          end: this.dataset.end,
+          location: this.dataset.location,
+          address: this.dataset.address,
+          ageMin: this.dataset.ageMin,
+          ageMax: this.dataset.ageMax,
+          age: this.dataset.age,
+          capacity: this.dataset.capacity,
           description: this.dataset.description,
           signup: this.dataset.signup
         });
@@ -353,12 +395,68 @@
 
   function showEventPopup(obj) {
     if (!$dialog) return;
-    $evTitle.textContent = obj.title || "Termin";
-    $evDate.textContent  = obj.date  || "";
-    $evDesc.textContent  = obj.description || "";
 
+    // Neue Felder (falls im HTML vorhanden)
+    var $start = document.getElementById("eventStart");
+    var $end   = document.getElementById("eventEnd");
+    var $loc   = document.getElementById("eventLocation");
+    var $age   = document.getElementById("eventAge");
+    var $cap   = document.getElementById("eventCapacity");
+
+    // Titel, Beschreibung
+    $evTitle && ($evTitle.textContent = obj.title || "Termin");
+    $evDesc  && ($evDesc.textContent  = obj.description || "");
+
+    // Start/Ende
+    var startTxt = formatDateTime(obj.start || "");
+    var endTxt   = formatDateTime(obj.end   || obj.start || "");
+    if ($start && $end) {
+      $start.textContent = startTxt;
+      $end.textContent   = endTxt;
+      // Falls dein altes Feld eventDate noch drin ist, füllen wir es zusätzlich
+      if ($evDate) $evDate.textContent = startTxt;
+    } else if ($evDate) {
+      // Fallback: nur ein Feld vorhanden
+      $evDate.textContent = startTxt;
+    }
+
+    // Ort
+    var locParts = [];
+    if (obj.location) locParts.push(obj.location);
+    if (obj.address)  locParts.push(obj.address);
+    if ($loc) $loc.textContent = locParts.join(", ") || "–";
+
+    // Alter
+    if ($age) {
+      var ageText = "–";
+      var hasMin = obj.ageMin !== "" && obj.ageMin != null;
+      var hasMax = obj.ageMax !== "" && obj.ageMax != null;
+      if (hasMin || hasMax) {
+        var lo = hasMin ? Number(obj.ageMin) : 0;
+        var hi = hasMax ? Number(obj.ageMax) : lo;
+        ageText = (lo && hi && lo !== hi) ? (lo + "–" + hi + " Jahre")
+                 : (hi ? (hi + " Jahre") : "–");
+      } else if (obj.age !== "" && obj.age != null) {
+        ageText = Number(obj.age) + " Jahre";
+      }
+      $age.textContent = ageText;
+    }
+
+    // Kapazität
+    if ($cap) {
+      var capText = "unbegrenzt";
+      if (obj.capacity !== "" && obj.capacity != null) {
+        var n = Number(obj.capacity);
+        if (Number.isFinite(n)) capText = "max. " + n;
+      }
+      $cap.textContent = capText;
+    }
+
+    // CTA-Regel: nur bei (camp|3x3) UND vorhandener signup_url
     if ($evSignup) {
-      if (obj.signup) {
+      var t = (obj.type || "").toLowerCase();
+      var showCta = (t === "camp" || t === "3x3") && !!obj.signup;
+      if (showCta) {
         $evSignup.setAttribute("href", obj.signup);
         $evSignup.style.display = "inline-block";
       } else {
@@ -366,7 +464,7 @@
         $evSignup.style.display = "none";
       }
     }
-    // mit .open arbeiten (passt zu HTML/CSS)
+
     $dialog.classList.add("open");
   }
 
