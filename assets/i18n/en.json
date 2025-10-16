@@ -1,146 +1,181 @@
 {
   "app": {
-    "title": "Verein[t] – School. Basketball. For Everyone.",
-    "description": "Digital platform connecting schools, clubs, and families through basketball.",
-    "loading": "Loading content...",
-    "offline": "No internet connection",
     "error": "An error occurred. Please try again."
   },
-
   "nav": {
     "home": "Home",
     "project": "Project",
     "network": "Network",
     "calendar": "Calendar",
     "messenger": "Messenger",
-    "donate": "Donate & Support",
-    "settings": "Settings",
-    "admin": "Administration",
-    "login": "Login"
+    "donate": "Donate"
   },
-
-  "home": {
-    "heading": "Verein[t] – School. Basketball. For Everyone.",
-    "intro": "Welcome to the Verein[t] App! Use the navigation below to access all modules.",
-    "modules": {
-      "title": "Current Modules",
-      "desc": "The bottom navigation connects all sections:",
-      "list": {
-        "home": "🏠 Home",
-        "project": "📚 Project",
-        "network": "🌐 Network",
-        "calendar": "🗓 Calendar",
-        "messenger": "💬 Messenger",
-        "donate": "💚 Donate & Support"
-      }
-    },
-    "note": "All pages use the same style.css and nav.js."
-  },
-
-  "project": {
-    "title": "Project: Verein[t]",
-    "intro": "The project connects schools, clubs, and families – with basketball as a bridge.",
-    "modules": "Project Modules",
-    "schools": "Partner Schools",
-    "partners": "Partners & Supporters",
-    "more": "Learn more"
-  },
-
-  "network": {
-    "title": "Network",
-    "intro": "Here you can find all participating organizations, clubs, and supporters.",
-    "schools": "Schools",
-    "clubs": "Clubs",
-    "supporters": "Supporters"
-  },
-
   "calendar": {
-    "title": "Calendar",
-    "add_event": "Add new event",
-    "edit_event": "Edit event",
-    "no_events": "No events found.",
-    "loading": "Loading events...",
-    "event_types": {
-      "training": "Training",
+    "title": "Calendar – Verein[t]",
+    "month": "Month",
+    "prev": "Previous month",
+    "next": "Next month",
+    "filters": {
+      "allGrades": "All grades",
+      "allTypes": "All types",
+      "allAges": "All age groups"
+    },
+    "signup": "➕ Register",
+    "monthNames": [
+      "January","February","March","April","May","June",
+      "July","August","September","October","November","December"
+    ],
+    "weekdays": ["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],
+    "types": {
       "tournament": "Tournament",
-      "home_game": "Home game",
-      "away_game": "Away game",
       "camp": "Camp",
+      "match": "Match",
       "other": "Other"
     },
-    "feedback": {
-      "yes": "Attending",
-      "maybe": "Maybe",
-      "no": "Not available",
-      "comment": "Add a comment"
+    "gradeSuffix": "grade",
+    "yearsSuffix": "years"
+  },
+  "messenger": {
+    "title": "Messenger – Verein[t]",
+    "heading": "💬 Messenger",
+    "intro": "Chat with your teams, coaches or other members.",
+    "chats": {
+      "u12": {
+        "title": "🏀 U12 Team Chat",
+        "last": "Last message: “See you at practice tomorrow!”",
+        "meta": "3 new messages"
+      },
+      "coaches": {
+        "title": "🎓 Coaches",
+        "last": "Last message: “New drill uploaded.”",
+        "meta": "1 new message"
+      },
+      "orga": {
+        "title": "📢 Organisation",
+        "last": "Last message: “Camps start next week.”",
+        "meta": "No new messages"
+      }
     }
   },
-
-  "messenger": {
-    "title": "Messages",
-    "placeholder": "Type a message...",
-    "send": "Send",
-    "loading": "Loading messages...",
-    "empty": "No messages yet.",
-    "translate": "Auto-translate",
-    "translated_from": "Translated from {lang}"
-  },
-
   "donate": {
+    "metaTitle": "Donate & Support – Verein[t]",
     "title": "Donate & Support",
-    "intro": "Support the Verein[t] project and enable participation for all children.",
-    "button": "Donate now",
-    "membership": "Become a supporting member",
-    "thank_you": "Thank you for your support!"
+    "subtitle": "Support “Verein[t] – School. Basketball. For Everyone.” with a donation or supporting membership.",
+    "cta": {
+      "bank": "Bank transfer (SEPA)",
+      "online": "Donate online",
+      "membership": "Become a supporting member",
+      "contact": "Contact"
+    },
+    "bank": {
+      "title": "SEPA bank transfer",
+      "hint": "Please add a purpose so we can assign your donation.",
+      "recipient": "TuS Eversten e.V. – Project Verein[t]",
+      "iban": "DE00 0000 0000 0000 0000 00",
+      "bic": "BANKDEFFXXX",
+      "purpose": {
+        "label": "Purpose:",
+        "value": "Donation Verein[t] + Name"
+      },
+      "qr": "QR code for banking app"
+    },
+    "online": {
+      "title": "Donate online",
+      "text": "You can donate online via card or direct debit. The provider may charge small fees.",
+      "button": "Open donation form",
+      "receipt": "Donation receipt on request – please provide your full address."
+    },
+    "membership": {
+      "title": "Supporting membership",
+      "text": "Become a supporting member and back the project long-term. Cancellable monthly.",
+      "tier1": "€5 / month – Support youth",
+      "tier2": "€10 / month – Training equipment",
+      "tier3": "€25 / month – Camps & activities",
+      "button": "Become a supporting member"
+    },
+    "contact": {
+      "title": "Contact",
+      "text": "Questions about donations or receipts? Send us a message."
+    },
+    "legal": "Donations may be tax-deductible as allowed by law. No guarantee – please verify club details."
   },
-
-  "settings": {
-    "title": "Settings",
-    "language": "Language",
-    "theme": "Theme",
-    "logout": "Logout",
-    "profile": "Profile",
-    "notifications": "Notifications",
-    "darkmode": "Enable Dark Mode"
-  },
-
-  "login": {
-    "title": "Login",
-    "email": "Email address",
-    "password": "Password",
-    "login": "Log in",
-    "register": "Register",
-    "forgot": "Forgot password?",
-    "logout": "Logout",
-    "success": "Login successful!",
-    "error": "Login failed. Please check your credentials."
-  },
-
-  "roles": {
-    "admin": "Administrator",
-    "coach": "Coach",
-    "guardian": "Guardian",
-    "player": "Participant",
-    "public": "Public"
-  },
-
-  "common": {
-    "save": "Save",
-    "cancel": "Cancel",
-    "delete": "Delete",
-    "edit": "Edit",
-    "back": "Back",
-    "yes": "Yes",
-    "no": "No",
-    "ok": "OK",
-    "continue": "Continue",
-    "confirm": "Confirm"
-  },
-
-  "errors": {
-    "missing_data": "Missing or invalid data.",
-    "not_found": "Page not found.",
-    "forbidden": "Access denied.",
-    "server_error": "Server error. Please try again later."
+  "network": {
+    "title": "Network – Verein[t]",
+    "eversten": {
+      "title": "TuS Eversten – Network",
+      "heading": "TuS Eversten",
+      "intro": "Info, teams, contacts and activities of TuS Eversten.",
+      "section": {
+        "about": "About the club",
+        "teams": "Teams & groups",
+        "contact": "Contact persons"
+      },
+      "about": "TuS Eversten e.V. is a traditional multi-sport club in Oldenburg focusing on sports, community and youth development.",
+      "teams": "From minis to seniors – training opportunities for all age groups.",
+      "contact": "For questions about the basketball project or membership, please contact the org team."
+    },
+    "clubs": {
+      "title": "Partner Clubs – Network",
+      "heading": "Partner clubs",
+      "intro": "Overview of cooperating clubs.",
+      "items": {
+        "a": {
+          "name": "Oldenburger Turnerbund (OTB)",
+          "meta": "Basketball • Youth to seniors",
+          "desc": "Cooperation on tournaments and talent development.",
+          "link": "Website"
+        },
+        "b": {
+          "name": "TUS Bloherfelde",
+          "meta": "Youth development • Mixed teams",
+          "desc": "Shared training concepts and exchange in the youth sector.",
+          "link": "Website"
+        },
+        "c": {
+          "name": "BTB Oldenburg",
+          "meta": "Basketball • U10–U12 cooperation",
+          "desc": "Cooperation on camps, workshops and social projects.",
+          "link": "Website"
+        }
+      }
+    },
+    "schools": {
+      "title": "Partner Schools – Network",
+      "heading": "Partner schools",
+      "intro": "Schools in the network and joint projects.",
+      "placeholder1": {
+        "title": "School 1",
+        "meta": "Partner school",
+        "text": "Placeholder for upcoming partner schools. Add name, project description or contact details later."
+      },
+      "placeholder2": {
+        "title": "School 2",
+        "meta": "Partner school",
+        "text": "Placeholder for additional partner schools once cooperation is official."
+      },
+      "placeholder3": {
+        "title": "School 3",
+        "meta": "Partner school",
+        "text": "This area can be filled later with concrete school projects or images."
+      }
+    },
+    "supporters": {
+      "title": "Patrons & Supporters – Network",
+      "heading": "Patrons & supporters",
+      "intro": "Supporters, sponsors and funding partnerships.",
+      "tiers": { "bronze": "Bronze", "silver": "Silver", "gold": "Gold" },
+      "tierLabel": "supporter",
+      "items": {
+        "placeholder": {
+          "meta": "Sample company • placeholder",
+          "desc": "Placeholder text – short description of the support will appear here."
+        }
+      },
+      "join": {
+        "title": "Get involved",
+        "text": "Want to support the project? Become a partner or patron.",
+        "cta": "Become a supporter now"
+      }
+    }
   }
 }
