@@ -3,39 +3,55 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>3x3 – Verein[t]</title>
+  <title data-i18n="three.title">3x3 – Verein[t]</title>
+
   <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js').catch(function(){}); });
+    }
+  </script>
+
   <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
   <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main{ padding:16px 16px 84px; }
+    .list{ display:grid; gap:12px }
+    .item{ background:#111; border:1px solid #222; border-radius:12px; padding:14px }
+    .meta{ color:var(--muted); font-size:.9rem }
+  </style>
 </head>
 <body>
   <main>
-    <h1>🏆 3x3</h1>
-    <p>Das urbane Basketball-Format – schnell, dynamisch, teamorientiert.</p>
+    <h1 data-i18n="three.header">3x3-Serie</h1>
+    <p data-i18n="three.intro">Offene Turnierserie im 3x3-Format – schnell, fair, inklusiv.</p>
 
-    <section class="card" style="margin-top:1rem;">
-      <h2>Format</h2>
-      <p>3 gegen 3 auf einem Korb. 1 x 10 Minuten oder bis 21 Punkte. Ideal für Schul- und Freizeitturniere.</p>
-    </section>
+    <section class="list" aria-labelledby="threeEvents">
+      <h2 id="threeEvents" data-i18n="three.events">Termine</h2>
 
-    <section class="card" style="margin-top:1rem;">
-      <h2>Ziele</h2>
-      <ul>
-        <li>Freies, kreatives Spiel fördern</li>
-        <li>Eigenverantwortung & Fairplay stärken</li>
-        <li>Attraktive Events für Jugendliche schaffen</li>
-      </ul>
+      <article class="item">
+        <h3 data-i18n="three.samples.day1.title">Spieltag 1</h3>
+        <p class="meta" data-i18n="three.samples.day1.meta">Dezember • Tegelkamphalle</p>
+        <a class="button" href="/project/anmeldung.html" data-i18n="three.signup">Zur Anmeldung</a>
+      </article>
+
+      <article class="item">
+        <h3 data-i18n="three.samples.day2.title">Spieltag 2</h3>
+        <p class="meta" data-i18n="three.samples.day2.meta">Januar • Tegelkamphalle</p>
+        <a class="button" href="/project/anmeldung.html" data-i18n="three.signup">Zur Anmeldung</a>
+      </article>
     </section>
   </main>
 </body>
 </html>
-
