@@ -1,146 +1,181 @@
 {
   "app": {
-    "title": "Verein[t] – Schule. Basketball. Für Alle.",
-    "description": "Digitale Plattform zur Verbindung von Schulen, Vereinen und Familien.",
-    "loading": "Lade Inhalte...",
-    "offline": "Keine Internetverbindung",
     "error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
   },
-
   "nav": {
-    "home": "Start",
+    "home": "Home",
     "project": "Projekt",
     "network": "Netzwerk",
     "calendar": "Kalender",
     "messenger": "Messenger",
-    "donate": "Spenden & Fördern",
-    "settings": "Einstellungen",
-    "admin": "Administration",
-    "login": "Login"
+    "donate": "Spenden"
   },
-
-  "home": {
-    "heading": "Verein[t] – Schule. Basketball. Für Alle.",
-    "intro": "Willkommen in der App von Verein[t]! Nutze die Navigation unten, um zwischen den Modulen zu wechseln.",
-    "modules": {
-      "title": "Aktuelle Module",
-      "desc": "Die Navigation unten verbindet alle Bereiche:",
-      "list": {
-        "home": "🏠 Start",
-        "project": "📚 Projekt",
-        "network": "🌐 Netzwerk",
-        "calendar": "🗓 Kalender",
-        "messenger": "💬 Messenger",
-        "donate": "💚 Spenden & Fördern"
-      }
-    },
-    "note": "Alle Seiten verwenden dieselbe style.css und nav.js."
-  },
-
-  "project": {
-    "title": "Projekt: Verein[t]",
-    "intro": "Das Projekt verbindet Schulen, Vereine und Familien – mit Basketball als Brücke.",
-    "modules": "Module des Projekts",
-    "schools": "Partnerschulen",
-    "partners": "Partner & Förderer",
-    "more": "Mehr erfahren"
-  },
-
-  "network": {
-    "title": "Netzwerk",
-    "intro": "Hier findest du alle beteiligten Organisationen, Vereine und Unterstützer.",
-    "schools": "Schulen",
-    "clubs": "Vereine",
-    "supporters": "Förderer"
-  },
-
   "calendar": {
-    "title": "Kalender",
-    "add_event": "Neuen Termin hinzufügen",
-    "edit_event": "Termin bearbeiten",
-    "no_events": "Keine Termine gefunden.",
-    "loading": "Lade Termine...",
-    "event_types": {
-      "training": "Training",
+    "title": "Kalender – Verein[t]",
+    "month": "Monat",
+    "prev": "Vorheriger Monat",
+    "next": "Nächster Monat",
+    "filters": {
+      "allGrades": "Alle Klassen",
+      "allTypes": "Alle Arten",
+      "allAges": "Alle Altersgruppen"
+    },
+    "signup": "➕ Zur Anmeldung",
+    "monthNames": [
+      "Januar","Februar","März","April","Mai","Juni",
+      "Juli","August","September","Oktober","November","Dezember"
+    ],
+    "weekdays": ["Mo","Di","Mi","Do","Fr","Sa","So"],
+    "types": {
       "tournament": "Turnier",
-      "home_game": "Heimspiel",
-      "away_game": "Auswärtsspiel",
       "camp": "Camp",
+      "match": "Spiel",
       "other": "Sonstiges"
     },
-    "feedback": {
-      "yes": "Dabei",
-      "maybe": "Unsicher",
-      "no": "Keine Zeit",
-      "comment": "Kommentar hinzufügen"
+    "gradeSuffix": "Klasse",
+    "yearsSuffix": "Jahre"
+  },
+  "messenger": {
+    "title": "Messenger – Verein[t]",
+    "heading": "💬 Messenger",
+    "intro": "Chatte mit deinen Teams, Coaches oder anderen Mitgliedern.",
+    "chats": {
+      "u12": {
+        "title": "🏀 U12 Teamchat",
+        "last": "Letzte Nachricht: „Bis morgen beim Training!“",
+        "meta": "3 neue Nachrichten"
+      },
+      "coaches": {
+        "title": "🎓 Coaches",
+        "last": "Letzte Nachricht: „Neue Übung online.“",
+        "meta": "1 neue Nachricht"
+      },
+      "orga": {
+        "title": "📢 Organisation",
+        "last": "Letzte Nachricht: „Camps starten nächste Woche.“",
+        "meta": "Keine neuen Nachrichten"
+      }
     }
   },
-
-  "messenger": {
-    "title": "Nachrichten",
-    "placeholder": "Nachricht eingeben...",
-    "send": "Senden",
-    "loading": "Lade Nachrichten...",
-    "empty": "Noch keine Nachrichten vorhanden.",
-    "translate": "Automatisch übersetzen",
-    "translated_from": "Übersetzt aus {lang}"
-  },
-
   "donate": {
+    "metaTitle": "Spenden & Fördern – Verein[t]",
     "title": "Spenden & Fördern",
-    "intro": "Unterstütze das Projekt Verein[t] und ermögliche Teilhabe für alle Kinder.",
-    "button": "Jetzt spenden",
-    "membership": "Fördermitglied werden",
-    "thank_you": "Vielen Dank für deine Unterstützung!"
+    "subtitle": "Unterstütze „Verein[t] – Schule. Basketball. Für Alle.“ mit einer Spende oder Fördermitgliedschaft.",
+    "cta": {
+      "bank": "Überweisung (SEPA)",
+      "online": "Online spenden",
+      "membership": "Fördermitglied werden",
+      "contact": "Kontakt"
+    },
+    "bank": {
+      "title": "SEPA-Überweisung",
+      "hint": "Bitte Verwendungszweck angeben, damit wir die Spende zuordnen können.",
+      "recipient": "TuS Eversten e.V. – Projekt Verein[t]",
+      "iban": "DE00 0000 0000 0000 0000 00",
+      "bic": "BANKDEFFXXX",
+      "purpose": {
+        "label": "Verwendungszweck:",
+        "value": "Spende Verein[t] + Name"
+      },
+      "qr": "QR-Code für Banking-App"
+    },
+    "online": {
+      "title": "Online spenden",
+      "text": "Du kannst online mit Karte oder Lastschrift spenden. Der Dienstleister erhebt ggf. geringe Gebühren.",
+      "button": "Zum Spendenformular",
+      "receipt": "Spendenquittung auf Wunsch – bitte vollständige Adresse angeben."
+    },
+    "membership": {
+      "title": "Fördermitgliedschaft",
+      "text": "Werde Fördermitglied und unterstütze das Projekt dauerhaft. Kündigung monatlich möglich.",
+      "tier1": "5 € / Monat – Nachwuchs fördern",
+      "tier2": "10 € / Monat – Trainingsmaterial",
+      "tier3": "25 € / Monat – Camps & Aktionen",
+      "button": "Fördermitglied werden"
+    },
+    "contact": {
+      "title": "Kontakt",
+      "text": "Fragen zur Spende oder Quittung? Schreib uns gern."
+    },
+    "legal": "Spenden sind im Rahmen der gesetzlichen Regelungen steuerlich absetzbar. Angaben ohne Gewähr – bitte Vereinsangaben prüfen."
   },
-
-  "settings": {
-    "title": "Einstellungen",
-    "language": "Sprache",
-    "theme": "Design",
-    "logout": "Abmelden",
-    "profile": "Profil",
-    "notifications": "Benachrichtigungen",
-    "darkmode": "Dark Mode aktivieren"
-  },
-
-  "login": {
-    "title": "Anmelden",
-    "email": "E-Mail-Adresse",
-    "password": "Passwort",
-    "login": "Einloggen",
-    "register": "Registrieren",
-    "forgot": "Passwort vergessen?",
-    "logout": "Abmelden",
-    "success": "Erfolgreich eingeloggt!",
-    "error": "Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten."
-  },
-
-  "roles": {
-    "admin": "Administrator",
-    "coach": "Trainer",
-    "guardian": "Erziehungsberechtigter",
-    "player": "Teilnehmer",
-    "public": "Öffentlich"
-  },
-
-  "common": {
-    "save": "Speichern",
-    "cancel": "Abbrechen",
-    "delete": "Löschen",
-    "edit": "Bearbeiten",
-    "back": "Zurück",
-    "yes": "Ja",
-    "no": "Nein",
-    "ok": "OK",
-    "continue": "Weiter",
-    "confirm": "Bestätigen"
-  },
-
-  "errors": {
-    "missing_data": "Daten fehlen oder sind ungültig.",
-    "not_found": "Seite nicht gefunden.",
-    "forbidden": "Zugriff verweigert.",
-    "server_error": "Serverfehler. Bitte später erneut versuchen."
+  "network": {
+    "title": "Netzwerk – Verein[t]",
+    "eversten": {
+      "title": "TuS Eversten – Netzwerk",
+      "heading": "TuS Eversten",
+      "intro": "Infos, Teams, Ansprechpartner und Aktivitäten des TuS Eversten.",
+      "section": {
+        "about": "Über den Verein",
+        "teams": "Teams & Gruppen",
+        "contact": "Ansprechpartner"
+      },
+      "about": "Der TuS Eversten e.V. ist ein traditionsreicher Mehrspartenverein in Oldenburg, der Sport, Gemeinschaft und Nachwuchsförderung groß schreibt.",
+      "teams": "Von den Minis bis zu den Senioren – der Verein bietet Trainingsmöglichkeiten für alle Altersklassen.",
+      "contact": "Bei Fragen zum Basketballprojekt oder zur Vereinsmitgliedschaft wende dich bitte an das Orga-Team."
+    },
+    "clubs": {
+      "title": "Partnervereine – Netzwerk",
+      "heading": "Partnervereine",
+      "intro": "Übersicht der kooperierenden Vereine.",
+      "items": {
+        "a": {
+          "name": "Oldenburger Turnerbund (OTB)",
+          "meta": "Basketball • Jugend bis Senioren",
+          "desc": "Kooperation bei Turnieren und Talentförderung.",
+          "link": "Website"
+        },
+        "b": {
+          "name": "TUS Bloherfelde",
+          "meta": "Jugendförderung • Mixed-Teams",
+          "desc": "Gemeinsame Trainingskonzepte und Austausch im Jugendbereich.",
+          "link": "Website"
+        },
+        "c": {
+          "name": "BTB Oldenburg",
+          "meta": "Basketball • Kooperation U10–U12",
+          "desc": "Kooperation bei Camps, Fortbildungen und sozialen Projekten.",
+          "link": "Website"
+        }
+      }
+    },
+    "schools": {
+      "title": "Partnerschulen – Netzwerk",
+      "heading": "Partnerschulen",
+      "intro": "Schulen im Netzwerk und gemeinsame Projekte.",
+      "placeholder1": {
+        "title": "Schule 1",
+        "meta": "Kooperationsschule",
+        "text": "Platzhaltertext für künftige Partnerschulen. Hier können später Name, Projektbeschreibung oder Kontaktdaten ergänzt werden."
+      },
+      "placeholder2": {
+        "title": "Schule 2",
+        "meta": "Kooperationsschule",
+        "text": "Platzhaltertext für weitere Partnerschulen, sobald Kooperationen offiziell sind."
+      },
+      "placeholder3": {
+        "title": "Schule 3",
+        "meta": "Kooperationsschule",
+        "text": "Dieser Abschnitt kann später mit konkreten Schulprojekten oder Bildern ergänzt werden."
+      }
+    },
+    "supporters": {
+      "title": "Paten & Förderer – Netzwerk",
+      "heading": "Paten & Förderer",
+      "intro": "Unterstützer, Sponsoren und Förderpartnerschaften.",
+      "tiers": { "bronze": "Bronze", "silver": "Silber", "gold": "Gold" },
+      "tierLabel": "Förderer",
+      "items": {
+        "placeholder": {
+          "meta": "Beispielunternehmen • Platzhalter",
+          "desc": "Platzhaltertext – hier erscheint später eine Kurzbeschreibung der Förderung."
+        }
+      },
+      "join": {
+        "title": "Mitmachen",
+        "text": "Du möchtest das Projekt unterstützen? Werde Förderpartner oder Pate.",
+        "cta": "Jetzt Förderer werden"
+      }
+    }
   }
 }
