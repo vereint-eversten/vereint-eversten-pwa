@@ -243,7 +243,7 @@
       `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`
     ).join("");
 
-    for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
+    for (let i = 0; i < startDay; i++) html += `<div class="cell empty"></div>`;
 
     for (let d = 1; d <= daysInMonth; d++) {
       const thisDate = ${year}-${pad2(month + 1)}-${pad2(d)};
