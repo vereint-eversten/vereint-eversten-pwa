@@ -3,40 +3,58 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Camps – Verein[t]</title>
-  <link rel="stylesheet" href="/style.css">
+  <title data-i18n="camp.title">Camps – Verein[t]</title>
+
   <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function(){ navigator.serviceWorker.register('/sw.js').catch(function(){}); });
+    }
+  </script>
+
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
   <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main{ padding:16px 16px 84px; }
+    .list{ display:grid; gap:12px; }
+    .item{ background:#111; border:1px solid #222; border-radius:12px; padding:14px }
+    .meta{ color:var(--muted); font-size:.9rem }
+    .cta{ display:inline-block; margin-top:10px }
+  </style>
 </head>
 <body>
   <main>
-    <h1>⛺ Camps</h1>
-    <p>Unsere Basketball-Camps für Kinder und Jugendliche.</p>
+    <h1 data-i18n="camp.header">⛺ Camps</h1>
+    <p data-i18n="camp.intro">Infos und Anmeldungen zu unseren Ferien- und Schnuppercamps.</p>
 
-    <section class="card" style="margin-top:1rem;">
-      <h2>Zielgruppen</h2>
-      <p>7 – 12 Jahre, sowohl Vereins- als auch Schulkinder. Offene Teilnahme unabhängig von Vorerfahrung.</p>
-    </section>
+    <section class="list" aria-labelledby="upcomingCamps">
+      <h2 id="upcomingCamps" data-i18n="camp.upcoming">Bevorstehende Camps</h2>
 
-    <section class="card" style="margin-top:1rem;">
-      <h2>Schwerpunkte</h2>
-      <ul>
-        <li>Basketball lernen mit Spaß</li>
-        <li>Teamwork & Fairplay</li>
-        <li>Workshops zu Ernährung und Bewegung</li>
-        <li>Abschluss-Turnier am letzten Tag</li>
-      </ul>
+      <article class="item">
+        <h3 data-i18n="camp.samples.winter.title">Wintercamp</h3>
+        <p class="meta" data-i18n="camp.samples.winter.meta">Dezember • Tegelkamphalle</p>
+        <p data-i18n="camp.samples.winter.text">Trainings, Spiele und Teamgeist – für Klassen 1–6.</p>
+        <a class="button cta" href="/project/anmeldung.html" data-i18n="camp.signup">Zur Anmeldung</a>
+      </article>
+
+      <article class="item">
+        <h3 data-i18n="camp.samples.spring.title">Ostercamp</h3>
+        <p class="meta" data-i18n="camp.samples.spring.meta">März/April • Tegelkamphalle</p>
+        <p data-i18n="camp.samples.spring.text">Zwei Tage voller Basketball und Bewegung.</p>
+        <a class="button cta" href="/project/anmeldung.html" data-i18n="camp.signup">Zur Anmeldung</a>
+      </article>
     </section>
   </main>
 </body>
 </html>
-
