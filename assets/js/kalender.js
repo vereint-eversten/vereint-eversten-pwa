@@ -207,7 +207,7 @@
           const opt = document.createElement("option");
           opt.value = v;
           if ($sel.id === "gradeFilter") opt.textContent = `${v}. Klasse`;
-          else if ($sel.id === "ageFilter") opt.textContent = ${v} Jahre;
+          else if ($sel.id === "ageFilter") opt.textContent = `${v} Jahre`;
           else if ($sel.id === "typeFilter") opt.textContent = labelType(v);
           else opt.textContent = v;
           $sel.appendChild(opt);
