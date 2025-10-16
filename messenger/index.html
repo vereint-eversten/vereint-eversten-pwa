@@ -3,71 +3,89 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Messenger – Verein[t]</title>
+  <title data-i18n="messenger.title">Messenger – Verein[t]</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function(){});
+      });
+    }
+  </script>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
   <script defer src="/assets/js/nav.js"></script>
 
   <style>
-    main {
-      padding: 16px 16px 84px;
-    }
-    .chat-list {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    main { padding:16px 16px 84px }
+    .chat-list { display:flex; flex-direction:column; gap:10px }
     .chat-item {
-      background: #111;
-      border: 1px solid #222;
-      border-radius: 10px;
-      padding: 12px;
-      cursor: pointer;
-      transition: background .15s ease;
+      background:#111;
+      border:1px solid #222;
+      border-radius:10px;
+      padding:12px;
+      cursor:pointer;
+      transition:background .15s ease;
     }
-    .chat-item:hover {
-      background: #1a1a1a;
-    }
-    .chat-item h3 {
-      margin: 0;
-      font-size: 1rem;
-    }
-    .chat-item p {
-      margin: 4px 0 0;
-      color: #aaa;
-      font-size: .9rem;
-    }
+    .chat-item:hover { background:#1a1a1a }
+    .chat-item h3 { margin:0; font-size:1rem }
+    .chat-item p { margin:4px 0 0; color:#aaa; font-size:.9rem }
+    .chat-item .meta { font-size:.75rem; color:#777 }
   </style>
 </head>
 
 <body>
   <main>
-    <h1>💬 Messenger</h1>
-    <p>Chatte mit deinen Teams, Coaches oder anderen Mitgliedern.</p>
+    <h1 data-i18n="messenger.heading">💬 Messenger</h1>
+    <p data-i18n="messenger.intro">
+      Chatte mit deinen Teams, Coaches oder anderen Mitgliedern.
+    </p>
 
     <section class="chat-list" style="margin-top:1rem;">
-      <div class="chat-item">
-        <h3>🏀 U12 Teamchat</h3>
-        <p>Letzte Nachricht: „Bis morgen beim Training!“</p>
+      <div class="chat-item" data-chat="u12">
+        <h3 data-i18n="messenger.chats.u12.title">🏀 U12 Teamchat</h3>
+        <p data-i18n="messenger.chats.u12.last">Letzte Nachricht: „Bis morgen beim Training!“</p>
+        <span class="meta" data-i18n="messenger.chats.u12.meta">3 neue Nachrichten</span>
       </div>
-      <div class="chat-item">
-        <h3>🎓 Coaches</h3>
-        <p>Letzte Nachricht: „Neue Übung online.“</p>
+
+      <div class="chat-item" data-chat="coaches">
+        <h3 data-i18n="messenger.chats.coaches.title">🎓 Coaches</h3>
+        <p data-i18n="messenger.chats.coaches.last">Letzte Nachricht: „Neue Übung online.“</p>
+        <span class="meta" data-i18n="messenger.chats.coaches.meta">1 neue Nachricht</span>
       </div>
-      <div class="chat-item">
-        <h3>📢 Organisation</h3>
-        <p>Letzte Nachricht: „Camps starten nächste Woche.“</p>
+
+      <div class="chat-item" data-chat="orga">
+        <h3 data-i18n="messenger.chats.orga.title">📢 Organisation</h3>
+        <p data-i18n="messenger.chats.orga.last">Letzte Nachricht: „Camps starten nächste Woche.“</p>
+        <span class="meta" data-i18n="messenger.chats.orga.meta">Keine neuen Nachrichten</span>
       </div>
     </section>
   </main>
+
+  <script>
+    document.querySelectorAll('.chat-item').forEach(function(item){
+      item.addEventListener('click', function(){
+        const chatId = this.getAttribute('data-chat');
+        location.href = '/messenger/chat.html?id=' + encodeURIComponent(chatId);
+      });
+    });
+  </script>
 </body>
 </html>
