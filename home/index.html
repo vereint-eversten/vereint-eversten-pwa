@@ -1,51 +1,62 @@
 <!doctype html>
 <html lang="de">
 <head>
-<base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home – Verein[t]</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Home</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<style>
-.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
-.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
-#content{padding:1rem}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
+  <style>
+    main {
+      padding: 16px 16px 84px;
+    }
+    .hero {
+      text-align: center;
+      margin-top: 2rem;
+    }
+    .hero h1 {
+      font-size: 1.6rem;
+      margin-bottom: .5rem;
+    }
+    .hero p {
+      color: #9aa0a6;
+      margin: 0;
+    }
+    .home-grid {
+      display: grid;
+      gap: 1rem;
+      margin-top: 2rem;
+    }
+    .card:hover {
+      border-color: var(--accent);
+    }
+  </style>
 </head>
+
 <body>
-<main>
-  <header><h1 style="margin:16px">#Home</h1></header>
-  <div class="module-tabs">
-    <a href="#" data-file="news.html">News</a>
-  </div>
-  <div id="content">Lade news.html …</div>
-</main>
-<script>
-  renderBottomNav('home');
-  const content = document.getElementById('content');
-  async function load(fn){
-    const res = await fetch(fn);
-    const txt = await res.text();
-    content.innerHTML = txt;
-    window.scrollTo(0,0);
-  }
-  // initial
-  load('news.html');
-  // click handlers
-  document.querySelectorAll('.module-tabs a').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      load(a.dataset.file);
-    })
-  });
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <main>
+    <section class="hero">
+      <h1>Willkommen bei Verein[t]</h1>
+      <p>Schule. Basketball. Für Alle.</p>
+    </section>
+
+    <section class="home-grid">
+      <div class="card">
+        <h2>🗓 Nächste Termine</h2>
+        <p>Übersicht der kommenden Events aus dem Kalender-Modul.</p>
+      </div>
+
+      <div class="card">
+        <h2>💬 Letzte Nachrichten</h2>
+        <p>Neue Chat-Nachrichten aus deinen Teams.</p>
+      </div>
+
+      <div class="card">
+        <h2>🌐 Netzwerk</h2>
+        <p>Partner, Schulen & Förderer auf einen Blick.</p>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
