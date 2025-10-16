@@ -3,37 +3,87 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Projektkonzept – Verein[t]</title>
-  <link rel="stylesheet" href="/style.css">
+
+  <title data-i18n="concept.title">Projektkonzept – Verein[t]</title>
+
+  <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function(){});
+      });
+    }
+  </script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Navigation -->
   <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main {
+      padding: 16px 16px 84px;
+      color: #fff;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #1a1a1a, #111);
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+
+    h1, h2 {
+      color: var(--accent, #00c56b);
+    }
+
+    ul {
+      margin-top: .5rem;
+      padding-left: 1.2rem;
+    }
+
+    ul li {
+      margin-bottom: .4rem;
+    }
+  </style>
 </head>
+
 <body>
   <main>
-    <h1>🏗 Projektkonzept</h1>
-    <p>Das Konzept von „Verein[t] – Schule. Basketball. Für Alle.“</p>
+    <h1 data-i18n="concept.header">🏗 Projektkonzept</h1>
+    <p data-i18n="concept.intro">
+      Das Konzept von „Verein[t] – Schule. Basketball. Für Alle.“
+    </p>
 
     <section class="card" style="margin-top:1rem;">
-      <h2>Grundidee</h2>
-      <p>Wir bringen Schulen, Vereine und engagierte Menschen zusammen, um Kindern unabhängig von Herkunft und Einkommen Zugang zu Bewegung, Sport und Gemeinschaft zu ermöglichen.</p>
+      <h2 data-i18n="concept.idea.title">Grundidee</h2>
+      <p data-i18n="concept.idea.text">
+        Wir bringen Schulen, Vereine und engagierte Menschen zusammen, um Kindern unabhängig von Herkunft und Einkommen Zugang zu Bewegung, Sport und Gemeinschaft zu ermöglichen.
+      </p>
     </section>
 
     <section class="card" style="margin-top:1rem;">
-      <h2>Ziele</h2>
+      <h2 data-i18n="concept.goals.title">Ziele</h2>
       <ul>
-        <li>Chancengleichheit im Sport fördern</li>
-        <li>Integration und Teilhabe stärken</li>
-        <li>Soziale Verantwortung sichtbar machen</li>
-        <li>Basketball als Bildungsinstrument nutzen</li>
+        <li data-i18n="concept.goals.equal">Chancengleichheit im Sport fördern</li>
+        <li data-i18n="concept.goals.integration">Integration und Teilhabe stärken</li>
+        <li data-i18n="concept.goals.responsibility">Soziale Verantwortung sichtbar machen</li>
+        <li data-i18n="concept.goals.education">Basketball als Bildungsinstrument nutzen</li>
       </ul>
     </section>
   </main>
