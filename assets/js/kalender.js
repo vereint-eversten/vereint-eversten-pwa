@@ -1,14 +1,14 @@
-// js/kalender.js (final release)
+// /assets/js/kalender.js
 // Features:
-// - Robust init (runs even if DOMContentLoaded already fired)
-// - Filters: Klassenstufe, Art (case-insensitive, pretty labels), Alter (age_min/age_max preferred)
-// - No "0 Jahre" option; age options only from events that specify age
-// - Multiday events expand across all days (incl. across months) with "(Tag x/y)"
-// - Safe template strings / backticks
+// - Robuste Init (läuft auch wenn DOMContentLoaded schon durch ist)
+// - Filter: Klassenstufe, Typ (case-insensitive, hübsche Labels), Alter
+// - Multiday-Events über alle Tage (mit "(Tag x/y)")
+// - signup_url pro Event (Camp/3x3) → Popup-Link, sonst Button ausgeblendet
+// - Dialog verwendet Klasse "active" (passend zu .dialog.active in CSS)
 
 (() => {
-  if (window._calendarLoaded_) return;
-  window._calendarLoaded_ = true;
+  if (window.calendarLoaded) return;
+  window.calendarLoaded = true;
 
   let currentDate = new Date();
   const monthNames = [
@@ -16,12 +16,12 @@
     "Juli","August","September","Oktober","November","Dezember"
   ];
 
-  // DOM-Refs
+  // DOM
   let $grid, $monthTitle, $dialog, $evTitle, $evDate, $evDesc, $evSignup;
   let $gradeFilter, $typeFilter, $ageFilter;
   let lastEventsCache = [];
 
-  // ---- Init (robust) ----
+  // Init
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", init);
   } else {
@@ -42,7 +42,7 @@
     $ageFilter   = document.getElementById("ageFilter");
 
     if (!$grid) {
-      console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
+      console.warn("⚠ Kalendercontainer nicht gefunden.");
       return;
     }
 
@@ -59,23 +59,32 @@
     render(currentDate);
   }
 
-  // ---------- Utils ----------
+  // Utils
   const pad2 = (n) => String(n).padStart(2, "0");
 
   const parseDate = (s) => {
     if (!s) return null;
     const dt = new Date(s);
-    return isNaN(dt) ? null : dt; // akzeptiert ISO mit/ohne TZ
+    return isNaN(dt) ? null : dt;
   };
 
-  const dayKeyLocal = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
+  const dayKeyLocal = (d) => ${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())};
+
   const extractDayFromISO = (iso) => {
     const dt = parseDate(iso);
     return dt ? dayKeyLocal(dt) : "";
   };
 
-  const normGrade = (v) =>
-    (v ?? "").toString().trim().replace(/\s*klasse$/i, "").replace(/\.$/, "");
+  // "5", "5.", "5. Klasse", "class_5" → "5"
+  const normGrade = (v) => {
+    let s = (v ?? "").toString().trim().toLowerCase();
+    const m = s.match(/^class_(\d{1,2})$/); // aus teams:["class_1",...]
+    if (m) return m[1];
+    s = s.replace(/\s*klasse$/, "").replace(/\.$/, "");
+    // nur Ziffern behalten
+    const n = s.match(/^\d{1,2}$/);
+    return n ? n[0] : "";
+  };
 
   const eventGrades = (ev) => {
     if (Array.isArray(ev?.teams) && ev.teams.length) {
@@ -88,11 +97,12 @@
   const normType = (v) => (v ?? "").toString().trim().toLowerCase();
   const labelType = (v) => {
     const t = normType(v);
-    if (t === "3x3") return "3x3";
-    if (t === "turnier") return "Turnier";
-    if (t === "camp") return "Camp";
-    if (t === "spiel") return "Spiel";
-    if (t === "sonstiges") return "Sonstiges";
+    if (t === "3x3")        return "3x3";
+    if (t === "tournament") return "Turnier";
+    if (t === "turnier")    return "Turnier";
+    if (t === "camp")       return "Camp";
+    if (t === "spiel")      return "Spiel";
+    if (t === "sonstiges")  return "Sonstiges";
     return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
   };
 
@@ -114,7 +124,7 @@
     const want = Number(selectedAge);
     if (Number.isNaN(want)) return true;
     const r = parseAgeRange(ev);
-    if (!r) return true; // kein Altersfeld -> nicht ausschließen
+    if (!r) return true;
     return want >= (r.min ?? 0) && want <= (r.max ?? 99);
   };
 
@@ -140,16 +150,16 @@
     const year  = date.getFullYear();
     const month = date.getMonth();
 
-    if ($monthTitle) $monthTitle.textContent = `${monthNames[month]} ${year}`;
+    if ($monthTitle) $monthTitle.textContent = ${monthNames[month]} ${year};
 
     const firstDay    = new Date(year, month, 1);
     const startDay    = (firstDay.getDay() + 6) % 7; // Mo=0
     const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-    // Events laden
+    // Events laden (absoluter Pfad!)
     let events = [];
     try {
-      const res = await fetch("../assets/data/events.json", { cache: "no-store" });
+      const res = await fetch("/data/events.json", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         events = Array.isArray(data) ? data : (Array.isArray(data.events) ? data.events : []);
@@ -160,21 +170,21 @@
       console.warn("⚠ Konnte events.json nicht laden:", e);
     }
 
-    // ---- Filter-Optionen aktualisieren ----
+    // Filteroptionen nur neu aufbauen, wenn sich Daten geändert haben
     const stringify = JSON.stringify;
     if (stringify(lastEventsCache) !== stringify(events)) {
       lastEventsCache = events;
 
-      // Klassen
+      // Klassen (aus teams / grade)
       const allGrades = events.flatMap(eventGrades);
       const uniqueGrades = Array.from(new Set(allGrades)).filter(Boolean).sort((a,b)=>Number(a)-Number(b));
 
-      // Typen (normalisiert)
+      // Typen
       const uniqueTypes = Array.from(new Set(
         events.map(ev => normType(ev.event_type ?? ev.type)).filter(Boolean)
       )).sort();
 
-      // Alter (nur aus Events mit Altersinfos; exclude 0)
+      // Alter (nur Events mit Altersinfos, >=1)
       const ageSet = new Set();
       events.forEach(ev => {
         const r = parseAgeRange(ev);
@@ -187,7 +197,7 @@
 
       const fillSelect = ($sel, values, allLabel) => {
         if (!$sel) return;
-        const prev = $sel.value; // vorherige Auswahl
+        const prev = $sel.value;
         $sel.innerHTML = "";
         const optAll = document.createElement("option");
         optAll.value = "";
@@ -196,17 +206,16 @@
         values.forEach(v => {
           const opt = document.createElement("option");
           opt.value = v;
-          if ($sel.id === "gradeFilter") opt.textContent = `${v}. Klasse`;
-          else if ($sel.id === "ageFilter") opt.textContent = `${v} Jahre`;
+          if ($sel.id === "gradeFilter") opt.textContent = ${v}. Klasse;
+          else if ($sel.id === "ageFilter") opt.textContent = ${v} Jahre;
           else if ($sel.id === "typeFilter") opt.textContent = labelType(v);
           else opt.textContent = v;
           $sel.appendChild(opt);
         });
-        // Nur wiederherstellen, wenn prev nicht leer ist und existiert
         if (prev !== "" && [...$sel.options].some(o => o.value === prev)) {
           $sel.value = prev;
         } else {
-          $sel.value = ""; // "Alle …" / "Jedes Alter"
+          $sel.value = "";
         }
       };
 
@@ -215,11 +224,11 @@
       fillSelect($ageFilter, uniqueAges, "Jedes Alter");
     }
 
-    const selectedGrade = $gradeFilter?.value || "";
-    const selectedType  = $typeFilter?.value  || "";
+    const selectedGrade = normGrade($gradeFilter?.value || "");
+    const selectedType  = normType($typeFilter?.value  || "");
     const selectedAge   = $ageFilter?.value   || "";
 
-    // ---- Precompute: Map day -> events (inkl. Multiday) ----
+    // Map Tag → Events (inkl. Multiday)
     const dayMap = new Map();
     events.forEach(ev => {
       const span = getEventSpanDays(ev);
@@ -229,24 +238,24 @@
       });
     });
 
-    // ---- Kalenderzellen ----
+    // Kalenderzellen
     let html = ["Mo","Di","Mi","Do","Fr","Sa","So"].map(wd =>
-      `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`
+      <div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>
     ).join("");
 
-    for (let i = 0; i < startDay; i++) html += `<div class="cell empty"></div>`;
+    for (let i = 0; i < startDay; i++) html += <div class="cell empty"></div>;
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const thisDate = `${year}-${pad2(month + 1)}-${pad2(d)}`;
+      const thisDate = ${year}-${pad2(month + 1)}-${pad2(d)};
 
       const dayEvents = (dayMap.get(thisDate) || []).filter(ev => {
         // Klassen
-        const grades = eventGrades(ev);
-        const gradeOk = !selectedGrade || grades.includes(normGrade(selectedGrade));
+        const grades = eventGrades(ev); // ["5","6",...]
+        const gradeOk = !selectedGrade || grades.includes(selectedGrade);
 
-        // Typ (case-insensitive)
+        // Typ
         const evType = normType(ev.event_type ?? ev.type);
-        const typeOk = !selectedType || evType === normType(selectedType);
+        const typeOk = !selectedType || evType === selectedType;
 
         // Alter
         const ageOk = ageMatches(ev, selectedAge);
@@ -259,15 +268,19 @@
         let tagInfo = "";
         const idx = span.indexOf(thisDate);
         if (span.length > 1 && idx !== -1) {
-          tagInfo = ` <span class="muted">(Tag ${idx+1}/${span.length})</span>`;
+          tagInfo = ` <span class="muted">(Tag ${idx + 1}/${span.length})</span>`;
         }
+
+        const signup = ev.signup_url || "";
+
         return `
-        <div class="event"
-             data-title="${escapeHtml(ev.title || '')}"
-             data-date="${escapeHtml(extractDayFromISO(ev.start) || '')}"
-             data-description="${escapeHtml(ev.description || '')}">
-          ${escapeHtml(ev.title || 'Event')}${tagInfo}
-        </div>`;
+          <div class="event"
+               data-title="${escapeHtml(ev.title || '')}"
+               data-date="${escapeHtml(extractDayFromISO(ev.start) || '')}"
+               data-description="${escapeHtml(ev.description || '')}"
+               data-signup="${escapeHtml(signup)}">
+            ${escapeHtml(ev.title || 'Event')}${tagInfo}
+          </div>`;
       }).join("");
 
       html += `
@@ -279,24 +292,34 @@
 
     $grid.innerHTML = html;
 
-    // Klick-Handler für Events
+    // Klick-Handler
     $grid.querySelectorAll(".event").forEach(el => {
       el.addEventListener("click", () => {
         showEventPopup({
           title: el.dataset.title,
           date: el.dataset.date,
-          description: el.dataset.description
+          description: el.dataset.description,
+          signup: el.dataset.signup
         });
       });
     });
   }
 
-  function showEventPopup({ title, date, description }) {
+  function showEventPopup({ title, date, description, signup }) {
     if (!$dialog) return;
     $evTitle.textContent = title || "Termin";
     $evDate.textContent  = date  || "";
     $evDesc.textContent  = description || "";
-    $evSignup?.setAttribute("href", "/project/anmeldung.html");
+
+    if ($evSignup) {
+      if (signup) {
+        $evSignup.setAttribute("href", signup);
+        $evSignup.style.display = "inline-block";
+      } else {
+        $evSignup.removeAttribute("href");
+        $evSignup.style.display = "none";
+      }
+    }
     $dialog.classList.add("active");
   }
 
