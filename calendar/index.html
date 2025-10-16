@@ -1,50 +1,151 @@
-<!-- /modules/kalender.html (updated for classes/type/age filters) -->
-<section class="calendar">
-  <div class="top">
-    <button id="prevBtn" aria-label="Vorheriger Monat">‹</button>
-    <h2 id="monthTitle" style="margin:0; font-size:18px;">Monat</h2>
-    <button id="nextBtn" aria-label="Nächster Monat">›</button>
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kalender – Verein[t]</title>
 
-    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
-      <!-- Klassenstufe -->
-      <select id="gradeFilter" aria-label="Klassenstufe">
-        <option value="">Alle Klassen</option>
-      </select>
+  <!-- Globale Styles und Navigation -->
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
 
-      <!-- Veranstaltungsart -->
-      <select id="typeFilter" aria-label="Art der Veranstaltung">
-        <option value="">Alle Arten</option>
-      </select>
+  <!-- Modul-spezifische Styles (optional) -->
+  <style>
+    .calendar {
+      padding: 16px;
+    }
+    .calendar .top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+    .calendar select, .calendar button {
+      background: #111;
+      color: #eee;
+      border: 1px solid #333;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 0.9rem;
+    }
+    .calendar button:hover {
+      background: #222;
+    }
+    .calendar .grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+    }
+    .calendar .day {
+      padding: 8px;
+      text-align: center;
+      border: 1px solid #222;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.15s ease;
+    }
+    .calendar .day:hover {
+      background: #1a1a1a;
+    }
 
-      <!-- Alter -->
-      <select id="ageFilter" aria-label="Alter">
-        <option value="">Alle Altersgruppen</option>
-      </select>
+    /* Dialog */
+    .dialog {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    }
+    .dialog.active {
+      display: flex;
+    }
+    .dialog .card {
+      background: #111;
+      border-radius: 12px;
+      padding: 20px;
+      max-width: 400px;
+      width: 90%;
+      color: #fff;
+      position: relative;
+    }
+    .dialog .close-btn {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.4rem;
+      cursor: pointer;
+    }
+    .dialog .button {
+      background: var(--accent, #2ea44f);
+      color: #fff;
+      text-decoration: none;
+      padding: 8px 12px;
+      border-radius: 6px;
+      display: inline-block;
+    }
+    .dialog .button:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <section class="calendar">
+      <div class="top">
+        <button id="prevBtn" aria-label="Vorheriger Monat">‹</button>
+        <h2 id="monthTitle" style="margin:0; font-size:18px;">Monat</h2>
+        <button id="nextBtn" aria-label="Nächster Monat">›</button>
+
+        <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+          <!-- Klassenstufe -->
+          <select id="gradeFilter" aria-label="Klassenstufe">
+            <option value="">Alle Klassen</option>
+          </select>
+
+          <!-- Veranstaltungsart -->
+          <select id="typeFilter" aria-label="Art der Veranstaltung">
+            <option value="">Alle Arten</option>
+          </select>
+
+          <!-- Alter -->
+          <select id="ageFilter" aria-label="Alter">
+            <option value="">Alle Altersgruppen</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Kalenderraster -->
+      <div id="calendarGrid" class="grid" aria-live="polite"></div>
+    </section>
+
+    <!-- Popup-Dialog für Event-Details -->
+    <div class="dialog" id="eventDialog">
+      <div class="card">
+        <button class="close-btn" onclick="closeCalendarDialog()">×</button>
+
+        <h3 id="eventTitle">Titel</h3>
+        <p id="eventDate" class="muted"></p>
+        <p id="eventDescription"></p>
+
+        <hr style="margin:16px 0; border:1px solid var(--border, #333);" />
+
+        <p style="text-align:center;">
+          <a href="/camp/anmeldung.html" id="eventSignupLink" class="button">
+            ➕ Zur Anmeldung
+          </a>
+        </p>
+      </div>
     </div>
-  </div>
+  </main>
 
-  <!-- Kalenderraster -->
-  <div id="calendarGrid" class="grid" aria-live="polite"></div>
-</section>
-
-<!-- Popup-Dialog für Event-Details -->
-<div class="dialog" id="eventDialog">
-  <div class="card">
-    <button class="close-btn" onclick="closeCalendarDialog()">×</button>
-
-    <h3 id="eventTitle">Titel</h3>
-    <p id="eventDate" class="muted"></p>
-    <p id="eventDescription"></p>
-
-    <hr style="margin:16px 0; border:1px solid var(--border);" />
-
-    <p style="text-align:center;">
-      <a href="../modules/anmeldung.html" id="eventSignupLink" class="button">
-        ➕ Zur Anmeldung
-      </a>
-    </p>
-  </div>
-</div>
-
-<!-- Kalenderlogik -->
-<script src="../js/kalender.js"></script>
+  <!-- Kalenderlogik -->
+  <script src="/assets/js/kalender.js"></script>
+</body>
+</html>
