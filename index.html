@@ -3,41 +3,59 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Verein[t] – Start</title>
-<link rel="manifest" href="/manifest.webmanifest">
-<meta name="theme-color" content="#0b0b0b">
-<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
-  }
-</script>
-  <!-- Globale Styles und Navigation -->
+
+  <title data-i18n="app.title">Verein[t] – Start</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="app-build" content="2025-10-16"><!-- optional für Cache-Busting in i18n.js -->
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+    }
+  </script>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
   <script defer src="/assets/js/nav.js"></script>
 </head>
 
 <body>
   <main>
     <section class="hero">
-      <h1>Verein[t] – Schule. Basketball. Für Alle.</h1>
-      <p>Willkommen! Nutze die Navigation unten, um zu den Modulen zu wechseln.</p>
+      <h1 data-i18n="home.heading">Verein[t] – Schule. Basketball. Für Alle.</h1>
+      <p data-i18n="home.lead">Willkommen! Nutze die Navigation unten, um zu den Modulen zu wechseln.</p>
     </section>
 
     <section class="card">
-      <h2>Aktueller Stand</h2>
-      <p>Dies ist das funktionierende Grundgerüst. Die Navigation unten verbindet alle Module:</p>
+      <h2 data-i18n="home.status.title">Aktueller Stand</h2>
+      <p data-i18n="home.status.text">
+        Dies ist das funktionierende Grundgerüst. Die Navigation unten verbindet alle Module:
+      </p>
       <ul>
-        <li>🏠 Home</li>
-        <li>📚 Projekt</li>
-        <li>🌐 Netzwerk</li>
-        <li>🗓 Kalender</li>
-        <li>💬 Messenger</li>
-        <li> <3 Spenden & Fördern</li>
+        <li>🏠 <span data-i18n="nav.home">Home</span></li>
+        <li>📚 <span data-i18n="nav.project">Projekt</span></li>
+        <li>🌐 <span data-i18n="nav.network">Netzwerk</span></li>
+        <li>🗓 <span data-i18n="nav.calendar">Kalender</span></li>
+        <li>💬 <span data-i18n="nav.messenger">Messenger</span></li>
+        <li>❤ <span data-i18n="nav.donate">Spenden</span></li>
       </ul>
-      <p>Alle Seiten nutzen dieselbe <code>style.css</code> und <code>nav.js</code>.</p>
+      <p data-i18n="home.status.note">
+        Alle Seiten nutzen dieselbe <code>style.css</code> und <code>nav.js</code>.
+      </p>
     </section>
   </main>
 </body>
