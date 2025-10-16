@@ -1,0 +1,63 @@
+<!doctype html><html lang="de"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title data-i18n="auth.loginTitle">Anmelden – Verein[t]</title>
+<link rel="manifest" href="/manifest.webmanifest"><meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<link rel="stylesheet" href="/style.css">
+<meta name="supabase-url" content="https://ntccnkvpxrpwgxmiherf.supabase.co">
+<meta name="supabase-anon" content="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc">
+<script defer src="/assets/js/languages.js"></script>
+<script defer src="/assets/js/i18n.js"></script>
+<script defer src="/assets/js/lang-toggle.js"></script>
+<script type="module" src="/assets/js/auth.js"></script>
+<script defer src="/assets/js/nav.js"></script>
+<style>
+.form{max-width:420px;margin:24px auto;padding:16px;border:1px solid #222;border-radius:12px;background:#111}
+.form label{display:block;margin:0 0 6px;color:#9aa0a6}
+.form input{width:100%;padding:10px;border:1px solid #333;border-radius:8px;background:#0f0f0f;color:#eaeaea}
+.form .row{display:flex;gap:10px;margin-top:12px}
+.btn{display:inline-block;padding:10px 12px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none;border:0;cursor:pointer}
+.btn.sec{background:#222}
+.note{color:#9aa0a6;font-size:.9rem;margin-top:8px}
+</style>
+</head><body>
+<main>
+  <h1 data-i18n="auth.loginHeading">Anmelden</h1>
+  <p class="muted" data-i18n="auth.loginIntro">Melde dich mit E-Mail (Magic-Link) oder einem Anbieter an.</p>
+
+  <section class="form">
+    <label for="email" data-i18n="auth.email">E-Mail</label>
+    <input id="email" type="email" inputmode="email" autocomplete="email" placeholder="du@example.org">
+    <div class="row">
+      <button id="btnEmail" class="btn" data-i18n="auth.sendLink">Magic-Link senden</button>
+      <a href="/" class="btn sec" data-i18n="common.cancel">Abbrechen</a>
+    </div>
+    <p class="note" id="msg"></p>
+    <hr style="margin:16px 0;border:1px solid #222">
+    <div class="row" style="flex-wrap:wrap">
+      <button class="btn sec" id="btnGoogle">Google</button>
+      <button class="btn sec" id="btnApple">Apple</button>
+    </div>
+  </section>
+</main>
+
+<script type="module">
+import { signInWithEmail, signInWithProvider } from "/assets/js/auth.js";
+
+const $ = (s)=>document.querySelector(s);
+$("#btnEmail").addEventListener("click", async ()=> {
+  const email = $("#email").value.trim();
+  const msg = $("#msg");
+  if (!email) { msg.textContent = "Bitte E-Mail eingeben."; return; }
+  msg.textContent = "Sende Link…";
+  try {
+    await signInWithEmail(email);
+    msg.textContent = "Link gesendet. Prüfe dein Postfach.";
+  } catch(e){
+    console.error(e); msg.textContent = "Fehler: " + (e.message || e);
+  }
+});
+$("#btnGoogle").addEventListener("click", ()=> signInWithProvider("google"));
+$("#btnApple").addEventListener("click",  ()=> signInWithProvider("apple"));
+</script>
+</body></html>
