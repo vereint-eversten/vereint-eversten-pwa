@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Anmeldung – Verein[t]</title>
+
+  <!-- PWA-Basis -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <link rel="icon" href="/assets/pwa/icon-192.png" type="image/png">
+
+  <!-- Styles & Navigation -->
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
+
+  <!-- Supabase SDK + eigener Client -->
+  <script src="https://unpkg.com/@supabase/supabase-js@2.45.1/dist/umd/supabase.js" defer></script>
+  <script src="/assets/js/supabaseClient.js" defer></script>
+
+  <style>
+    .form-card{background:#111;border:1px solid #333;border-radius:10px;padding:16px;max-width:520px;margin:24px auto;display:flex;flex-direction:column;gap:12px}
+    .form-card label{display:flex;flex-direction:column;font-size:.95rem;color:#ddd}
+    .form-card input,.form-card select,.form-card textarea{margin-top:4px;background:#1a1a1a;color:#fff;border:1px solid #444;border-radius:6px;padding:10px}
+    .form-card .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:560px){.form-card .row{grid-template-columns:1fr}}
+    .button{background:var(--accent,#2ea44f);color:#fff;border:0;border-radius:8px;padding:12px 14px;font-weight:700;cursor:pointer}
+    .muted{color:#9aa0a6}
+    .error{color:#ff6b6b}
+    .hidden{display:none}
+  </style>
+</head>
+<body>
+  <main>
+    <h1 style="text-align:center">Anmeldung</h1>
+    <p class="muted" style="text-align:center;margin-top:-4px">Camps, Liga, 3x3 – eine Anmeldung für alles.</p>
+
+    <form id="signupForm" class="form-card" novalidate>
+      <div class="row">
+        <label>Vorname* <input name="first_name" required autocomplete="given-name"></label>
+        <label>Nachname* <input name="last_name" required autocomplete="family-name"></label>
+      </div>
+
+      <label>E-Mail* <input type="email" name="email" required autocomplete="email"></label>
+
+      <div class="row">
+        <label>Geburtsdatum <input type="date" name="birthdate" max="2100-12-31"></label>
+        <label>Klassenstufe <input type="number" name="grade" min="1" max="13" inputmode="numeric" placeholder="z. B. 5"></label>
+      </div>
+
+      <label>Veranstaltung*
+        <select name="event_type" required>
+          <option value="">Bitte wählen</option>
+          <option value="camp">Camp</option>
+          <option value="liga">Liga</option>
+          <option value="3x3">3x3</option>
+          <option value="sonstiges">Sonstiges</option>
+        </select>
+      </label>
+
+      <label>Nachricht / Bemerkung
+        <textarea name="message" rows="3" placeholder="Allergien, Trikotgröße, etc."></textarea>
+      </label>
+
+      <!-- DSGVO -->
+      <label style="display:flex;gap:.6rem;align-items:flex-start;flex-direction:row">
+        <input type="checkbox" id="consent" required style="margin-top:4px">
+        <span>Ich stimme der Verarbeitung meiner Daten im Rahmen der Anmeldung zu und habe die
+          <a href="/datenschutz.html" target="_blank" rel="noopener">Datenschutzhinweise</a> gelesen.*
+        </span>
+      </label>
+
+      <!-- Honeypot (Spam-Schutz) -->
+      <input type="text" name="company" class="hidden" tabindex="-1" autocomplete="off">
+
+      <button type="submit" class="button">Anmeldung absenden</button>
+      <p id="status" class="muted"></p>
+    </form>
+  </main>
+
+  <script>
+    // Registrierung des Service Workers (PWA)
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+    }
+
+    // Formular-Submit → Supabase
+    window.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('signupForm');
+      const status = document.getElementById('status');
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        status.textContent = '';
+
+        // Spam-Honeypot
+        if (form.company && form.company.value.trim() !== '') {
+          status.textContent = 'Es ist ein Fehler aufgetreten.';
+          return;
+        }
+
+        // Pflichtfelder checken
+        if (!form.first_name.value.trim() || !form.last_name.value.trim() || !form.email.value.trim() || !form.event_type.value) {
+          status.textContent = 'Bitte alle Pflichtfelder ausfüllen.';
+          status.classList.remove('error'); status.classList.add('muted');
+          return;
+        }
+        if (!document.getElementById('consent').checked) {
+          status.textContent = 'Bitte der Datenverarbeitung zustimmen.';
+          status.classList.add('error'); return;
+        }
+
+        const payload = {
+          first_name: form.first_name.value.trim(),
+          last_name:  form.last_name.value.trim(),
+          email:      form.email.value.trim().toLowerCase(),
+          birthdate:  form.birthdate.value || null,
+          grade:      form.grade.value ? Number(form.grade.value) : null,
+          event_type: form.event_type.value,
+          message:    form.message.value.trim() || null,
+          source_page: location.pathname
+        };
+
+        try {
+          const { supabase } = window;            // UMD SDK
+          const client = window.sbClient;         // unser initialisierter Client
+          if (!client) throw new Error('Supabase Client fehlt');
+
+          const { data, error } = await client.from('registrations').insert(payload).select().single();
+          if (error) throw error;
+
+          form.reset();
+          status.classList.remove('error');
+          status.textContent = '✅ Danke! Deine Anmeldung wurde gespeichert.';
+        } catch (err) {
+          console.error(err);
+          status.classList.add('error');
+          status.textContent = '❌ Speichern fehlgeschlagen. Bitte später erneut versuchen.';
+        }
+      });
+    });
+  </script>
+</body>
+</html>
