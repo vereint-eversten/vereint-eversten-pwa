@@ -149,7 +149,7 @@
     // Events laden
     let events = [];
     try {
-      const res = await fetch("../data/events.json", { cache: "no-store" });
+      const res = await fetch("../assets/data/events.json", { cache: "no-store" });
       if (res.ok) {
         const data = await res.json();
         events = Array.isArray(data) ? data : (Array.isArray(data.events) ? data.events : []);
