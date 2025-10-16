@@ -63,7 +63,7 @@
     localStorage.setItem(storeKey, langCode);
 
     // ✅ Backticks + führender Slash + korrekte Klammern
-    const url = /assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())};
+    const url = `/assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())}`;
     const res = await fetch(url, { cache: "no-store" });
 
     // ✅ Fehlertext als Template-String
