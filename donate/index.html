@@ -1,50 +1,80 @@
 <!doctype html>
 <html lang="de">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
   <title data-i18n="donate.metaTitle">Spenden & Fördern – Verein[t]</title>
 
-  <!-- PWA Basics -->
-  <link rel="manifest" href="/manifest.webmanifest" />
-  <meta name="theme-color" content="#0b0b0b" />
-  <link rel="icon" href="/assets/pwa/icon-192.png" />
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <link rel="icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
 
-  <!-- Styles & Core JS -->
-  <link rel="stylesheet" href="/style.css" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function(){});
+      });
+    }
+  </script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n (Reihenfolge wichtig) -->
+  <script defer src="/assets/js/languages.js"></script>
   <script defer src="/assets/js/i18n.js"></script>
   <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
   <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    .container{ padding:16px 16px calc(100px + env(safe-area-inset-bottom, 0px)) }
+    .page-header{ margin-bottom:12px }
+    .grid-quick{ display:grid; grid-template-columns:1fr; gap:12px }
+    .kv p{ margin:.3rem 0 }
+    .muted{ color:var(--muted) }
+    @media(min-width:700px){ .grid-quick{ grid-template-columns:1fr 1fr } }
+  </style>
 </head>
+
 <body>
-  <main class="container" style="padding:16px 16px 100px;">
-    <header class="page-header" style="margin-bottom:12px;">
-      <h1 data-i18n="donate.title">Spenden & Fördern</h1>
+  <main class="container" aria-labelledby="donateTitle">
+    <header class="page-header">
+      <h1 id="donateTitle" data-i18n="donate.title">Spenden & Fördern</h1>
       <p class="muted" data-i18n="donate.subtitle">
         Unterstütze „Verein[t] – Schule. Basketball. Für Alle.“ mit einer Spende oder Fördermitgliedschaft.
       </p>
     </header>
 
     <!-- Quick Actions -->
-    <section class="grid-2" style="display:grid; grid-template-columns:1fr; gap:12px;">
-      <a class="button" href="#bank" data-i18n="donate.cta.bank">Überweisung (SEPA)</a>
-      <a class="button" href="#online" data-i18n="donate.cta.online">Online spenden</a>
-      <a class="button" href="#membership" data-i18n="donate.cta.membership">Fördermitglied werden</a>
-      <a class="button" href="#contact" data-i18n="donate.cta.contact">Kontakt</a>
+    <section class="grid-quick" aria-labelledby="quickActions">
+      <h2 id="quickActions" class="visually-hidden" data-i18n="donate.quick.title">Schnellzugriff</h2>
+      <a class="button" href="#bank" data-i18n="donate.cta.bank" aria-label="SEPA-Überweisung">Überweisung (SEPA)</a>
+      <a class="button" href="#online" data-i18n="donate.cta.online" aria-label="Online spenden">Online spenden</a>
+      <a class="button" href="#membership" data-i18n="donate.cta.membership" aria-label="Fördermitglied werden">Fördermitglied werden</a>
+      <a class="button" href="#contact" data-i18n="donate.cta.contact" aria-label="Kontakt">Kontakt</a>
     </section>
 
     <!-- Bank Transfer -->
-    <section id="bank" class="card" style="margin-top:16px;">
-      <h2 data-i18n="donate.bank.title">SEPA-Überweisung</h2>
+    <section id="bank" class="card" style="margin-top:16px;" aria-labelledby="bankTitle">
+      <h2 id="bankTitle" data-i18n="donate.bank.title">SEPA-Überweisung</h2>
       <p class="muted" data-i18n="donate.bank.hint">Bitte Verwendungszweck angeben, damit wir die Spende zuordnen können.</p>
-      <div class="kv">
-        <p><strong>Empfänger:</strong> <span data-i18n="donate.bank.recipient">TuS Eversten e.V. – Projekt Verein[t]</span></p>
+
+      <div class="kv" aria-describedby="bankTitle">
+        <p><strong data-i18n="donate.bank.recipient.label">Empfänger:</strong> <span data-i18n="donate.bank.recipient.value">TuS Eversten e.V. – Projekt Verein[t]</span></p>
         <p><strong>IBAN:</strong> <code data-i18n="donate.bank.iban">DE00 0000 0000 0000 0000 00</code></p>
         <p><strong>BIC:</strong> <code data-i18n="donate.bank.bic">BANKDEFFXXX</code></p>
         <p><strong data-i18n="donate.bank.purpose.label">Verwendungszweck:</strong> <span data-i18n="donate.bank.purpose.value">Spende Verein[t] + Name</span></p>
       </div>
 
-      <!-- Optional: QR für Banking-Apps -->
       <figure style="margin-top:12px; text-align:center;">
         <img src="/assets/img/qr-donate.png" alt="Spenden-QR" style="max-width:220px; width:100%; border:1px solid var(--border,#222); border-radius:10px;">
         <figcaption class="muted" data-i18n="donate.bank.qr">QR-Code für Banking-App</figcaption>
@@ -52,21 +82,20 @@
     </section>
 
     <!-- Online Donation -->
-    <section id="online" class="card" style="margin-top:16px;">
-      <h2 data-i18n="donate.online.title">Online spenden</h2>
+    <section id="online" class="card" style="margin-top:16px;" aria-labelledby="onlineTitle">
+      <h2 id="onlineTitle" data-i18n="donate.online.title">Online spenden</h2>
       <p data-i18n="donate.online.text">
         Du kannst online mit Karte oder Lastschrift spenden. Der Dienstleister erhebt ggf. geringe Gebühren.
       </p>
-      <!-- TODO: Link zu eurem Spendentool (Betterplace, Twingle, Stripe, etc.) -->
-      <a class="button" href="#" data-i18n="donate.online.button">Zum Spendenformular</a>
+      <a class="button" href="#" data-i18n="donate.online.button" aria-label="Zum Spendenformular">Zum Spendenformular</a>
       <p class="muted" style="margin-top:8px;" data-i18n="donate.online.receipt">
         Spendenquittung auf Wunsch – bitte vollständige Adresse angeben.
       </p>
     </section>
 
     <!-- Membership -->
-    <section id="membership" class="card" style="margin-top:16px;">
-      <h2 data-i18n="donate.membership.title">Fördermitgliedschaft</h2>
+    <section id="membership" class="card" style="margin-top:16px;" aria-labelledby="memberTitle">
+      <h2 id="memberTitle" data-i18n="donate.membership.title">Fördermitgliedschaft</h2>
       <p data-i18n="donate.membership.text">
         Werde Fördermitglied und unterstütze das Projekt dauerhaft. Kündigung monatlich möglich.
       </p>
@@ -75,18 +104,14 @@
         <li data-i18n="donate.membership.tier2">10 € / Monat – Trainingsmaterial</li>
         <li data-i18n="donate.membership.tier3">25 € / Monat – Camps & Aktionen</li>
       </ul>
-      <a class="button" href="/donate/form.html" data-i18n="donate.membership.button">Fördermitglied werden</a>
+      <a class="button" href="/donate/form.html" data-i18n="donate.membership.button" aria-label="Fördermitglied werden">Fördermitglied werden</a>
     </section>
 
     <!-- Contact -->
-    <section id="contact" class="card" style="margin-top:16px;">
-      <h2 data-i18n="donate.contact.title">Kontakt</h2>
-      <p data-i18n="donate.contact.text">
-        Fragen zur Spende oder Quittung? Schreib uns gern.
-      </p>
-      <p>
-        <a href="mailto:spenden@vereint-eversten.de">spenden@vereint-eversten.de</a>
-      </p>
+    <section id="contact" class="card" style="margin-top:16px;" aria-labelledby="contactTitle">
+      <h2 id="contactTitle" data-i18n="donate.contact.title">Kontakt</h2>
+      <p data-i18n="donate.contact.text">Fragen zur Spende oder Quittung? Schreib uns gern.</p>
+      <p><a href="mailto:spenden@vereint-eversten.de">spenden@vereint-eversten.de</a></p>
       <p class="muted" data-i18n="donate.legal">
         Spenden sind im Rahmen der gesetzlichen Regelungen steuerlich absetzbar. Angaben ohne Gewähr – bitte Vereinsangaben prüfen.
       </p>
