@@ -2,48 +2,125 @@
   --bg:#0b0b0b;
   --fg:#eaeaea;
   --muted:#9aa0a6;
-  --accent:#2ea44f;      /* Grün-Akzent */
+  --accent:#2ea44f;
+  --border:#1f1f1f;
+
+  /* Höhen/Abstände */
+  --nav-h:64px;
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --content-pad-bottom: calc(var(--nav-h) + 20px + var(--safe-bottom));
+}
+
+@media (prefers-color-scheme: dark){
+  :root{ color-scheme: dark; }
 }
 
 /* Reset/Basis */
-*{box-sizing:border-box}
+*{ box-sizing:border-box }
 html,body{
   margin:0; padding:0;
   background:var(--bg); color:var(--fg);
-  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
-  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
 }
 
-/* Content: Platz unten, damit die Nav nichts überdeckt */
-main{padding:16px 16px 84px}
-h1{font-size:1.4rem;margin:0 0 .5rem}
-p{margin:.25rem 0 0; color:var(--muted)}
-.card{padding:16px;border:1px solid #1f1f1f;border-radius:12px;background:#111}
+/* Inhalt: Platz unten, damit Bottom-Nav + Safe Area nichts überdeckt */
+main{
+  padding-block: 16px var(--content-pad-bottom);
+  padding-inline: 16px;
+}
+h1{ font-size:1.4rem; margin:0 0 .5rem 0 }
+p{ margin:.25rem 0 0 0; color:var(--muted) }
+.card{
+  padding:16px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:#111;
+}
 
 /* Bottom Navigation (6 Buttons) */
 .bottom-nav{
-  position:fixed;left:0;right:0;bottom:0;z-index:9999;
-  display:flex;justify-content:space-between;gap:.25rem;
-  height:64px;padding:6px 8px;
-  background:rgba(10,10,10,.95);
-  border-top:1px solid #1e1e1e;
-  backdrop-filter:saturate(180%) blur(12px);
+  position: fixed; inset-inline: 0; bottom: 0; z-index: 9999;
+  display: flex; justify-content: space-between; gap: .25rem;
+  height: var(--nav-h); padding: 6px 8px calc(6px + var(--safe-bottom));
+  background: rgba(10,10,10,.95);
+  border-top: 1px solid #1e1e1e;
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
 }
 
 .bottom-nav .nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  text-decoration:none;color:var(--fg);
-  font-size:.72rem;line-height:1;gap:4px;border-radius:10px;
-  opacity:.85; transition:opacity .15s ease, transform .15s ease;
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  min-height: calc(var(--nav-h) - 12px); /* touch target */
+  text-decoration: none; color: var(--fg);
+  font-size: .72rem; line-height: 1; gap: 6px; border-radius: 10px;
+  opacity: .9; transition: opacity .15s ease, transform .15s ease;
+  padding-inline: 4px;
 }
-.bottom-nav .nav-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
-.bottom-nav .nav-item:hover{opacity:1}
-.bottom-nav .nav-item:active{transform:translateY(1px)}
+.bottom-nav .nav-item:focus-visible{ outline: 2px solid var(--accent); outline-offset: 2px }
+.bottom-nav .nav-item:hover{ opacity: 1 }
+.bottom-nav .nav-item:active{ transform: translateY(1px) }
 
-.bottom-nav .nav-item.active{opacity:1;font-weight:600;color:#fff}
-.bottom-nav .nav-icon{width:22px;height:22px;filter:invert(100%)}
+.bottom-nav .nav-item.active{
+  opacity:1; font-weight:600; color:#fff;
+}
+.bottom-nav .nav-icon{
+  width:22px; height:22px;
+  /* Nutze currentColor statt invert-Filter → bessere A11y & Theming */
+  fill: currentColor; stroke: currentColor;
+  /* Falls PNG/SVG ohne currentColor: als Fallback bleibt die alte Variante */
+  filter: var(--nav-icon-filter, none);
+}
 
 /* Desktop: zentriere die Leiste */
 @media (min-width: 960px){
-  .bottom-nav{max-width:840px;margin:0 auto;left:0;right:0}
+  .bottom-nav{ max-width: 840px; margin-inline: auto; }
 }
+
+/* Language Toggle (kurz, falls noch nicht vorhanden) */
+.lang-fab{
+  position: fixed; right: 16px; bottom: calc(var(--nav-h) + 32px + var(--safe-bottom));
+  z-index: 1000; display:inline-flex; align-items:center; gap:8px;
+  padding:10px 12px; border-radius:999px;
+  border:1px solid var(--border); background:#121212; color:#fff;
+  box-shadow: 0 6px 20px rgba(0,0,0,.35);
+  font-weight:600; font-size:12px;
+}
+.lang-fab:active{ transform: translateY(1px) }
+
+.lang-sheet{ position: fixed; inset: 0; background: rgba(0,0,0,.45); display: none; z-index: 1001; }
+.lang-sheet.open{ display: block; }
+.lang-sheet-card{
+  position: absolute; left: 0; right: 0; bottom: 0; margin: 0 auto; max-width: 560px;
+  background: #101010; color: #fff;
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+  border: 1px solid var(--border); padding: 10px 10px 8px;
+  box-shadow: 0 -10px 30px rgba(0,0,0,.35);
+}
+.lang-sheet-header{ display:flex; align-items:center; justify-content:space-between;
+  padding: 4px 4px 8px; border-bottom:1px solid #262626; }
+.lang-close{ background:transparent; border:0; color:#aaa; font-size:22px; line-height:1; cursor:pointer; }
+.lang-sheet-controls{ padding: 8px 4px; }
+.lang-search{ width:100%; padding:10px; border-radius:8px; border:1px solid #2a2a2a; background:#161616; color:#fff; }
+.lang-sheet-body{ display:flex; flex-direction:column; gap:8px; padding:8px 0 10px; max-height: 50vh; overflow:auto; }
+.lang-option{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px; border-radius:10px; border:1px solid #2a2a2a; background:#161616; color:#fff; text-align:left;
+}
+.lang-option.active{ border-color:#3a3a3a; outline:2px solid rgba(255,255,255,.08); }
+.lang-left{ display:flex; flex-direction:column; }
+.lang-native{ font-weight:700; }
+.lang-english{ font-size:12px; opacity:.75; }
+.lang-right{ display:flex; align-items:center; gap:10px; font-size:12px; opacity:.9; }
+.lang-check{ font-weight:700; }
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce){
+  .bottom-nav .nav-item, .lang-fab{ transition: none; }
+}
+
+/* RTL-Feinschliff (wir nutzen ohnehin logische Properties) */
+html[dir="rtl"] .bottom-nav{ direction: rtl; }
+html[dir="rtl"] .lang-fab{ left: 16px; right: auto; } /* FAB auf die andere Seite spiegeln */
