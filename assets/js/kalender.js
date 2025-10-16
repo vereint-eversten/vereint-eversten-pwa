@@ -246,7 +246,7 @@
     for (let i = 0; i < startDay; i++) html += `<div class="cell empty"></div>`;
 
     for (let d = 1; d <= daysInMonth; d++) {
-      const thisDate = ${year}-${pad2(month + 1)}-${pad2(d)};
+      const thisDate = `${year}-${pad2(month + 1)}-${pad2(d)}`;
 
       const dayEvents = (dayMap.get(thisDate) || []).filter(ev => {
         // Klassen
