@@ -1,27 +1,49 @@
+:root{
+  --bg:#0b0b0b;
+  --fg:#eaeaea;
+  --muted:#9aa0a6;
+  --accent:#2ea44f;      /* Grün-Akzent */
+}
 
-:root{ --bg:#0b0b0b; --fg:#eaeaea; --muted:#9aa0a6; --accent:#2ea44f; }
+/* Reset/Basis */
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif}
+html,body{
+  margin:0; padding:0;
+  background:var(--bg); color:var(--fg);
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif;
+  -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+}
+
+/* Content: Platz unten, damit die Nav nichts überdeckt */
 main{padding:16px 16px 84px}
-h1{font-size:1.25rem;margin:0 0 .5rem}
-p{color:var(--muted);margin:.25rem 0 0}
-.hero{padding:16px;border:1px solid #1f1f1f;border-radius:12px;background:#111}
-/* Bottom navigation */
+h1{font-size:1.4rem;margin:0 0 .5rem}
+p{margin:.25rem 0 0; color:var(--muted)}
+.card{padding:16px;border:1px solid #1f1f1f;border-radius:12px;background:#111}
+
+/* Bottom Navigation (6 Buttons) */
 .bottom-nav{
-  position:fixed;left:0;right:0;bottom:0;
+  position:fixed;left:0;right:0;bottom:0;z-index:9999;
   display:flex;justify-content:space-between;gap:.25rem;
   height:64px;padding:6px 8px;
-  background:rgba(10,10,10,.95);backdrop-filter:saturate(180%) blur(12px);
-  border-top:1px solid #1e1e1e; z-index:9999;
+  background:rgba(10,10,10,.95);
+  border-top:1px solid #1e1e1e;
+  backdrop-filter:saturate(180%) blur(12px);
 }
+
 .bottom-nav .nav-item{
   flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  color:var(--fg); text-decoration:none; font-size:.72rem; line-height:1;
-  border-radius:10px; gap:4px; opacity:.8;
+  text-decoration:none;color:var(--fg);
+  font-size:.72rem;line-height:1;gap:4px;border-radius:10px;
+  opacity:.85; transition:opacity .15s ease, transform .15s ease;
 }
-.bottom-nav .nav-item.active{opacity:1;font-weight:600;color:#fff}
 .bottom-nav .nav-item:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.bottom-nav .nav-item:hover{opacity:1}
+.bottom-nav .nav-item:active{transform:translateY(1px)}
+
+.bottom-nav .nav-item.active{opacity:1;font-weight:600;color:#fff}
 .bottom-nav .nav-icon{width:22px;height:22px;filter:invert(100%)}
+
+/* Desktop: zentriere die Leiste */
 @media (min-width: 960px){
   .bottom-nav{max-width:840px;margin:0 auto;left:0;right:0}
 }
