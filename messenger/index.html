@@ -1,51 +1,73 @@
 <!doctype html>
 <html lang="de">
 <head>
-<base href="/">
-
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Messenger</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<style>
-.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
-.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
-#content{padding:1rem}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
-</head>
-<body>
-<main>
-  <header><h1 style="margin:16px">#Messenger</h1></header>
-  <div class="module-tabs">
-    <a href="#" data-file="messenger.html">Messenger</a>
-  </div>
-  <div id="content">Lade messenger.html …</div>
-</main>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Messenger – Verein[t]</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script>
-  renderBottomNav('messenger');
-  const content = document.getElementById('content');
-  async function load(fn){
-    const res = await fetch(fn);
-    const txt = await res.text();
-    content.innerHTML = txt;
-    window.scrollTo(0,0);
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
   }
-  // initial
-  load('messenger.html');
-  // click handlers
-  document.querySelectorAll('.module-tabs a').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      load(a.dataset.file);
-    })
-  });
 </script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main {
+      padding: 16px 16px 84px;
+    }
+    .chat-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .chat-item {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      padding: 12px;
+      cursor: pointer;
+      transition: background .15s ease;
+    }
+    .chat-item:hover {
+      background: #1a1a1a;
+    }
+    .chat-item h3 {
+      margin: 0;
+      font-size: 1rem;
+    }
+    .chat-item p {
+      margin: 4px 0 0;
+      color: #aaa;
+      font-size: .9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>💬 Messenger</h1>
+    <p>Chatte mit deinen Teams, Coaches oder anderen Mitgliedern.</p>
+
+    <section class="chat-list" style="margin-top:1rem;">
+      <div class="chat-item">
+        <h3>🏀 U12 Teamchat</h3>
+        <p>Letzte Nachricht: „Bis morgen beim Training!“</p>
+      </div>
+      <div class="chat-item">
+        <h3>🎓 Coaches</h3>
+        <p>Letzte Nachricht: „Neue Übung online.“</p>
+      </div>
+      <div class="chat-item">
+        <h3>📢 Organisation</h3>
+        <p>Letzte Nachricht: „Camps starten nächste Woche.“</p>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
