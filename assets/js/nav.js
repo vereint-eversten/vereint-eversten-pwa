@@ -7,7 +7,7 @@
     { id: 'network',   label: 'Netzwerk',  href: '/network/' },
     { id: 'calendar',  label: 'Kalender',  href: '/calendar/' },
     { id: 'messenger', label: 'Messenger', href: '/messenger/' },
-    { id: 'shop',      label: 'Shop',      href: '/shop/' }
+    { id: 'donate',      label: 'Spenden',      href: '/donate/' }
   ];
 
   function renderBottomNav() {
