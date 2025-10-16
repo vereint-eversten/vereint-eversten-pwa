@@ -150,7 +150,7 @@
     const year  = date.getFullYear();
     const month = date.getMonth();
 
-    if ($monthTitle) $monthTitle.textContent = ${monthNames[month]} ${year};
+    if ($monthTitle) $monthTitle.textContent = `${monthNames[month]} ${year}`;
 
     const firstDay    = new Date(year, month, 1);
     const startDay    = (firstDay.getDay() + 6) % 7; // Mo=0
