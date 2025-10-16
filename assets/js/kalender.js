@@ -68,7 +68,7 @@
     return isNaN(dt) ? null : dt;
   };
 
-  const dayKeyLocal = (d) => ${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())};
+  const dayKeyLocal = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
 
   const extractDayFromISO = (iso) => {
     const dt = parseDate(iso);
