@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="de">
+<head>
+<base href="/">
+
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Messenger</title>
+<link rel="stylesheet" href="style.css"/>
+<script defer src="assets/js/nav.js"></script>
+<style>
+.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
+.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
+#content{padding:1rem}
+</style>
+<link rel="manifest" href="manifest.webmanifest">
+</head>
+<body>
+<main>
+  <header><h1 style="margin:16px">#Messenger</h1></header>
+  <div class="module-tabs">
+    <a href="#" data-file="messenger.html">Messenger</a>
+  </div>
+  <div id="content">Lade messenger.html …</div>
+</main>
+<script>
+  renderBottomNav('messenger');
+  const content = document.getElementById('content');
+  async function load(fn){
+    const res = await fetch(fn);
+    const txt = await res.text();
+    content.innerHTML = txt;
+    window.scrollTo(0,0);
+  }
+  // initial
+  load('messenger.html');
+  // click handlers
+  document.querySelectorAll('.module-tabs a').forEach(a=>{
+    a.addEventListener('click', e=>{
+      e.preventDefault();
+      load(a.dataset.file);
+    })
+  });
+</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
+</script>
+</body>
+</html>

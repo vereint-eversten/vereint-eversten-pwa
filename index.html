@@ -1,43 +1,25 @@
-<!DOCTYPE html>
-<html lang="de">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>verein[t] – Schule. Basketball. Für Alle.</title>
+<!doctype html>
+<html lang="de"><head>
+<base href="/">
 
-  <!-- Basis-Design -->
-  <link rel="stylesheet" href="style.css" />
-
-  <!-- PWA-Metadaten (optional, kannst du später aktivieren) -->
-  <meta name="theme-color" content="#2e7d32" />
-  <link rel="manifest" href="manifest.json" />
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Home</title>
+<link rel="stylesheet" href="style.css"/>
+<script defer src="assets/js/nav.js"></script>
+<link rel="manifest" href="manifest.webmanifest">
 </head>
-
 <body>
-  <!-- HEADER -->
-  <header id="header">
-    <h1>verein[t]</h1>
-    <p class="subtitle">Schule. Basketball. Für Alle.</p>
-  </header>
-
-  <!-- NAVIGATIONSBEREICH -->
-  <nav id="nav" class="main-nav"></nav>
-
-  <!-- HAUPTBEREICH -->
-  <main id="main">
-    <div id="contentBody">
-      <div class="panel">
-        <p>Wähle oben ein Modul, um zu starten.</p>
-      </div>
-    </div>
-  </main>
-
-  <!-- FOOTER -->
-  <footer id="footer">
-    <p>&copy; 2025 verein[t] – Basketballnetzwerk Oldenburg gUG (haftungsbeschränkt)</p>
-  </footer>
-
-  <!-- JAVASCRIPT -->
-  <script src="js/app.js"></script>
+<main>
+  <section style="padding:1rem">
+    <h1>Verein[t] – Dashboard</h1>
+    <p>Willkommen! Nutze die Navigation unten, um zu den Modulen zu wechseln.</p>
+  </section>
+</main>
+<script>renderBottomNav('home');</script>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
+}
+</script>
 </body>
 </html>

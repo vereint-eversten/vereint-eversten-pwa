@@ -1,0 +1,50 @@
+<!-- /modules/kalender.html (updated for classes/type/age filters) -->
+<section class="calendar">
+  <div class="top">
+    <button id="prevBtn" aria-label="Vorheriger Monat">‹</button>
+    <h2 id="monthTitle" style="margin:0; font-size:18px;">Monat</h2>
+    <button id="nextBtn" aria-label="Nächster Monat">›</button>
+
+    <div style="margin-left:auto; display:flex; gap:8px; align-items:center;">
+      <!-- Klassenstufe -->
+      <select id="gradeFilter" aria-label="Klassenstufe">
+        <option value="">Alle Klassen</option>
+      </select>
+
+      <!-- Veranstaltungsart -->
+      <select id="typeFilter" aria-label="Art der Veranstaltung">
+        <option value="">Alle Arten</option>
+      </select>
+
+      <!-- Alter -->
+      <select id="ageFilter" aria-label="Alter">
+        <option value="">Alle Altersgruppen</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Kalenderraster -->
+  <div id="calendarGrid" class="grid" aria-live="polite"></div>
+</section>
+
+<!-- Popup-Dialog für Event-Details -->
+<div class="dialog" id="eventDialog">
+  <div class="card">
+    <button class="close-btn" onclick="closeCalendarDialog()">×</button>
+
+    <h3 id="eventTitle">Titel</h3>
+    <p id="eventDate" class="muted"></p>
+    <p id="eventDescription"></p>
+
+    <hr style="margin:16px 0; border:1px solid var(--border);" />
+
+    <p style="text-align:center;">
+      <a href="../modules/anmeldung.html" id="eventSignupLink" class="button">
+        ➕ Zur Anmeldung
+      </a>
+    </p>
+  </div>
+</div>
+
+<!-- Kalenderlogik -->
+<script src="../js/kalender.js"></script>
