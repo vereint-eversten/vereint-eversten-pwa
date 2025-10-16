@@ -62,14 +62,18 @@
     document.documentElement.dir  = AppLangs.RTL.has(langCode) ? "rtl" : "ltr";
     localStorage.setItem(storeKey, langCode);
 
-    // ✅ Backticks + führender Slash + korrekte Klammern
-    const url = `/assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())}`;
+    const url = /assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())};
     const res = await fetch(url, { cache: "no-store" });
 
-    // ✅ Fehlertext als Template-String
-    if (!res.ok) throw new Error(missing i18n file: ${url} (${res.status}));
-
-    dict = await res.json();
+    if (!res.ok) {
+      // Fallback auf Deutsch, damit die App nicht „leer“ bleibt
+      console.warn(i18n: ${url} (${res.status}) – fallback to de);
+      const fallback = await fetch(/assets/i18n/de.json?v=${encodeURIComponent(__buildVersion())}, { cache: "no-store" });
+      if (!fallback.ok) throw new Error(missing i18n file: ${url} and de.json);
+      dict = await fallback.json();
+    } else {
+      dict = await res.json();
+    }
 
     applyTranslations(document);
     listeners.forEach(fn => { try { fn(langCode); } catch (e) { console.warn(e); } });
