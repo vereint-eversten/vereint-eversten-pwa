@@ -23,10 +23,10 @@
     }
   </script>
 
-  <!-- Styles -->
+  <!-- Global Styles -->
   <link rel="stylesheet" href="/style.css">
 
-  <!-- i18n (Reihenfolge wichtig) -->
+  <!-- i18n (optional, aber empfohlen – Reihenfolge wichtig) -->
   <script defer src="/assets/js/languages.js"></script>
   <script defer src="/assets/js/i18n.js"></script>
   <script defer src="/assets/js/lang-toggle.js"></script>
@@ -34,7 +34,7 @@
   <!-- Bottom Navigation -->
   <script defer src="/assets/js/nav.js"></script>
 
-  <!-- Modul-spezifische Styles -->
+  <!-- Modul-spezifische Styles (kompakt) -->
   <style>
     .calendar{ padding:16px }
     .calendar .top{ display:flex; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:1rem }
@@ -48,12 +48,15 @@
     .event{ background:#1a1a1a; border:1px solid #2a2a2a; border-radius:6px; padding:6px; margin-top:6px; cursor:pointer }
     .event:hover{ background:#222 }
 
+    /* Dialog sichtbar, wenn .open gesetzt (JS) */
     .dialog{ position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:center; justify-content:center; z-index:10000 }
     .dialog.open{ display:flex }
-    .dialog .card{ background:#111; border-radius:12px; padding:20px; max-width:420px; width:90%; color:#fff; position:relative; border:1px solid #222 }
+    .dialog .card{ background:#111; border-radius:12px; padding:20px; max-width:460px; width:90%; color:#fff; position:relative; border:1px solid #222 }
     .dialog .close-btn{ position:absolute; right:10px; top:10px; background:none; border:0; color:#fff; font-size:1.4rem; cursor:pointer }
     .dialog .button{ background:var(--accent,#2ea44f); color:#fff; text-decoration:none; padding:8px 12px; border-radius:6px; display:inline-block }
     .dialog .button:hover{ opacity:.9 }
+    .kv p{ margin:.35rem 0 }
+    .kv .muted{ color:#9aa0a6 }
   </style>
 </head>
 
@@ -90,19 +93,320 @@
         <button class="close-btn" onclick="closeCalendarDialog()" aria-label="Schließen">×</button>
 
         <h3 id="eventTitle">Titel</h3>
-        <p id="eventDate" class="muted"></p>
-        <p id="eventDescription"></p>
+        <p id="eventDescription" class="muted"></p>
+
+        <div class="kv" style="margin-top:8px;">
+          <p><strong data-i18n="calendar.detail.start">Start:</strong> <span id="eventStart">–</span></p>
+          <p><strong data-i18n="calendar.detail.end">Ende:</strong> <span id="eventEnd">–</span></p>
+          <p><strong data-i18n="calendar.detail.place">Ort:</strong> <span id="eventLocation">–</span></p>
+          <p><strong data-i18n="calendar.detail.age">Alter:</strong> <span id="eventAge">–</span></p>
+          <p><strong data-i18n="calendar.detail.capacity">Anzahl:</strong> <span id="eventCapacity">unbegrenzt</span></p>
+        </div>
 
         <hr style="margin:16px 0; border:1px solid var(--border,#333)">
 
         <p style="text-align:center;">
-          <a href="/project/anmeldung.html" id="eventSignupLink" class="button" data-i18n="calendar.signup">➕ Zur Anmeldung</a>
+          <!-- Wird per JS ein-/ausgeblendet und mit href befüllt -->
+          <a href="#" id="eventSignupLink" class="button" style="display:none" data-i18n="calendar.signup">➕ Zur Anmeldung</a>
         </p>
       </div>
     </div>
   </main>
 
-  <!-- Kalenderlogik -->
-  <script src="/assets/js/kalender.js"></script>
+  <!-- Kalender-Logik (inline, ASCII-safe) -->
+  <script>
+  (function () {
+    if (window.calendarLoaded) return; window.calendarLoaded = true;
+    var currentDate = new Date();
+
+    // i18n-Helfer
+    function tt(key, def) {
+      try { return (window.i18n && typeof i18n.t === "function") ? i18n.t(key, def || "") : (def || ""); }
+      catch (e) { return def || ""; }
+    }
+    function getMonthNames() {
+      var m = (window.i18n && i18n.t("calendar.monthNames")) || null;
+      if (m && typeof m === "object" && m.length === 12) return m;
+      return ["Januar","Februar","März","April","Mai","Juni","Juli","August","September","Oktober","November","Dezember"];
+    }
+    function getWeekdays() {
+      var w = (window.i18n && i18n.t("calendar.weekdays")) || null;
+      if (w && typeof w === "object" && w.length === 7) return w;
+      return ["Mo","Di","Mi","Do","Fr","Sa","So"];
+    }
+
+    // DOM
+    var $grid, $monthTitle, $dialog, $evTitle, $evDesc, $evSignup;
+    var $gradeFilter, $typeFilter, $ageFilter;
+    var lastEventsCache = [];
+
+    if (document.readyState === "loading") {
+      document.addEventListener("DOMContentLoaded", init);
+    } else { init(); }
+
+    function init() {
+      $grid       = document.getElementById("calendarGrid");
+      $monthTitle = document.getElementById("monthTitle");
+      $dialog     = document.getElementById("eventDialog");
+      $evTitle    = document.getElementById("eventTitle");
+      $evDesc     = document.getElementById("eventDescription");
+      $evSignup   = document.getElementById("eventSignupLink");
+
+      $gradeFilter = document.getElementById("gradeFilter");
+      $typeFilter  = document.getElementById("typeFilter");
+      $ageFilter   = document.getElementById("ageFilter");
+
+      if (!$grid) { console.warn("Kalendercontainer nicht gefunden."); return; }
+
+      var prev = document.getElementById("prevBtn");
+      var next = document.getElementById("nextBtn");
+      if (prev) prev.onclick = function(){ currentDate.setMonth(currentDate.getMonth()-1); render(currentDate); };
+      if (next) next.onclick = function(){ currentDate.setMonth(currentDate.getMonth()+1); render(currentDate); };
+
+      var onFilterChange = function(){ render(currentDate); };
+      if ($gradeFilter) $gradeFilter.addEventListener("change", onFilterChange);
+      if ($typeFilter)  $typeFilter.addEventListener("change", onFilterChange);
+      if ($ageFilter)   $ageFilter.addEventListener("change", onFilterChange);
+
+      render(currentDate);
+    }
+
+    // Utils
+    function pad2(n){ return String(n).padStart(2,"0"); }
+    function parseDate(s){ if(!s) return null; var d=new Date(s); return isNaN(d)?null:d; }
+    function dayKeyLocal(d){ return d.getFullYear()+"-"+pad2(d.getMonth()+1)+"-"+pad2(d.getDate()); }
+    function escapeHtml(s){ return String(s).replace(/[&<>\"']/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m];}); }
+    function normType(v){ return (v==null?"":String(v)).trim().toLowerCase(); }
+    function normGrade(v){
+      var s=(v==null?"":String(v)).trim().toLowerCase();
+      var m=s.match(/^class_(\d{1,2})$/); if(m) return m[1];
+      s=s.replace(/\s*klasse$/,"").replace(/\.$/,"");
+      var n=s.match(/^\d{1,2}$/); return n?n[0]:"";
+    }
+    function eventGrades(ev){
+      if(ev && Array.isArray(ev.teams) && ev.teams.length){
+        var out=[]; for(var i=0;i<ev.teams.length;i++){ var g=normGrade(ev.teams[i]); if(g) out.push(g); }
+        return out;
+      }
+      var g2=normGrade(ev && ev.grade); return g2?[g2]:[];
+    }
+    function parseAgeRange(ev){
+      if(ev && (Number.isFinite(ev.age_min) || Number.isFinite(ev.age_max))) return {min:(ev.age_min!=null?ev.age_min:0), max:(ev.age_max!=null?ev.age_max:99)};
+      if(ev && Number.isFinite(ev.age)) return {min:ev.age, max:ev.age};
+      var s=(ev && ev.age!=null?String(ev.age):"").trim();
+      var m=s.match(/^(\d{1,2})\s*[-–]\s*(\d{1,2})$/); if(m) return {min:Number(m[1]),max:Number(m[2])};
+      var n=Number(s); if(!Number.isNaN(n)) return {min:n,max:n};
+      return null;
+    }
+    function ageMatches(ev, sel){
+      if(!sel) return true; var want=Number(sel); if(Number.isNaN(want)) return true;
+      var r=parseAgeRange(ev); if(!r) return true; return want>=(r.min!=null?r.min:0) && want<=(r.max!=null?r.max:99);
+    }
+    function iterateDaysInclusive(a,b){
+      var arr=[], d=new Date(a.getFullYear(),a.getMonth(),a.getDate()), last=new Date(b.getFullYear(),b.getMonth(),b.getDate());
+      while(d<=last){ arr.push(new Date(d)); d.setDate(d.getDate()+1); } return arr;
+    }
+    function getEventSpanDays(ev){
+      var s=parseDate(ev && (ev.start||ev.date)); var e=parseDate(ev && (ev.end||ev.start||ev.date));
+      if(!s||!e) return []; var out=[], it=iterateDaysInclusive(s,e); for(var i=0;i<it.length;i++) out.push(dayKeyLocal(it[i])); return out;
+    }
+    function formatDateTime(iso){
+      var d=parseDate(iso); if(!d) return "–";
+      try{ return new Intl.DateTimeFormat("de-DE",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).format(d); }
+      catch(_){ var y=d.getFullYear(), m=pad2(d.getMonth()+1), dd=pad2(d.getDate()), hh=pad2(d.getHours()), mm=pad2(d.getMinutes()); return dd+"."+m+"."+y+" "+hh+":"+mm+" Uhr"; }
+    }
+
+    async function render(date){
+      date = date || new Date();
+      var months=getMonthNames(), year=date.getFullYear(), month=date.getMonth();
+      var first=new Date(year,month,1), startDay=(first.getDay()+6)%7, daysInMonth=new Date(year,month+1,0).getDate();
+      var $monthTitle=document.getElementById("monthTitle"); if($monthTitle) $monthTitle.textContent=months[month]+" "+year;
+
+      // Events laden
+      var events=[]; try{
+        var res=await fetch("/assets/data/events.json",{cache:"no-store"});
+        if(res.ok){ var data=await res.json(); events = Array.isArray(data)?data:(Array.isArray(data.events)?data.events:[]); }
+        else{ console.warn("events.json Status:",res.status); }
+      }catch(e){ console.warn("events.json Load:",e); }
+
+      // Filteroptionen erneuern bei Datenänderung
+      var changed = JSON.stringify(lastEventsCache)!==JSON.stringify(events);
+      if(changed){
+        lastEventsCache = events.slice();
+        // Klassen
+        var gradesAll=[], i, j;
+        for(i=0;i<events.length;i++){ var gArr=eventGrades(events[i]); for(j=0;j<gArr.length;j++) gradesAll.push(gArr[j]); }
+        var uniqueGrades=Array.from(new Set(gradesAll)).filter(Boolean).sort(function(a,b){return Number(a)-Number(b);});
+        // Typen
+        var typeSet=new Set(); for(i=0;i<events.length;i++){ var t=normType(events[i].event_type||events[i].type); if(t) typeSet.add(t); }
+        var uniqueTypes=Array.from(typeSet).sort();
+        // Alter
+        var ageSet=new Set(); for(i=0;i<events.length;i++){ var r=parseAgeRange(events[i]); if(!r)continue; var lo=Math.max(1,Number(r.min!=null?r.min:0)); var hi=Math.max(lo,Number(r.max!=null?r.max:lo)); for(var x=lo;x<=hi;x++) ageSet.add(String(x)); }
+        var uniqueAges=Array.from(ageSet).sort(function(a,b){return Number(a)-Number(b);});
+
+        var suffixGrade=tt("calendar.gradeSuffix","Klasse");
+        var yearsLabel =tt("calendar.yearsSuffix","Jahre");
+
+        function fill($sel, values, allLabel, mode){
+          if(!$sel) return; var prev=$sel.value; $sel.innerHTML="";
+          var optAll=document.createElement("option"); optAll.value=""; optAll.textContent=allLabel; $sel.appendChild(optAll);
+          for(var k=0;k<values.length;k++){ var v=values[k], opt=document.createElement("option"); opt.value=v;
+            if(mode==="grade") opt.textContent=v+". "+suffixGrade;
+            else if(mode==="age") opt.textContent=v+" "+yearsLabel;
+            else if(mode==="type") opt.textContent=(v==="3x3"?"3x3":(v==="camp"?"Camp":(v==="tournament"||v==="turnier"?"Turnier":v.charAt(0).toUpperCase()+v.slice(1))));
+            else opt.textContent=String(v);
+            $sel.appendChild(opt);
+          }
+          if(prev!=="" && Array.prototype.some.call($sel.options,function(o){return o.value===prev;})) $sel.value=prev; else $sel.value="";
+        }
+
+        fill($gradeFilter, uniqueGrades, tt("calendar.filters.allGrades","Alle Klassen"), "grade");
+        fill($typeFilter,  uniqueTypes,  tt("calendar.filters.allTypes","Alle Arten"),   "type");
+        fill($ageFilter,   uniqueAges,   tt("calendar.filters.allAges","Alle Altersgruppen"), "age");
+      }
+
+      var selectedGrade = normGrade($gradeFilter && $gradeFilter.value || "");
+      var selectedType  = normType($typeFilter  && $typeFilter.value  || "");
+      var selectedAge   = ($ageFilter && $ageFilter.value) || "";
+
+      // Tag → Events
+      var dayMap=new Map();
+      for(var e=0;e<events.length;e++){ var ev=events[e], span=getEventSpanDays(ev); for(var s=0;s<span.length;s++){ var key=span[s]; if(!dayMap.has(key)) dayMap.set(key,[]); dayMap.get(key).push(ev); } }
+
+      // Raster rendern
+      var wd=getWeekdays(), html="";
+      for(var w=0;w<wd.length;w++){ html+='<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>'+wd[w]+'</strong></div>'; }
+      for(var pad=0; pad<startDay; pad++) html+='<div class="cell empty"></div>';
+
+      for(var d=1; d<=daysInMonth; d++){
+        var thisDate = year+"-"+pad2(month+1)+"-"+pad2(d);
+        var list = dayMap.get(thisDate) || [], filtered=[];
+        for(var li=0; li<list.length; li++){
+          var it=list[li], grades=eventGrades(it), gradeOk=!selectedGrade || grades.indexOf(selectedGrade)!==-1;
+          var t=normType(it.event_type||it.type), typeOk=!selectedType || t===selectedType;
+          var ageOk=ageMatches(it, selectedAge);
+          if(gradeOk && typeOk && ageOk) filtered.push(it);
+        }
+
+        var eventsHTML="";
+        for(var k=0; k<filtered.length; k++){
+          var item=filtered[k], spanDays=getEventSpanDays(item), idx=spanDays.indexOf(thisDate), tagInfo="";
+          if(spanDays.length>1 && idx!==-1){ tagInfo=' <span class="muted">(Tag '+(idx+1)+'/'+spanDays.length+')</span>'; }
+
+          var startISO= item && (item.start||item.date) ? String(item.start||item.date) : "";
+          var endISO  = item && (item.end||item.start||item.date) ? String(item.end||item.start||item.date) : "";
+          var typeLow = normType(item && (item.event_type||item.type));
+          var signup  = item && item.signup_url ? String(item.signup_url) : "";
+
+          // CTA-Regel: camp/3x3 → prefer signup_url; fallback auf Standardseite
+          var signupForPopup="";
+          if(typeLow==="camp" || typeLow==="3x3"){
+            signupForPopup = signup || (typeLow==="camp" ? "/project/anmeldung_camp.html" : "/project/anmeldung_3x3.html");
+          }
+
+          var ageMin=(item && item.age_min!=null)?String(item.age_min):"";
+          var ageMax=(item && item.age_max!=null)?String(item.age_max):"";
+          var age   =(item && item.age!=null)?String(item.age):"";
+          var cap   =(item && item.capacity!=null)?String(item.capacity):"";
+
+          eventsHTML += ''
+            + '<div class="event"'
+            + ' data-title="'+escapeHtml(item.title||"")+'"'
+            + ' data-type="'+escapeHtml(typeLow)+'"'
+            + ' data-start="'+escapeHtml(startISO)+'"'
+            + ' data-end="'+escapeHtml(endISO)+'"'
+            + ' data-location="'+escapeHtml(item.location||"")+'"'
+            + ' data-address="'+escapeHtml(item.address||"")+'"'
+            + ' data-age-min="'+escapeHtml(ageMin)+'"'
+            + ' data-age-max="'+escapeHtml(ageMax)+'"'
+            + ' data-age="'+escapeHtml(age)+'"'
+            + ' data-capacity="'+escapeHtml(cap)+'"'
+            + ' data-signup="'+escapeHtml(signupForPopup)+'"'
+            + ' data-description="'+escapeHtml(item.description||"")+'">'
+            + escapeHtml(item.title||"Event") + tagInfo
+            + '</div>';
+        }
+
+        html += '<div class="cell"><div class="date">'+d+'.</div>'+eventsHTML+'</div>';
+      }
+
+      $grid.innerHTML = html;
+
+      // Klick-Handler
+      var evEls=$grid.querySelectorAll(".event");
+      for(var h=0; h<evEls.length; h++){
+        evEls[h].addEventListener("click", function(){
+          showEventPopup({
+            title:this.dataset.title,
+            type:this.dataset.type,
+            start:this.dataset.start,
+            end:this.dataset.end,
+            location:this.dataset.location,
+            address:this.dataset.address,
+            ageMin:this.dataset.ageMin,
+            ageMax:this.dataset.ageMax,
+            age:this.dataset.age,
+            capacity:this.dataset.capacity,
+            description:this.dataset.description,
+            signup:this.dataset.signup
+          });
+        });
+      }
+    }
+
+    function showEventPopup(obj){
+      var dialog=document.getElementById("eventDialog"); if(!dialog) return;
+      var $evTitle=document.getElementById("eventTitle");
+      var $evDesc =document.getElementById("eventDescription");
+      var $start  =document.getElementById("eventStart");
+      var $end    =document.getElementById("eventEnd");
+      var $loc    =document.getElementById("eventLocation");
+      var $age    =document.getElementById("eventAge");
+      var $cap    =document.getElementById("eventCapacity");
+      var $cta    =document.getElementById("eventSignupLink");
+
+      if($evTitle) $evTitle.textContent = obj.title || "Termin";
+      if($evDesc)  $evDesc.textContent  = obj.description || "";
+
+      var startTxt = formatDateTime(obj.start||"");
+      var endTxt   = formatDateTime(obj.end||obj.start||"");
+      if($start) $start.textContent = startTxt;
+      if($end)   $end.textContent   = endTxt;
+
+      var locParts=[]; if(obj.location) locParts.push(obj.location); if(obj.address) locParts.push(obj.address);
+      if($loc) $loc.textContent = locParts.join(", ") || "–";
+
+      if($age){
+        var ageText="–", hasMin=(obj.ageMin!=="" && obj.ageMin!=null), hasMax=(obj.ageMax!=="" && obj.ageMax!=null);
+        if(hasMin || hasMax){ var lo=hasMin?Number(obj.ageMin):0, hi=hasMax?Number(obj.ageMax):lo;
+          ageText = (lo && hi && lo!==hi) ? (lo+"–"+hi+" Jahre") : (hi ? (hi+" Jahre") : "–"); }
+        else if(obj.age!=="" && obj.age!=null){ ageText = Number(obj.age)+" Jahre"; }
+        $age.textContent = ageText;
+      }
+
+      if($cap){
+        var capText = "unbegrenzt";
+        if(obj.capacity!=="" && obj.capacity!=null){ var n=Number(obj.capacity); if(Number.isFinite(n)) capText="max. "+n; }
+        $cap.textContent = capText;
+      }
+
+      if($cta){
+        var t=(obj.type||"").toLowerCase();
+        if(t==="camp" || t==="3x3"){
+          var href = obj.signup || (t==="camp" ? "/project/anmeldung_camp.html" : "/project/anmeldung_3x3.html");
+          $cta.setAttribute("href", href);
+          $cta.style.display = "inline-block";
+        } else { // turnier/sonstiges
+          $cta.removeAttribute("href");
+          $cta.style.display = "none";
+        }
+      }
+
+      dialog.classList.add("open");
+    }
+
+    window.closeCalendarDialog = function(){ var d=document.getElementById("eventDialog"); if(d) d.classList.remove("open"); };
+  })();
+  </script>
 </body>
 </html>
