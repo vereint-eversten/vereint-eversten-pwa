@@ -62,7 +62,7 @@
     document.documentElement.dir  = AppLangs.RTL.has(langCode) ? "rtl" : "ltr";
     localStorage.setItem(storeKey, langCode);
 
-    const url = /assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())};
+    const url = `/assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())}`;
     const res = await fetch(url, { cache: "no-store" });
 
     if (!res.ok) {
