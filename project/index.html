@@ -1,51 +1,75 @@
 <!doctype html>
 <html lang="de">
 <head>
-<base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Projekt – Verein[t]</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Project</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<style>
-.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
-.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
-#content{padding:1rem}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
+  <style>
+    main {
+      padding: 16px 16px 84px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-gap: 16px;
+      justify-items: stretch;
+    }
+
+    .project-button {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 160px;
+      text-decoration: none;
+      color: #fff;
+      background: linear-gradient(145deg, #1a1a1a, #111);
+      border: 1px solid #222;
+      border-radius: 16px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      transition: all 0.2s ease;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+      text-align: center;
+    }
+
+    .project-button:hover {
+      background: #222;
+      transform: scale(1.03);
+      border-color: var(--accent);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.6);
+    }
+
+    .project-button span {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 640px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
-<main>
-  <header><h1 style="margin:16px">#Project</h1></header>
-  <div class="module-tabs">
-    <a href="#" data-file="concept.html">Concept</a><a href="#" data-file="league.html">League</a><a href="#" data-file="3x3.html">3x3</a><a href="#" data-file="camp.html">Camp</a><a href="#" data-file="contact.html">Contact</a>
-  </div>
-  <div id="content">Lade concept.html …</div>
-</main>
-<script>
-  renderBottomNav('project');
-  const content = document.getElementById('content');
-  async function load(fn){
-    const res = await fetch(fn);
-    const txt = await res.text();
-    content.innerHTML = txt;
-    window.scrollTo(0,0);
-  }
-  // initial
-  load('concept.html');
-  // click handlers
-  document.querySelectorAll('.module-tabs a').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      load(a.dataset.file);
-    })
-  });
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <main>
+    <a href="/project/concept.html" class="project-button">
+      <span>🏗 Konzept</span>
+    </a>
+
+    <a href="/project/camps.html" class="project-button">
+      <span>⛺ Camps</span>
+    </a>
+
+    <a href="/project/league.html" class="project-button">
+      <span>🏀 Liga</span>
+    </a>
+
+    <a href="/project/3x3.html" class="project-button">
+      <span>3x3</span>
+    </a>
+  </main>
 </body>
 </html>
