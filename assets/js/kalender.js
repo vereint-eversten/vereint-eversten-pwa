@@ -465,11 +465,11 @@
       }
     }
 
-    $dialog.classList.add("open");
+    $dialog.classList.add("active");
   }
 
   window.closeCalendarDialog = function () {
-    if ($dialog) $dialog.classList.remove("open");
+    if ($dialog) $dialog.classList.remove("active");
   };
 
   function escapeHtml(s) {
