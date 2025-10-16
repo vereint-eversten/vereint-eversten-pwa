@@ -1,25 +1,18 @@
 <!doctype html>
-<html lang="de"><head>
-<base href="/">
-
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Home</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<link rel="manifest" href="manifest.webmanifest">
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Verein[t] – Start</title>
+  <link rel="stylesheet" href="style.css">
+  <script defer src="assets/js/nav.js"></script>
 </head>
 <body>
-<main>
-  <section style="padding:1rem">
-    <h1>Verein[t] – Dashboard</h1>
-    <p>Willkommen! Nutze die Navigation unten, um zu den Modulen zu wechseln.</p>
-  </section>
-</main>
-<script>renderBottomNav('home');</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <main>
+    <section class="hero">
+      <h1>Verein[t] – Schule. Basketball. Für Alle.</h1>
+      <p>Grundgerüst aktiv. Navigation unten.</p>
+    </section>
+  </main>
 </body>
 </html>
