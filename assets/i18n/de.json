@@ -1,0 +1,146 @@
+{
+  "app": {
+    "title": "Verein[t] – Schule. Basketball. Für Alle.",
+    "description": "Digitale Plattform zur Verbindung von Schulen, Vereinen und Familien.",
+    "loading": "Lade Inhalte...",
+    "offline": "Keine Internetverbindung",
+    "error": "Ein Fehler ist aufgetreten. Bitte versuche es erneut."
+  },
+
+  "nav": {
+    "home": "Start",
+    "project": "Projekt",
+    "network": "Netzwerk",
+    "calendar": "Kalender",
+    "messenger": "Messenger",
+    "donate": "Spenden & Fördern",
+    "settings": "Einstellungen",
+    "admin": "Administration",
+    "login": "Login"
+  },
+
+  "home": {
+    "heading": "Verein[t] – Schule. Basketball. Für Alle.",
+    "intro": "Willkommen in der App von Verein[t]! Nutze die Navigation unten, um zwischen den Modulen zu wechseln.",
+    "modules": {
+      "title": "Aktuelle Module",
+      "desc": "Die Navigation unten verbindet alle Bereiche:",
+      "list": {
+        "home": "🏠 Start",
+        "project": "📚 Projekt",
+        "network": "🌐 Netzwerk",
+        "calendar": "🗓 Kalender",
+        "messenger": "💬 Messenger",
+        "donate": "💚 Spenden & Fördern"
+      }
+    },
+    "note": "Alle Seiten verwenden dieselbe style.css und nav.js."
+  },
+
+  "project": {
+    "title": "Projekt: Verein[t]",
+    "intro": "Das Projekt verbindet Schulen, Vereine und Familien – mit Basketball als Brücke.",
+    "modules": "Module des Projekts",
+    "schools": "Partnerschulen",
+    "partners": "Partner & Förderer",
+    "more": "Mehr erfahren"
+  },
+
+  "network": {
+    "title": "Netzwerk",
+    "intro": "Hier findest du alle beteiligten Organisationen, Vereine und Unterstützer.",
+    "schools": "Schulen",
+    "clubs": "Vereine",
+    "supporters": "Förderer"
+  },
+
+  "calendar": {
+    "title": "Kalender",
+    "add_event": "Neuen Termin hinzufügen",
+    "edit_event": "Termin bearbeiten",
+    "no_events": "Keine Termine gefunden.",
+    "loading": "Lade Termine...",
+    "event_types": {
+      "training": "Training",
+      "tournament": "Turnier",
+      "home_game": "Heimspiel",
+      "away_game": "Auswärtsspiel",
+      "camp": "Camp",
+      "other": "Sonstiges"
+    },
+    "feedback": {
+      "yes": "Dabei",
+      "maybe": "Unsicher",
+      "no": "Keine Zeit",
+      "comment": "Kommentar hinzufügen"
+    }
+  },
+
+  "messenger": {
+    "title": "Nachrichten",
+    "placeholder": "Nachricht eingeben...",
+    "send": "Senden",
+    "loading": "Lade Nachrichten...",
+    "empty": "Noch keine Nachrichten vorhanden.",
+    "translate": "Automatisch übersetzen",
+    "translated_from": "Übersetzt aus {lang}"
+  },
+
+  "donate": {
+    "title": "Spenden & Fördern",
+    "intro": "Unterstütze das Projekt Verein[t] und ermögliche Teilhabe für alle Kinder.",
+    "button": "Jetzt spenden",
+    "membership": "Fördermitglied werden",
+    "thank_you": "Vielen Dank für deine Unterstützung!"
+  },
+
+  "settings": {
+    "title": "Einstellungen",
+    "language": "Sprache",
+    "theme": "Design",
+    "logout": "Abmelden",
+    "profile": "Profil",
+    "notifications": "Benachrichtigungen",
+    "darkmode": "Dark Mode aktivieren"
+  },
+
+  "login": {
+    "title": "Anmelden",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "login": "Einloggen",
+    "register": "Registrieren",
+    "forgot": "Passwort vergessen?",
+    "logout": "Abmelden",
+    "success": "Erfolgreich eingeloggt!",
+    "error": "Anmeldung fehlgeschlagen. Bitte überprüfe deine Daten."
+  },
+
+  "roles": {
+    "admin": "Administrator",
+    "coach": "Trainer",
+    "guardian": "Erziehungsberechtigter",
+    "player": "Teilnehmer",
+    "public": "Öffentlich"
+  },
+
+  "common": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "back": "Zurück",
+    "yes": "Ja",
+    "no": "Nein",
+    "ok": "OK",
+    "continue": "Weiter",
+    "confirm": "Bestätigen"
+  },
+
+  "errors": {
+    "missing_data": "Daten fehlen oder sind ungültig.",
+    "not_found": "Seite nicht gefunden.",
+    "forbidden": "Zugriff verweigert.",
+    "server_error": "Serverfehler. Bitte später erneut versuchen."
+  }
+}
