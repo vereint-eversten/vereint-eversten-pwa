@@ -1,51 +1,40 @@
 <!doctype html>
 <html lang="de">
 <head>
-<base href="/">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Netzwerk – Verein[t]</title>
+  <link rel="stylesheet" href="/style.css">
+  <script defer src="/assets/js/nav.js"></script>
 
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Network</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<style>
-.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
-.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
-#content{padding:1rem}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
+  <!-- Modul-Styles (Fallback), damit die Buttons sicher sichtbar sind -->
+  <style>
+    :root{ --accent:#2ea44f; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:#0b0b0b; color:#eaeaea; }
+    main{ padding:16px 16px 84px; }
+    .grid{ display:grid; grid-template-columns: 1fr 1fr; gap:16px; }
+    @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+    .btn-tile{
+      display:flex; align-items:center; justify-content:center; min-height:160px;
+      text-align:center; text-decoration:none; color:#fff;
+      background:linear-gradient(145deg,#1a1a1a,#111); border:1px solid #222;
+      border-radius:16px; font-size:1.15rem; font-weight:700;
+      box-shadow:0 2px 6px rgba(0,0,0,.35);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+    }
+    .btn-tile:hover{ transform:scale(1.03); box-shadow:0 6px 16px rgba(0,0,0,.45); border-color:var(--accent); }
+    .btn-tile span{ opacity:.9 }
+  </style>
 </head>
+
 <body>
-<main>
-  <header><h1 style="margin:16px">#Network</h1></header>
-  <div class="module-tabs">
-    <a href="#" data-file="clubs.html">Clubs</a><a href="#" data-file="schools.html">Schools</a><a href="#" data-file="eversten.html">Eversten</a><a href="#" data-file="sponsors.html">Sponsors</a>
-  </div>
-  <div id="content">Lade clubs.html …</div>
-</main>
-<script>
-  renderBottomNav('network');
-  const content = document.getElementById('content');
-  async function load(fn){
-    const res = await fetch(fn);
-    const txt = await res.text();
-    content.innerHTML = txt;
-    window.scrollTo(0,0);
-  }
-  // initial
-  load('clubs.html');
-  // click handlers
-  document.querySelectorAll('.module-tabs a').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      load(a.dataset.file);
-    })
-  });
-</script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <main>
+    <div class="grid">
+      <a class="btn-tile" href="/network/eversten.html"><span>TuS Eversten</span></a>
+      <a class="btn-tile" href="/network/clubs.html"><span>Partnervereine</span></a>
+      <a class="btn-tile" href="/network/schools.html"><span>Partnerschulen</span></a>
+      <a class="btn-tile" href="/network/supporters.html"><span>Paten &amp; Förderer</span></a>
+    </div>
+  </main>
 </body>
 </html>
