@@ -1,4 +1,11 @@
-// modules/kalender.js (age_min/max + multi-day support)
+// js/kalender.js (final release)
+// Features:
+// - Robust init (runs even if DOMContentLoaded already fired)
+// - Filters: Klassenstufe, Art (case-insensitive, pretty labels), Alter (age_min/age_max preferred)
+// - No "0 Jahre" option; age options only from events that specify age
+// - Multiday events expand across all days (incl. across months) with "(Tag x/y)"
+// - Safe template strings / backticks
+
 (() => {
   if (window._calendarLoaded_) return;
   window._calendarLoaded_ = true;
@@ -14,11 +21,12 @@
   let $gradeFilter, $typeFilter, $ageFilter;
   let lastEventsCache = [];
 
-  function ready(fn){
-    if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", fn);
-    else fn();
+  // ---- Init (robust) ----
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
   }
-  ready(init);
 
   function init() {
     $grid       = document.getElementById("calendarGrid");
@@ -33,7 +41,10 @@
     $typeFilter  = document.getElementById("typeFilter");
     $ageFilter   = document.getElementById("ageFilter");
 
-    if (!$grid) { console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?"); return; }
+    if (!$grid) {
+      console.warn("⚠ Kalendercontainer nicht gefunden – falsches Timing?");
+      return;
+    }
 
     const prev = document.getElementById("prevBtn");
     const next = document.getElementById("nextBtn");
@@ -49,37 +60,43 @@
   }
 
   // ---------- Utils ----------
-  const toISODate = (d) => d.toISOString().slice(0,10); // YYYY-MM-DD (UTC)
   const pad2 = (n) => String(n).padStart(2, "0");
 
-  // parse ISO-like string into local Date object
   const parseDate = (s) => {
-    // If no timezone, treat as local
+    if (!s) return null;
     const dt = new Date(s);
-    if (isNaN(dt)) return null;
-    return dt;
+    return isNaN(dt) ? null : dt; // akzeptiert ISO mit/ohne TZ
   };
 
-  const dayKeyLocal = (d) => {
-    // yyyy-mm-dd using local time
-    return `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
-  };
-
+  const dayKeyLocal = (d) => `${d.getFullYear()}-${pad2(d.getMonth()+1)}-${pad2(d.getDate())}`;
   const extractDayFromISO = (iso) => {
     const dt = parseDate(iso);
     return dt ? dayKeyLocal(dt) : "";
   };
 
-  const normGrade = v => (v ?? "").toString().trim().replace(/\s*klasse$/i, "").replace(/\.$/, "");
+  const normGrade = (v) =>
+    (v ?? "").toString().trim().replace(/\s*klasse$/i, "").replace(/\.$/, "");
 
-  const eventGrades = ev => {
-    if (Array.isArray(ev?.teams) && ev.teams.length) return ev.teams.map(normGrade).filter(Boolean);
+  const eventGrades = (ev) => {
+    if (Array.isArray(ev?.teams) && ev.teams.length) {
+      return ev.teams.map(normGrade).filter(Boolean);
+    }
     const g = normGrade(ev?.grade);
     return g ? [g] : [];
   };
 
+  const normType = (v) => (v ?? "").toString().trim().toLowerCase();
+  const labelType = (v) => {
+    const t = normType(v);
+    if (t === "3x3") return "3x3";
+    if (t === "turnier") return "Turnier";
+    if (t === "camp") return "Camp";
+    if (t === "spiel") return "Spiel";
+    if (t === "sonstiges") return "Sonstiges";
+    return t ? t.charAt(0).toUpperCase() + t.slice(1) : "";
+  };
+
   const parseAgeRange = (ev) => {
-    // Prefer age_min/age_max, but support age or "7-9"
     if (Number.isFinite(ev?.age_min) || Number.isFinite(ev?.age_max)) {
       return {min: ev.age_min ?? 0, max: ev.age_max ?? 99};
     }
@@ -143,32 +160,34 @@
       console.warn("⚠ Konnte events.json nicht laden:", e);
     }
 
-    // Filter-Optionen aktualisieren
+    // ---- Filter-Optionen aktualisieren ----
     const stringify = JSON.stringify;
     if (stringify(lastEventsCache) !== stringify(events)) {
       lastEventsCache = events;
 
+      // Klassen
       const allGrades = events.flatMap(eventGrades);
       const uniqueGrades = Array.from(new Set(allGrades)).filter(Boolean).sort((a,b)=>Number(a)-Number(b));
 
+      // Typen (normalisiert)
       const uniqueTypes = Array.from(new Set(
-        events.map(ev => (ev.event_type ?? ev.type ?? "").toString().trim()).filter(Boolean)
-      )).sort((a,b)=>a.localeCompare(b));
+        events.map(ev => normType(ev.event_type ?? ev.type)).filter(Boolean)
+      )).sort();
 
-      // Alterswerte aus min..max-Bereichen aggregieren
+      // Alter (nur aus Events mit Altersinfos; exclude 0)
       const ageSet = new Set();
       events.forEach(ev => {
         const r = parseAgeRange(ev);
-        if (r) {
-          const lo = Math.max(0, r.min ?? 0), hi = Math.min(99, r.max ?? 99);
-          for (let x = lo; x <= hi; x++) ageSet.add(String(x));
-        }
+        if (!r) return;
+        const lo = Math.max(1, Number(r.min ?? 0));
+        const hi = Math.max(lo, Number(r.max ?? lo));
+        for (let x = lo; x <= hi; x++) ageSet.add(String(x));
       });
       const uniqueAges = Array.from(ageSet).sort((a,b)=>Number(a)-Number(b));
 
       const fillSelect = ($sel, values, allLabel) => {
         if (!$sel) return;
-        const prev = $sel.value;
+        const prev = $sel.value; // vorherige Auswahl
         $sel.innerHTML = "";
         const optAll = document.createElement("option");
         optAll.value = "";
@@ -179,23 +198,29 @@
           opt.value = v;
           if ($sel.id === "gradeFilter") opt.textContent = `${v}. Klasse`;
           else if ($sel.id === "ageFilter") opt.textContent = `${v} Jahre`;
+          else if ($sel.id === "typeFilter") opt.textContent = labelType(v);
           else opt.textContent = v;
           $sel.appendChild(opt);
         });
-        if ([...$sel.options].some(o => o.value === prev)) $sel.value = prev;
+        // Nur wiederherstellen, wenn prev nicht leer ist und existiert
+        if (prev !== "" && [...$sel.options].some(o => o.value === prev)) {
+          $sel.value = prev;
+        } else {
+          $sel.value = ""; // "Alle …" / "Jedes Alter"
+        }
       };
 
       fillSelect($gradeFilter, uniqueGrades, "Alle Klassen");
       fillSelect($typeFilter, uniqueTypes, "Alle Arten");
-      fillSelect($ageFilter, uniqueAges, "Alle Altersgruppen");
+      fillSelect($ageFilter, uniqueAges, "Jedes Alter");
     }
 
     const selectedGrade = $gradeFilter?.value || "";
     const selectedType  = $typeFilter?.value  || "";
     const selectedAge   = $ageFilter?.value   || "";
 
-    // Precompute: Map day -> events for faster render (multi-day expand)
-    const dayMap = new Map(); // key: yyyy-mm-dd, val: array of events
+    // ---- Precompute: Map day -> events (inkl. Multiday) ----
+    const dayMap = new Map();
     events.forEach(ev => {
       const span = getEventSpanDays(ev);
       span.forEach(key => {
@@ -204,7 +229,7 @@
       });
     });
 
-    // Kalenderzellen
+    // ---- Kalenderzellen ----
     let html = ["Mo","Di","Mi","Do","Fr","Sa","So"].map(wd =>
       `<div class="cell" style="min-height:auto;background:transparent;border:0;"><strong>${wd}</strong></div>`
     ).join("");
@@ -215,22 +240,21 @@
       const thisDate = `${year}-${pad2(month + 1)}-${pad2(d)}`;
 
       const dayEvents = (dayMap.get(thisDate) || []).filter(ev => {
-        // Klassen-Filter
+        // Klassen
         const grades = eventGrades(ev);
         const gradeOk = !selectedGrade || grades.includes(normGrade(selectedGrade));
 
-        // Typ-Filter (exakt; du kannst hier ein Mapping einfügen, falls nötig)
-        const evType = (ev.event_type ?? ev.type ?? "").toString().trim();
-        const typeOk = !selectedType || evType === selectedType;
+        // Typ (case-insensitive)
+        const evType = normType(ev.event_type ?? ev.type);
+        const typeOk = !selectedType || evType === normType(selectedType);
 
-        // Alters-Filter
+        // Alter
         const ageOk = ageMatches(ev, selectedAge);
 
         return gradeOk && typeOk && ageOk;
       });
 
       const eventsHTML = dayEvents.map(ev => {
-        // Zusatz: Tag x/y für mehrtägige Events anzeigen
         const span = getEventSpanDays(ev);
         let tagInfo = "";
         const idx = span.indexOf(thisDate);
