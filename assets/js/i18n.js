@@ -2,58 +2,81 @@
  * erwartet: /assets/js/languages.js (liefert window.AppLangs)
  * Sprachdateien: /assets/i18n/<code>.json
  */
-(() => {
+(function () {
   if (!window.AppLangs) {
     console.error("i18n.js: languages.js fehlt. Bitte vor i18n.js einbinden.");
     return;
   }
 
   // --------- State ----------
-  const storeKey = "app.lang";
-  const qsLang   = new URLSearchParams(location.search).get("lang");
-  const saved    = localStorage.getItem(storeKey);
-  const browser  = navigator.language || "de";
-  let lang       = AppLangs.normalize(qsLang || saved || browser);
-  let dict       = {};
-  const listeners = [];
+  var storeKey = "app.lang";
+  var qsLang   = new URLSearchParams(location.search).get("lang");
+  var saved    = localStorage.getItem(storeKey);
+  var browser  = navigator.language || "de";
+  var lang     = AppLangs.normalize(qsLang || saved || browser);
+  var dict     = {};
+  var listeners = [];
 
   // --------- Public API ----------
-  function t(key, def = "") {
+  function t(key, def) {
+    if (def === void 0) def = "";
     if (!key) return def || "";
-    const val = key.split(".").reduce((o, k) => (o && o[k] != null) ? o[k] : undefined, dict);
+    var parts = key.split(".");
+    var val = dict;
+    for (var i = 0; i < parts.length; i++) {
+      if (val && val[parts[i]] !== undefined && val[parts[i]] !== null) {
+        val = val[parts[i]];
+      } else {
+        val = undefined;
+        break;
+      }
+    }
     return (val == null) ? (def || key) : val;
   }
 
   function setLang(newLang) {
-    const normalized = AppLangs.normalize(newLang);
+    var normalized = AppLangs.normalize(newLang);
     if (normalized === lang) return;
     lang = normalized;
-    load(lang).catch(err => console.error("i18n: load failed", err));
+    load(lang).catch(function (err) { console.error("i18n: load failed", err); });
   }
 
   function onChange(cb) { if (typeof cb === "function") listeners.push(cb); }
 
   // Ersetzt Texte im DOM
-  function applyTranslations(root = document) {
-    root.querySelectorAll("[data-i18n]").forEach(el => {
-      const key = el.getAttribute("data-i18n");
+  function applyTranslations(root) {
+    if (!root) root = document;
+
+    // data-i18n: Inhalt
+    var els = root.querySelectorAll("[data-i18n]");
+    for (var i = 0; i < els.length; i++) {
+      var el  = els[i];
+      var key = el.getAttribute("data-i18n");
       el.textContent = t(key, el.textContent);
-    });
+    }
 
     // data-i18n-attr="placeholder:forms.email|title:nav.home"
-    root.querySelectorAll("[data-i18n-attr]").forEach(el => {
-      const pairs = el.getAttribute("data-i18n-attr").split("|");
-      pairs.forEach(p => {
-        const [attr, key] = p.split(":");
-        if (!attr || !key) return;
-        const current = el.getAttribute(attr.trim()) || "";
-        el.setAttribute(attr.trim(), t(key.trim(), current));
-      });
-    });
+    var attrEls = root.querySelectorAll("[data-i18n-attr]");
+    for (var j = 0; j < attrEls.length; j++) {
+      var el2 = attrEls[j];
+      var pairs = el2.getAttribute("data-i18n-attr").split("|");
+      for (var k = 0; k < pairs.length; k++) {
+        var p = pairs[k];
+        var idx = p.indexOf(":");
+        if (idx === -1) continue;
+        var attr = p.slice(0, idx).trim();
+        var key2 = p.slice(idx + 1).trim();
+        if (!attr || !key2) continue;
+        var current = el2.getAttribute(attr) || "";
+        el2.setAttribute(attr, t(key2, current));
+      }
+    }
 
     // <title data-i18n="...">
-    const titleEl = document.querySelector("head > title[data-i18n]");
-    if (titleEl) titleEl.textContent = t(titleEl.getAttribute("data-i18n"), titleEl.textContent);
+    var titleEl = document.querySelector("head > title[data-i18n]");
+    if (titleEl) {
+      titleEl.textContent = t(titleEl.getAttribute("data-i18n"), titleEl.textContent);
+    }
   }
 
   // --------- Loader ----------
@@ -62,32 +85,33 @@
     document.documentElement.dir  = AppLangs.RTL.has(langCode) ? "rtl" : "ltr";
     localStorage.setItem(storeKey, langCode);
 
-    const url = `/assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())}`;
-    const res = await fetch(url, { cache: "no-store" });
+    var url = "/assets/i18n/" + langCode + ".json?v=" + encodeURIComponent(__buildVersion());
+    var res = await fetch(url, { cache: "no-store" });
 
     if (!res.ok) {
-      // Fallback auf Deutsch, damit die App nicht „leer“ bleibt
-      console.warn(i18n: ${url} (${res.status}) – fallback to de);
-      const fallback = await fetch(/assets/i18n/de.json?v=${encodeURIComponent(__buildVersion())}, { cache: "no-store" });
-      if (!fallback.ok) throw new Error(missing i18n file: ${url} and de.json);
-      dict = await fallback.json();
+      console.warn("i18n: " + url + " (" + res.status + ") – fallback to de");
+      var fb = await fetch("/assets/i18n/de.json?v=" + encodeURIComponent(__buildVersion()), { cache: "no-store" });
+      if (!fb.ok) throw new Error("missing i18n file: " + url + " and de.json");
+      dict = await fb.json();
     } else {
       dict = await res.json();
     }
 
     applyTranslations(document);
-    listeners.forEach(fn => { try { fn(langCode); } catch (e) { console.warn(e); } });
+    for (var i = 0; i < listeners.length; i++) {
+      try { listeners[i](langCode); } catch (e) { console.warn(e); }
+    }
   }
 
-  // kleine Hilfsfunktion: Build/Cache-Bust aus meta[name=app-build] oder Datum
+  // Build/Cache-Bust (meta[name=app-build] oder Datum)
   function __buildVersion() {
-    const m = document.querySelector('meta[name="app-build"]');
-    return m?.getAttribute("content") || (new Date()).toISOString().slice(0,10);
+    var m = document.querySelector('meta[name="app-build"]');
+    return (m && m.getAttribute("content")) || (new Date()).toISOString().slice(0,10);
   }
 
   // --------- Init ----------
   if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", () => load(lang).catch(console.error));
+    document.addEventListener("DOMContentLoaded", function () { load(lang).catch(console.error); });
   } else {
     load(lang).catch(console.error);
   }
@@ -95,7 +119,7 @@
   // Global export
   window.i18n = {
     get lang(){ return lang; },
-    t, setLang, onChange, applyTranslations,
+    t: t, setLang: setLang, onChange: onChange, applyTranslations: applyTranslations,
     SUPPORTED: AppLangs.SUPPORTED
   };
 })();
