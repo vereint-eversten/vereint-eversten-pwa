@@ -1,6 +1,6 @@
 /* i18n.js — minimal, robust, scalable
  * erwartet: /assets/js/languages.js (liefert window.AppLangs)
- * Sprachdateien: /assets/i18n/<code>.json  (z.B. de.json, en.json, pt-PT.json)
+ * Sprachdateien: /assets/i18n/<code>.json
  */
 (() => {
   if (!window.AppLangs) {
@@ -14,8 +14,8 @@
   const saved    = localStorage.getItem(storeKey);
   const browser  = navigator.language || "de";
   let lang       = AppLangs.normalize(qsLang || saved || browser);
-  let dict       = {};              // aktive Übersetzungen
-  const listeners = [];             // callbacks für Sprachwechsel
+  let dict       = {};
+  const listeners = [];
 
   // --------- Public API ----------
   function t(key, def = "") {
@@ -35,12 +35,12 @@
 
   // Ersetzt Texte im DOM
   function applyTranslations(root = document) {
-    // innerText/HTML
     root.querySelectorAll("[data-i18n]").forEach(el => {
       const key = el.getAttribute("data-i18n");
       el.textContent = t(key, el.textContent);
     });
-    // Attribute: data-i18n-attr="placeholder:forms.email|title:nav.home"
+
+    // data-i18n-attr="placeholder:forms.email|title:nav.home"
     root.querySelectorAll("[data-i18n-attr]").forEach(el => {
       const pairs = el.getAttribute("data-i18n-attr").split("|");
       pairs.forEach(p => {
@@ -50,6 +50,7 @@
         el.setAttribute(attr.trim(), t(key.trim(), current));
       });
     });
+
     // <title data-i18n="...">
     const titleEl = document.querySelector("head > title[data-i18n]");
     if (titleEl) titleEl.textContent = t(titleEl.getAttribute("data-i18n"), titleEl.textContent);
@@ -57,19 +58,21 @@
 
   // --------- Loader ----------
   async function load(langCode) {
-    // Sprache/Dir an <html> setzen
     document.documentElement.lang = langCode;
     document.documentElement.dir  = AppLangs.RTL.has(langCode) ? "rtl" : "ltr";
     localStorage.setItem(storeKey, langCode);
 
-    // JSON laden (network-first; kein harter Precache)
-    const url = /assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion() )};
+    // ✅ Backticks + führender Slash + korrekte Klammern
+    const url = /assets/i18n/${langCode}.json?v=${encodeURIComponent(__buildVersion())};
     const res = await fetch(url, { cache: "no-store" });
+
+    // ✅ Fehlertext als Template-String
     if (!res.ok) throw new Error(missing i18n file: ${url} (${res.status}));
+
     dict = await res.json();
 
     applyTranslations(document);
-    listeners.forEach(fn => { try { fn(langCode); } catch(e){ console.warn(e);} });
+    listeners.forEach(fn => { try { fn(langCode); } catch (e) { console.warn(e); } });
   }
 
   // kleine Hilfsfunktion: Build/Cache-Bust aus meta[name=app-build] oder Datum
@@ -86,5 +89,9 @@
   }
 
   // Global export
-  window.i18n = { get lang(){ return lang; }, t, setLang, onChange, applyTranslations, SUPPORTED: AppLangs.SUPPORTED };
+  window.i18n = {
+    get lang(){ return lang; },
+    t, setLang, onChange, applyTranslations,
+    SUPPORTED: AppLangs.SUPPORTED
+  };
 })();
