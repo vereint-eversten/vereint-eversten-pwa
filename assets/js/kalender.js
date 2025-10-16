@@ -296,7 +296,7 @@
     $evTitle.textContent = title || "Termin";
     $evDate.textContent  = date  || "";
     $evDesc.textContent  = description || "";
-    $evSignup?.setAttribute("href", "../camp/anmeldung.html");
+    $evSignup?.setAttribute("href", "..project/camp/anmeldung.html");
     $dialog.classList.add("active");
   }
 
