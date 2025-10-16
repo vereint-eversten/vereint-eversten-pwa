@@ -1,51 +1,85 @@
 <!doctype html>
 <html lang="de">
 <head>
-<base href="/">
-
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Shop</title>
-<link rel="stylesheet" href="style.css"/>
-<script defer src="assets/js/nav.js"></script>
-<style>
-.module-tabs{display:flex;gap:.5rem;overflow:auto;padding:.5rem;border-bottom:1px solid #333;background:#111;position:sticky;top:0}
-.module-tabs a{color:#9fd4a2;text-decoration:none;padding:.4rem .6rem;border:1px solid #254;border-radius:.4rem;white-space:nowrap}
-#content{padding:1rem}
-</style>
-<link rel="manifest" href="manifest.webmanifest">
-</head>
-<body>
-<main>
-  <header><h1 style="margin:16px">#Shop</h1></header>
-  <div class="module-tabs">
-    <a href="#" data-file="shop.html">Shop</a>
-  </div>
-  <div id="content">Lade shop.html …</div>
-</main>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Shop – Verein[t]</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <script>
-  renderBottomNav('shop');
-  const content = document.getElementById('content');
-  async function load(fn){
-    const res = await fetch(fn);
-    const txt = await res.text();
-    content.innerHTML = txt;
-    window.scrollTo(0,0);
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
   }
-  // initial
-  load('shop.html');
-  // click handlers
-  document.querySelectorAll('.module-tabs a').forEach(a=>{
-    a.addEventListener('click', e=>{
-      e.preventDefault();
-      load(a.dataset.file);
-    })
-  });
 </script>
-<script>
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => navigator.serviceWorker.register('sw.js'));
-}
-</script>
+  <script defer src="/assets/js/nav.js"></script>
+
+  <style>
+    main {
+      padding: 16px 16px 84px;
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .product {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 10px;
+      text-align: center;
+      padding: 12px;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .product:hover {
+      transform: scale(1.03);
+      border-color: var(--accent);
+    }
+    .product img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    .product h3 {
+      margin: 4px 0;
+      font-size: 1rem;
+    }
+    .product p {
+      margin: 0;
+      color: #aaa;
+      font-size: .9rem;
+    }
+  </style>
+</head>
+
+<body>
+  <main>
+    <h1>🛒 Shop</h1>
+    <p>Hier kannst du Vereinsartikel, Camp-Shirts und mehr bestellen.</p>
+
+    <section class="product-grid">
+      <div class="product">
+        <img src="/assets/icons/shop.svg" alt="Produkt">
+        <h3>Camp-Shirt</h3>
+        <p>15 €</p>
+      </div>
+      <div class="product">
+        <img src="/assets/icons/shop.svg" alt="Produkt">
+        <h3>Trinkflasche</h3>
+        <p>8 €</p>
+      </div>
+      <div class="product">
+        <img src="/assets/icons/shop.svg" alt="Produkt">
+        <h3>Sportbeutel</h3>
+        <p>10 €</p>
+      </div>
+    </section>
+  </main>
 </body>
 </html>
