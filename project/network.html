@@ -1,1 +1,87 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
+  <title data-i18n="network.title">Netzwerk – Verein[t]</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-16">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('/sw.js').catch(function(){});
+      });
+    }
+  </script>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n (Reihenfolge wichtig) -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
+  <script defer src="/assets/js/nav.js"></script>
+
+  <!-- Modul-Styles -->
+  <style>
+    :root{ --accent:#2ea44f; }
+    body{ margin:0; font-family:system-ui,-apple-system,Segoe UI,Roboto,Inter,Arial,sans-serif; background:#0b0b0b; color:#eaeaea; }
+    main{ padding:16px 16px 84px; }
+    .grid{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media (max-width:640px){ .grid{ grid-template-columns:1fr; } }
+    .btn-tile{
+      display:flex; align-items:center; justify-content:center; min-height:160px;
+      text-align:center; text-decoration:none; color:#fff;
+      background:linear-gradient(145deg,#1a1a1a,#111); border:1px solid #222;
+      border-radius:16px; font-size:1.15rem; font-weight:700;
+      box-shadow:0 2px 6px rgba(0,0,0,.35);
+      transition:transform .15s ease, box-shadow .15s ease, border-color .15s ease, background .15s ease;
+      padding:12px;
+    }
+    .btn-tile:hover,
+    .btn-tile:focus-visible{
+      transform:scale(1.03);
+      box-shadow:0 6px 16px rgba(0,0,0,.45);
+      border-color:var(--accent);
+      outline:none;
+    }
+    .btn-tile span{ opacity:.9; }
+  </style>
+</head>
+
+<body>
+  <main aria-labelledby="networkTitle">
+    <h1 id="networkTitle" class="visually-hidden" data-i18n="network.title">Netzwerk – Verein[t]</h1>
+
+    <div class="grid">
+      <a class="btn-tile" href="/network/eversten.html" aria-label="TuS Eversten" data-i18n-attr="aria-label:network.eversten">
+        <span data-i18n="network.eversten">TuS Eversten</span>
+      </a>
+
+      <a class="btn-tile" href="/network/clubs.html" aria-label="Partnervereine" data-i18n-attr="aria-label:network.clubs">
+        <span data-i18n="network.clubs">Partnervereine</span>
+      </a>
+
+      <a class="btn-tile" href="/network/schools.html" aria-label="Partnerschulen" data-i18n-attr="aria-label:network.schools">
+        <span data-i18n="network.schools">Partnerschulen</span>
+      </a>
+
+      <a class="btn-tile" href="/network/supporters.html" aria-label="Paten & Förderer" data-i18n-attr="aria-label:network.supporters">
+        <span data-i18n="network.supporters">Paten &amp; Förderer</span>
+      </a>
+    </div>
+  </main>
+</body>
+</html>
