@@ -1,1 +1,202 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Passwort zurücksetzen – Verein[t]</title>
 
+  <!-- PWA Meta -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="/style.css">
+
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+  <style>
+    body {
+      background: #0b0b0b;
+      color: #eee;
+      font-family: "Roboto", sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    main {
+      padding: 24px;
+      max-width: 420px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .card {
+      background: #111;
+      border: 1px solid #222;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 24px;
+    }
+    label {
+      display: block;
+      margin-top: 12px;
+      color: #bbb;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #2a2a2a;
+      border-radius: 8px;
+      background: #141414;
+      color: #eaeaea;
+      font-size: 1rem;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: 1px solid #2a2a2a;
+      background: #1a1a1a;
+      color: #fff;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+    }
+    .btn.primary {
+      background: #00c060;
+      border: none;
+      color: #0b0b0b;
+      font-weight: 700;
+    }
+    .msg {
+      margin-top: 12px;
+      font-size: 0.95rem;
+      display: none;
+    }
+    .msg.err {
+      color: #ff6f6f;
+    }
+    .msg.ok {
+      color: #6fe28f;
+    }
+    p.muted {
+      color: #9aa0a6;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>🔑 Passwort zurücksetzen</h1>
+
+    <!-- Schritt 1: Link per E-Mail anfordern -->
+    <section id="requestCard" class="card" style="display:none;">
+      <p class="muted">Gib deine E-Mail-Adresse ein. Du erhältst einen Link, um dein Passwort zurückzusetzen.</p>
+      <label for="reqEmail">E-Mail</label>
+      <input id="reqEmail" type="email" placeholder="name@example.org" autocomplete="email">
+      <div class="row">
+        <button id="sendLinkBtn" class="btn primary">Link senden</button>
+        <a href="/home/" class="btn">Abbrechen</a>
+      </div>
+      <div id="reqMsg" class="msg"></div>
+    </section>
+
+    <!-- Schritt 2: Neues Passwort setzen -->
+    <section id="changeCard" class="card" style="display:none;">
+      <p class="muted">Lege jetzt dein neues Passwort fest.</p>
+      <label for="newPw">Neues Passwort</label>
+      <input id="newPw" type="password" placeholder="••••••••" autocomplete="new-password">
+      <label for="newPw2">Passwort wiederholen</label>
+      <input id="newPw2" type="password" placeholder="••••••••" autocomplete="new-password">
+      <div class="row">
+        <button id="setPwBtn" class="btn primary">Passwort speichern</button>
+        <a href="/home/" class="btn">Abbrechen</a>
+      </div>
+      <div id="chgMsg" class="msg"></div>
+    </section>
+  </main>
+
+  <script>
+    // === Supabase Setup ===
+    const SUPABASE_URL  = "https://ntccnkvpxrpwgxmiherf.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc";
+    const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const requestCard = document.getElementById("requestCard");
+    const changeCard  = document.getElementById("changeCard");
+    const reqEmail    = document.getElementById("reqEmail");
+    const reqMsg      = document.getElementById("reqMsg");
+    const sendLinkBtn = document.getElementById("sendLinkBtn");
+    const newPw       = document.getElementById("newPw");
+    const newPw2      = document.getElementById("newPw2");
+    const chgMsg      = document.getElementById("chgMsg");
+    const setPwBtn    = document.getElementById("setPwBtn");
+
+    function show(el, yes = true) { el.style.display = yes ? "" : "none"; }
+    function msg(el, text, ok = false) {
+      el.textContent = text;
+      el.className = "msg " + (ok ? "ok" : "err");
+      show(el);
+    }
+
+    // Prüfen ob User über Recovery-Link kommt
+    function isRecoveryLink() {
+      const hash = new URLSearchParams(location.hash.slice(1));
+      return hash.get("type") === "recovery" && hash.get("access_token");
+    }
+
+    async function init() {
+      if (isRecoveryLink()) {
+        const { data } = await sb.auth.getSession();
+        if (data?.session) {
+          show(changeCard);
+          show(requestCard, false);
+          return;
+        }
+      }
+      show(requestCard);
+    }
+
+    // Passwort-Link anfordern
+    sendLinkBtn.onclick = async () => {
+      const email = reqEmail.value.trim();
+      if (!email) return msg(reqMsg, "Bitte eine gültige E-Mail eingeben.");
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: location.origin + "/auth/reset.html",
+      });
+      if (error) return msg(reqMsg, error.message);
+      msg(reqMsg, "Wenn die E-Mail existiert, wurde ein Link gesendet.", true);
+    };
+
+    // Neues Passwort speichern
+    setPwBtn.onclick = async () => {
+      if (newPw.value !== newPw2.value || !newPw.value) {
+        return msg(chgMsg, "Passwörter stimmen nicht überein.");
+      }
+      const { data } = await sb.auth.getSession();
+      if (!data?.session) {
+        return msg(chgMsg, "Sitzung nicht gefunden. Bitte Link erneut öffnen.");
+      }
+      const { error } = await sb.auth.updateUser({ password: newPw.value });
+      if (error) return msg(chgMsg, error.message);
+      msg(chgMsg, "Passwort wurde aktualisiert. Du kannst dich jetzt einloggen.", true);
+      history.replaceState({}, "", location.pathname);
+    };
+
+    init();
+  </script>
+</body>
+</html>
