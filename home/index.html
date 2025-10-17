@@ -3,8 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
-  <title data-i18n="home.metaTitle">Verein[t] – Schule. Basketball. Für Alle.</title>
+  <title>Verein[t] – Schule. Basketball. Für Alle.</title>
 
   <!-- PWA -->
   <link rel="manifest" href="/manifest.webmanifest">
@@ -13,8 +12,8 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
-  <meta name="app-build" content="2025-10-17">
 
+  <!-- Service Worker -->
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () =>
@@ -23,60 +22,45 @@
     }
   </script>
 
-  <!-- Styles -->
-  <link rel="stylesheet" href="/style.css">
-
-  <!-- i18n (dynamisch, keine festen JSON-Dateien) -->
-  <script defer src="/assets/js/languages.js"></script>
-  <script defer src="/assets/js/i18n.js"></script>
-  <script defer src="/assets/js/lang-toggle.js"></script>
-
-  <!-- Navigation -->
-  <script defer src="/assets/js/nav.js"></script>
-
   <!-- Supabase -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
 
+  <!-- STYLES -->
   <style>
-    main { padding: 16px 16px 84px; }
-    .hero { text-align: center; margin-top: 2rem; }
-    .hero h1 { font-size: 1.6rem; margin-bottom: .5rem; }
-    .hero p { color: #9aa0a6; margin: 0; }
-
-    .grid-2 { display: grid; gap: 1rem; grid-template-columns: 1fr; }
-    @media (min-width: 840px) { .grid-2 { grid-template-columns: 1fr 1fr; } }
-
-    .card:hover { border-color: var(--accent); }
-
-    .auth-card input, .auth-card select {
-      width: 100%; padding: 10px; border-radius: 8px;
-      border: 1px solid #2a2a2a; background: #141414; color: #eaeaea; margin-top: 8px;
+    :root{
+      --bg:#0b0b0b; --fg:#eaeaea; --accent:#2ea44f; --border:#1f1f1f;
+      --muted:#9aa0a6; font-family:system-ui,-apple-system,Roboto,Arial,sans-serif;
     }
-    .row { margin-top: 8px; }
-    .row.inline { display: flex; gap: 8px; flex-wrap: wrap; }
-    .row.inline > * { flex: 1 1 200px; }
-
-    .auth-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
-    .btn { display: inline-block; padding: 10px 12px; border-radius: 8px;
-      text-decoration: none; color: #fff; border: 1px solid #2a2a2a; background: #1a1a1a; }
-    .btn.primary { background: var(--accent,#2ea44f); border-color: transparent; color: #0b0b0b; font-weight: 700; }
-
-    .muted-small { color: #9aa0a6; font-size: .9rem; margin-top: 6px; }
-    .err { color: #ff7b7b; font-size: .9rem; margin-top: 8px; }
-    .ok { color: #6ee7a1; font-size: .9rem; margin-top: 8px; }
-    .user-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
-    .user-email { font-weight: 600; }
+    body{margin:0;background:var(--bg);color:var(--fg);}
+    main{padding:16px 16px 84px;}
+    h1{text-align:center;margin-top:2rem;font-size:1.6rem;}
+    p{text-align:center;color:var(--muted);margin-top:0;}
+    .grid-2{display:grid;gap:1rem;grid-template-columns:1fr;}
+    @media(min-width:840px){.grid-2{grid-template-columns:1fr 1fr;}}
+    .card{background:#111;border:1px solid var(--border);border-radius:12px;padding:16px;}
+    .card:hover{border-color:var(--accent);}
+    .auth-card input{width:100%;padding:10px;border-radius:8px;border:1px solid #2a2a2a;background:#141414;color:#eaeaea;margin-top:8px;}
+    .row.inline{display:flex;gap:8px;flex-wrap:wrap;}
+    .row.inline>*{flex:1 1 200px;}
+    .auth-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+    .btn{padding:10px 12px;border-radius:8px;text-decoration:none;color:#fff;border:1px solid #2a2a2a;background:#1a1a1a;cursor:pointer;}
+    .btn.primary{background:var(--accent);color:#0b0b0b;font-weight:700;border-color:transparent;}
+    .muted-small{color:var(--muted);font-size:.9rem;margin-top:6px;}
+    .err{color:#ff7b7b;font-size:.9rem;margin-top:8px;}
+    .ok{color:#6ee7a1;font-size:.9rem;margin-top:8px;}
+    .user-row{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .user-email{font-weight:600;}
   </style>
 </head>
 
-<body data-auth="out">
+<body>
   <main>
     <section class="hero">
-      <h1 data-i18n="home.title">Willkommen bei Verein[t]</h1>
-      <p data-i18n="home.subtitle">Schule. Basketball. Für Alle.</p>
+      <h1>Willkommen bei Verein[t]</h1>
+      <p>Schule. Basketball. Für Alle.</p>
     </section>
 
-    <!-- LOGIN / REGISTRIERUNG -->
+    <!-- LOGIN + REGISTRIERUNG -->
     <section class="grid-2" style="margin-top:16px">
       <!-- LOGIN -->
       <div class="card auth-card" id="authLogin">
@@ -120,22 +104,20 @@
         <input id="regEmail" type="email">
         <label class="muted-small">Passwort</label>
         <input id="regPw" type="password">
-        <label class="muted-small">
-          <input id="regConsent" type="checkbox">
-          Ich stimme der Datenschutzerklärung zu
-          <a href="/datenschutz.html" target="_blank" class="btn">Details</a>
+        <label class="muted-small" style="display:flex;align-items:center;gap:6px;margin-top:8px;">
+          <input id="regConsent" type="checkbox"> Datenschutz akzeptiert
         </label>
         <div class="auth-actions">
           <button id="signupBtn" class="btn primary">Registrieren</button>
           <button id="clearSignup" class="btn">Felder leeren</button>
         </div>
         <div id="signupMsg" class="err" style="display:none"></div>
-        <div id="signupOk" class="ok" style="display:none">Bestätigungs-E-Mail wurde gesendet.</div>
+        <div id="signupOk" class="ok" style="display:none">Bestätigungs-E-Mail gesendet.</div>
       </div>
     </section>
 
     <!-- USER-INFO -->
-    <section id="userSection" class="card" style="margin-top:16px; display:none;">
+    <section id="userSection" class="card" style="margin-top:16px;display:none;">
       <div class="user-row">
         <div>
           <div class="muted-small">Angemeldet als</div>
@@ -148,7 +130,7 @@
       </div>
     </section>
 
-    <!-- INHALTE -->
+    <!-- INFO-KARTEN -->
     <section class="grid-2" style="margin-top:16px">
       <div class="card">
         <h2>🗓 Nächste Termine</h2>
@@ -165,110 +147,115 @@
     </section>
   </main>
 
-  <!-- LOGIN/REGISTRIERUNG MIT SUPABASE -->
+  <!-- LOGIN/REGISTRIERUNG-LOGIK -->
   <script>
-    const SUPABASE_URL  = "https://ntccnkvpxrpwgxmiherf.supabase.co";
+    const SUPABASE_URL = "https://ntccnkvpxrpwgxmiherf.supabase.co";
     const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc";
     const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-    const authLogin = document.getElementById('authLogin');
-    const authSignup = document.getElementById('authSignup');
-    const userSection = document.getElementById('userSection');
-    const loginEmail = document.getElementById('loginEmail');
-    const loginPassword = document.getElementById('loginPassword');
-    const loginMsg = document.getElementById('loginMsg');
-    const loginOk = document.getElementById('loginOk');
-    const regFirst = document.getElementById('regFirst');
-    const regLast = document.getElementById('regLast');
-    const regSchool = document.getElementById('regSchool');
-    const regBirth = document.getElementById('regBirth');
-    const regEmail = document.getElementById('regEmail');
-    const regPw = document.getElementById('regPw');
-    const regConsent = document.getElementById('regConsent');
-    const signupMsg = document.getElementById('signupMsg');
-    const signupOk = document.getElementById('signupOk');
-    const userEmail = document.getElementById('userEmail');
+    const els = {
+      loginEmail: document.getElementById('loginEmail'),
+      loginPassword: document.getElementById('loginPassword'),
+      loginMsg: document.getElementById('loginMsg'),
+      loginOk: document.getElementById('loginOk'),
+      signupMsg: document.getElementById('signupMsg'),
+      signupOk: document.getElementById('signupOk'),
+      regFirst: document.getElementById('regFirst'),
+      regLast: document.getElementById('regLast'),
+      regSchool: document.getElementById('regSchool'),
+      regBirth: document.getElementById('regBirth'),
+      regEmail: document.getElementById('regEmail'),
+      regPw: document.getElementById('regPw'),
+      regConsent: document.getElementById('regConsent'),
+      userEmail: document.getElementById('userEmail'),
+      userSection: document.getElementById('userSection'),
+      authLogin: document.getElementById('authLogin'),
+      authSignup: document.getElementById('authSignup')
+    };
 
-    function show(el, visible) { el.style.display = visible ? '' : 'none'; }
+    function show(el, visible){ el.style.display = visible ? '' : 'none'; }
 
-    async function refreshAuthUI() {
+    async function refreshAuthUI(){
       const { data } = await supabaseClient.auth.getSession();
       const user = data?.session?.user;
-      show(authLogin, !user);
-      show(authSignup, !user);
-      show(userSection, !!user);
-      if (user) userEmail.textContent = user.email;
+      show(els.authLogin, !user);
+      show(els.authSignup, !user);
+      show(els.userSection, !!user);
+      if (user) els.userEmail.textContent = user.email;
     }
 
-    document.getElementById('loginBtn').onclick = async () => {
+    // LOGIN
+    document.getElementById('loginBtn').onclick = async ()=>{
       const { error } = await supabaseClient.auth.signInWithPassword({
-        email: loginEmail.value,
-        password: loginPassword.value
+        email: els.loginEmail.value,
+        password: els.loginPassword.value
       });
-      if (error) { loginMsg.textContent = error.message; show(loginMsg, true); }
-      else { show(loginOk, true); refreshAuthUI(); }
+      if (error){ els.loginMsg.textContent = error.message; show(els.loginMsg,true);}
+      else{ show(els.loginOk,true); refreshAuthUI(); }
     };
 
-    document.getElementById('resetBtn').onclick = async () => {
-      const { error } = await supabaseClient.auth.resetPasswordForEmail(loginEmail.value, {
-        redirectTo: location.origin + '/auth/reset.html'
-      });
-      loginMsg.textContent = error ? error.message : 'Reset-Link wurde gesendet.';
-      show(loginMsg, true);
+    // RESET
+    document.getElementById('resetBtn').onclick = async ()=>{
+      const { error } = await supabaseClient.auth.resetPasswordForEmail(
+        els.loginEmail.value,{ redirectTo: location.origin + '/auth/reset.html' }
+      );
+      els.loginMsg.textContent = error ? error.message : 'Reset-Link wurde gesendet.';
+      show(els.loginMsg,true);
     };
 
-    document.getElementById('signupBtn').onclick = async () => {
-      if (!regConsent.checked) {
-        signupMsg.textContent = 'Bitte Datenschutz bestätigen.'; show(signupMsg, true); return;
+    // SIGNUP
+    document.getElementById('signupBtn').onclick = async ()=>{
+      if(!els.regConsent.checked){
+        els.signupMsg.textContent = 'Bitte Datenschutz bestätigen.'; show(els.signupMsg,true); return;
       }
 
       const { data, error } = await supabaseClient.auth.signUp({
-        email: regEmail.value,
-        password: regPw.value,
-        options: {
-          data: {
-            vorname: regFirst.value,
-            nachname: regLast.value,
-            schule: regSchool.value,
-            geburtsjahr: regBirth.value,
-            rolle: "user"
+        email: els.regEmail.value,
+        password: els.regPw.value,
+        options:{
+          data:{
+            vorname: els.regFirst.value,
+            nachname: els.regLast.value,
+            schule: els.regSchool.value,
+            geburtsjahr: els.regBirth.value,
+            rolle:'user'
           },
           emailRedirectTo: location.origin + '/auth/callback.html'
         }
       });
 
-      if (error) { signupMsg.textContent = error.message; show(signupMsg, true); return; }
+      if(error){ els.signupMsg.textContent = error.message; show(els.signupMsg,true); return; }
 
-      // zusätzlichen Datensatz in user_profiles anlegen
-      if (data?.user) {
+      if(data?.user){
         await supabaseClient.from('user_profiles').insert([{
-          id: data.user.id,
-          vorname: regFirst.value,
-          nachname: regLast.value,
-          schule: regSchool.value,
-          geburtsjahr: regBirth.value,
-          email: regEmail.value,
-          rolle: 'user',
-          datenschutz: regConsent.checked,
-          created_at: new Date().toISOString()
+          id:data.user.id,
+          vorname: els.regFirst.value,
+          nachname: els.regLast.value,
+          schule: els.regSchool.value,
+          geburtsjahr: els.regBirth.value,
+          email: els.regEmail.value,
+          rolle:'user',
+          datenschutz: els.regConsent.checked,
+          created_at:new Date().toISOString()
         }]);
       }
 
-      signupMsg.textContent = 'Bestätigungs-E-Mail wurde gesendet.';
-      show(signupMsg, true); show(signupOk, true);
+      els.signupMsg.textContent = 'Bestätigungs-E-Mail gesendet.';
+      show(els.signupMsg,true); show(els.signupOk,true);
     };
 
-    document.getElementById('clearSignup').onclick = () => {
-      [regFirst, regLast, regSchool, regBirth, regEmail, regPw].forEach(i => i.value = '');
-      regConsent.checked = false; show(signupMsg, false); show(signupOk, false);
+    // CLEAR
+    document.getElementById('clearSignup').onclick = ()=>{
+      [els.regFirst,els.regLast,els.regSchool,els.regBirth,els.regEmail,els.regPw].forEach(i=>i.value='');
+      els.regConsent.checked=false; show(els.signupMsg,false); show(els.signupOk,false);
     };
 
-    document.getElementById('logoutBtn').onclick = async () => {
-      await supabaseClient.auth.signOut();
-      refreshAuthUI();
+    // LOGOUT
+    document.getElementById('logoutBtn').onclick = async ()=>{
+      await supabaseClient.auth.signOut(); refreshAuthUI();
     };
 
-    supabaseClient.auth.onAuthStateChange(() => refreshAuthUI());
+    supabaseClient.auth.onAuthStateChange(()=>refreshAuthUI());
     refreshAuthUI();
   </script>
 </body>
