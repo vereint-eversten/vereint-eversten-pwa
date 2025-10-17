@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Administration – Nutzerverwaltung</title>
+
+<link rel="manifest" href="/manifest.webmanifest">
+<meta name="theme-color" content="#0b0b0b">
+<link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+
+<link rel="stylesheet" href="/style.css">
+<script defer src="/assets/js/nav.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
+<style>
+  main{ padding:16px 16px 84px }
+  .toolbar{ display:flex; gap:8px; flex-wrap:wrap; align-items:center; margin-bottom:12px }
+  .toolbar input, .toolbar select{
+    padding:10px; border-radius:8px; border:1px solid #2a2a2a; background:#141414; color:#eaeaea;
+  }
+  table{ width:100%; border-collapse:collapse; background:#111; border:1px solid #222; border-radius:12px; overflow:hidden }
+  th,td{ padding:10px; border-bottom:1px solid #222; text-align:left; font-size:.95rem }
+  th{ background:#0f0f0f; color:#ccc; position:sticky; top:0 }
+  tr:hover td{ background:#161616 }
+  .badge{ font-size:.75rem; padding:2px 6px; border:1px solid #333; border-radius:999px; }
+  .btn{ padding:8px 10px; border-radius:8px; border:1px solid #2a2a2a; background:#1a1a1a; color:#fff; text-decoration:none; cursor:pointer }
+  .btn.primary{ background:var(--accent,#2ea44f); border-color:transparent; color:#0b0b0b; font-weight:700 }
+  .btn.warn{ border-color:#7a2e2e; background:#2a1515 }
+  .muted{ color:#9aa0a6 }
+  .right{ margin-left:auto }
+  .grid{ display:grid; gap:8px; grid-template-columns:repeat(2,1fr) }
+  @media (max-width:720px){ .grid{ grid-template-columns:1fr } }
+  dialog{ border:1px solid #222; border-radius:12px; padding:16px; max-width:720px; width:96%; background:#111; color:#fff }
+  dialog::backdrop{ background:rgba(0,0,0,.55) }
+  .row{ display:flex; gap:8px; flex-wrap:wrap }
+  .row > *{ flex:1 1 220px }
+  input, select, textarea{ width:100%; padding:10px; border-radius:8px; border:1px solid #2a2a2a; background:#141414; color:#eaeaea }
+  textarea{ min-height:80px }
+</style>
+</head>
+<body>
+<main>
+  <header class="row" style="align-items:center; justify-content:space-between">
+    <h1>Benutzerverwaltung</h1>
+    <div id="authInfo" class="muted">Prüfe Anmeldung…</div>
+  </header>
+
+  <section class="toolbar">
+    <input id="q" placeholder="Suche: Name, E-Mail">
+    <select id="roleFilter">
+      <option value="">Alle Rollen</option>
+      <option value="user">User</option>
+      <option value="coach">Coach</option>
+      <option value="admin">Admin</option>
+    </select>
+    <button id="searchBtn" class="btn">Suchen</button>
+    <span class="right"></span>
+    <button id="refreshBtn" class="btn">Neu laden</button>
+  </section>
+
+  <section class="card" style="padding:0">
+    <table id="tbl">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>E-Mail</th>
+          <th>Rolle</th>
+          <th>Jahr</th>
+          <th>Schule</th>
+          <th>Admin</th>
+          <th style="width:160px">Aktionen</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <div id="empty" class="muted" style="padding:12px; display:none">Keine Treffer.</div>
+  </section>
+
+  <dialog id="editDlg">
+    <form method="dialog" id="editForm">
+      <h2>Nutzer bearbeiten</h2>
+      <input type="hidden" id="f_id">
+      <div class="grid">
+        <div>
+          <label>Vorname</label>
+          <input id="f_first_name">
+        </div>
+        <div>
+          <label>Nachname</label>
+          <input id="f_last_name">
+        </div>
+        <div>
+          <label>E-Mail (Info)</label>
+          <input id="f_email" disabled>
+        </div>
+        <div>
+          <label>Telefon</label>
+          <input id="f_phone">
+        </div>
+        <div>
+          <label>Rolle</label>
+          <select id="f_role">
+            <option value="user">user</option>
+            <option value="coach">coach</option>
+            <option value="admin">admin</option>
+          </select>
+        </div>
+        <div>
+          <label>Sprache</label>
+          <input id="f_language" placeholder="z. B. de, en, ar">
+        </div>
+        <div>
+          <label>Geburtsjahr</label>
+          <input id="f_birth_year" type="number" min="1900" max="2100">
+        </div>
+        <div>
+          <label>Schule</label>
+          <input id="f_school">
+        </div>
+        <div>
+          <label>Zustimmung Datenschutz</label>
+          <select id="f_datenschutz">
+            <option value="false">nein</option>
+            <option value="true">ja</option>
+          </select>
+        </div>
+        <div>
+          <label>Foto OK</label>
+          <select id="f_foto_ok">
+            <option value="false">nein</option>
+            <option value="true">ja</option>
+          </select>
+        </div>
+        <div>
+          <label>Haftung OK</label>
+          <select id="f_haftung_ok">
+            <option value="false">nein</option>
+            <option value="true">ja</option>
+          </select>
+        </div>
+        <div style="grid-column:1/-1">
+          <label>Notizen</label>
+          <textarea id="f_notes"></textarea>
+        </div>
+      </div>
+
+      <div class="row" style="margin-top:12px; justify-content:flex-end">
+        <button class="btn" id="cancelBtn">Abbrechen</button>
+        <button class="btn primary" id="saveBtn">Speichern</button>
+      </div>
+    </form>
+  </dialog>
+</main>
+
+<script>
+const SUPABASE_URL  = "https://ntccnkvpxrpwgxmiherf.supabase.co";
+const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc";
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+const q = document.getElementById('q');
+const roleFilter = document.getElementById('roleFilter');
+const searchBtn = document.getElementById('searchBtn');
+const refreshBtn = document.getElementById('refreshBtn');
+const tbl = document.querySelector('#tbl tbody');
+const empty = document.getElementById('empty');
+const authInfo = document.getElementById('authInfo');
+
+const editDlg = document.getElementById('editDlg');
+const f = {
+  id: document.getElementById('f_id'),
+  first_name: document.getElementById('f_first_name'),
+  last_name: document.getElementById('f_last_name'),
+  email: document.getElementById('f_email'),
+  phone: document.getElementById('f_phone'),
+  role: document.getElementById('f_role'),
+  language: document.getElementById('f_language'),
+  birth_year: document.getElementById('f_birth_year'),
+  school: document.getElementById('f_school'),
+  datenschutz: document.getElementById('f_datenschutz'),
+  foto_ok: document.getElementById('f_foto_ok'),
+  haftung_ok: document.getElementById('f_haftung_ok'),
+  notes: document.getElementById('f_notes')
+};
+
+async function requireAdmin() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) {
+    authInfo.textContent = "Nicht angemeldet. Bitte über Home einloggen.";
+    throw new Error("no-session");
+  }
+  const uid = session.user.id;
+  const { data, error } = await sb
+    .from('admin_users')
+    .select('user_id')
+    .eq('user_id', uid)
+    .maybeSingle();
+  if (error || !data) {
+    authInfo.textContent = "Kein Admin-Recht. Zugang verweigert.";
+    throw new Error("not-admin");
+  }
+  authInfo.textContent = "Angemeldet als Admin.";
+}
+
+function renderRows(rows) {
+  tbl.innerHTML = '';
+  if (!rows || !rows.length) {
+    empty.style.display = 'block';
+    return;
+  }
+  empty.style.display = 'none';
+  rows.forEach(r => {
+    const tr = document.createElement('tr');
+    const name = [r.first_name, r.last_name].filter(Boolean).join(' ') || '—';
+    tr.innerHTML = `
+      <td>${escapeHtml(name)}</td>
+      <td>${escapeHtml(r.email || '')}</td>
+      <td><span class="badge">${r.role}</span></td>
+      <td>${r.birth_year || ''}</td>
+      <td>${escapeHtml(r.school || '')}</td>
+      <td id="adm-${r.id}">…</td>
+      <td>
+        <button class="btn" data-edit="${r.id}">Bearbeiten</button>
+        <button class="btn warn" data-admin="${r.id}">Admin toggle</button>
+      </td>
+    `;
+    tbl.appendChild(tr);
+    updateAdminBadge(r.id);
+  });
+}
+
+async function updateAdminBadge(uid) {
+  const cell = document.getElementById('adm-' + uid);
+  if (!cell) return;
+  const { data } = await sb.from('admin_users').select('user_id').eq('user_id', uid).maybeSingle();
+  cell.innerHTML = data ? '<span class="badge" style="border-color:#2e7a3a">admin</span>'
+                        : '<span class="badge">—</span>';
+}
+
+async function search() {
+  await requireAdmin();
+  let query = sb.from('user_profiles').select('*').order('last_name', { ascending: true }).limit(200);
+  if (roleFilter.value) query = query.eq('role', roleFilter.value);
+
+  // einfache Volltext-Suche (fallback)
+  const term = (q.value || '').trim().toLowerCase();
+  if (term) {
+    // clientseitig filtern (Supabase Lite-FTS wäre auch möglich)
+    const { data, error } = await query;
+    if (error) { console.error(error); renderRows([]); return; }
+    const rows = (data || []).filter(r => {
+      const hay = [
+        r.first_name || '', r.last_name || '', r.email || ''
+      ].join(' ').toLowerCase();
+      return hay.includes(term);
+    });
+    renderRows(rows);
+    return;
+  }
+
+  const { data, error } = await query;
+  if (error) { console.error(error); renderRows([]); return; }
+  renderRows(data || []);
+}
+
+function bindTableActions() {
+  tbl.addEventListener('click', async (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+    const editId = btn.getAttribute('data-edit');
+    const admId = btn.getAttribute('data-admin');
+
+    if (editId) {
+      const { data } = await sb.from('user_profiles').select('*').eq('id', editId).single();
+      fillForm(data);
+      editDlg.showModal();
+    }
+    if (admId) {
+      await requireAdmin();
+      const { data } = await sb.from('admin_users').select('user_id').eq('user_id', admId).maybeSingle();
+      if (data) {
+        await sb.from('admin_users').delete().eq('user_id', admId);
+      } else {
+        await sb.from('admin_users').insert({ user_id: admId });
+      }
+      updateAdminBadge(admId);
+    }
+  });
+}
+
+function fillForm(r) {
+  f.id.value = r.id;
+  f.first_name.value = r.first_name || '';
+  f.last_name.value = r.last_name || '';
+  f.email.value = r.email || '';
+  f.phone.value = r.phone || '';
+  f.role.value = r.role || 'user';
+  f.language.value = r.language || 'de';
+  f.birth_year.value = r.birth_year || '';
+  f.school.value = r.school || '';
+  f.datenschutz.value = String(!!r.datenschutz);
+  f.foto_ok.value = String(!!r.foto_ok);
+  f.haftung_ok.value = String(!!r.haftung_ok);
+  f.notes.value = r.notes || '';
+}
+
+function readForm() {
+  return {
+    first_name: nullIfEmpty(f.first_name.value),
+    last_name:  nullIfEmpty(f.last_name.value),
+    phone:      nullIfEmpty(f.phone.value),
+    role:       f.role.value,
+    language:   nullIfEmpty(f.language.value),
+    birth_year: f.birth_year.value ? Number(f.birth_year.value) : null,
+    school:     nullIfEmpty(f.school.value),
+    datenschutz: f.datenschutz.value === 'true',
+    foto_ok:     f.foto_ok.value === 'true',
+    haftung_ok:  f.haftung_ok.value === 'true',
+    notes:       nullIfEmpty(f.notes.value)
+  };
+}
+
+document.getElementById('saveBtn').addEventListener('click', async (e) => {
+  e.preventDefault();
+  await requireAdmin();
+  const id = f.id.value;
+  const payload = readForm();
+  const { error } = await sb.from('user_profiles').update(payload).eq('id', id);
+  if (error) { alert('Fehler: ' + error.message); return; }
+  editDlg.close();
+  search();
+});
+
+document.getElementById('cancelBtn').addEventListener('click', (e) => {
+  e.preventDefault();
+  editDlg.close();
+});
+
+searchBtn.addEventListener('click', search);
+refreshBtn.addEventListener('click', search);
+
+sb.auth.onAuthStateChange(() => {
+  // beim Wechsel (Login/Logout in anderem Tab) neu prüfen
+  requireAdmin().then(search).catch(()=>{});
+});
+
+requireAdmin().then(search).catch(()=>{});
+
+function escapeHtml(s){return String(s||'').replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#039;'}[m]));}
+function nullIfEmpty(v){ v=(v||'').trim(); return v===''?null:v; }
+</script>
+</body>
+</html>
