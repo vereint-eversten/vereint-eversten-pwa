@@ -53,7 +53,7 @@ p{ margin:.25rem 0 0 0; color:var(--muted) }
 .bottom-nav .nav-item{
   flex: 1; display: flex; flex-direction: column;
   align-items: center; justify-content: center;
-  min-height: calc(var(--nav-h) - 12px); /* touch target */
+  min-height: calc(var(--nav-h) - 12px);
   text-decoration: none; color: var(--fg);
   font-size: .72rem; line-height: 1; gap: 6px; border-radius: 10px;
   opacity: .9; transition: opacity .15s ease, transform .15s ease;
@@ -68,10 +68,25 @@ p{ margin:.25rem 0 0 0; color:var(--muted) }
 }
 .bottom-nav .nav-icon{
   width:22px; height:22px;
-  /* Nutze currentColor statt invert-Filter → bessere A11y & Theming */
   fill: currentColor; stroke: currentColor;
-  /* Falls PNG/SVG ohne currentColor: als Fallback bleibt die alte Variante */
   filter: var(--nav-icon-filter, none);
+}
+
+/* --- 🔒 Schloss-Indikator für geschützte Bereiche --- */
+.bottom-nav .nav-item.locked .nav-label::after {
+  content: " 🔒";
+  font-size: 0.9em;
+  opacity: 0.8;
+  margin-left: 2px;
+}
+
+/* Optional: leicht ausgegraut, bis man eingeloggt ist */
+.bottom-nav .nav-item.locked {
+  opacity: 0.6;
+  pointer-events: none;
+}
+.bottom-nav .nav-item.locked:hover {
+  opacity: 0.6;
 }
 
 /* Desktop: zentriere die Leiste */
@@ -123,29 +138,21 @@ p{ margin:.25rem 0 0 0; color:var(--muted) }
 
 /* RTL-Feinschliff */
 html[dir="rtl"] .bottom-nav{ direction: rtl; }
-html[dir="rtl"] .lang-fab{ left: 16px; right: auto; } /* FAB auf die andere Seite spiegeln */
+html[dir="rtl"] .lang-fab{ left: 16px; right: auto; }
 
 /* === Kalender-Popup / Dialog (mit sanfter Animation) === */
 .dialog{
   position: fixed;
   inset: 0;
-  display: flex; /* für Transition im Flow */
+  display: flex;
   align-items: center;
   justify-content: center;
   z-index: 10000;
-
-  /* animierbare Sichtbarkeit */
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
-
-  /* Hintergrund animierbar */
   background: rgba(0,0,0,0);
-
-  transition:
-    opacity .2s ease,
-    visibility .2s ease,
-    background-color .2s ease;
+  transition: opacity .2s ease, visibility .2s ease, background-color .2s ease;
 }
 .dialog.active{
   opacity: 1;
@@ -162,12 +169,9 @@ html[dir="rtl"] .lang-fab{ left: 16px; right: auto; } /* FAB auf die andere Seit
   max-width: 420px;
   width: 90%;
   position: relative;
-
   opacity: 0;
   transform: translateY(6px) scale(.985);
-  transition:
-    opacity .22s ease,
-    transform .22s cubic-bezier(.2,.8,.2,1);
+  transition: opacity .22s ease, transform .22s cubic-bezier(.2,.8,.2,1);
 }
 .dialog.active .card{
   opacity: 1;
