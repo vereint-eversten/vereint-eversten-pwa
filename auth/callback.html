@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Login wird verarbeitet...</title>
+</head>
+<body>
+  <script type="module">
+    import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/+esm";
+
+    const supabase = createClient(
+      "https://ntccnkvpxrpwgxmiherf.supabase.co",
+      "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+    );
+
+    supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN") {
+        window.location.href = "/"; // zurück zur Startseite
+      }
+    });
+  </script>
+</body>
+</html>
