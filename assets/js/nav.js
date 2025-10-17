@@ -1,71 +1,117 @@
 // /assets/js/nav.js
-// Globale Bottom-Navigation mit i18n + Login-/Rollenprüfung (Supabase-kompatibel)
+// Bottom-Navigation mit i18n, Login-Redirect (Messenger), Admin-Rolle, robustem Re-Render
 
 (function () {
-  const items = [
-    { id: 'home',      key: 'nav.home',      href: '/',               role: 'public' },
-    { id: 'project',   key: 'nav.project',   href: '/project/',       role: 'public' },
-    { id: 'network',   key: 'nav.network',   href: '/network/',       role: 'public' },
-    { id: 'calendar',  key: 'nav.calendar',  href: '/calendar/',      role: 'public' },
-    { id: 'messenger', key: 'nav.messenger', href: '/messenger/',     role: 'user'   },
-    { id: 'admin',     key: 'nav.admin',     href: '/administration/',role: 'admin'  },
-    { id: 'donate',    key: 'nav.donate',    href: '/donate/',        role: 'public' }
+  var items = [
+    { id: 'home',      key: 'nav.home',      href: '/' },
+    { id: 'project',   key: 'nav.project',   href: '/project/' },
+    { id: 'network',   key: 'nav.network',   href: '/network/' },
+    { id: 'calendar',  key: 'nav.calendar',  href: '/calendar/' },
+    // Messenger immer zeigen, aber ggf. zum Login umleiten:
+    { id: 'messenger', key: 'nav.messenger', href: '/messenger/', requireAuth: true },
+    // Admin nur anzeigen, wenn role === 'admin':
+    { id: 'admin',     key: 'nav.admin',     href: '/administration/', requireRole: 'admin' },
+    { id: 'donate',    key: 'nav.donate',    href: '/donate/' }
   ];
 
-  async function getUserRole() {
+  // Schnell verfügbarer Auth-Status: via <body data-auth="in|out"> (von auth.js gesetzt)
+  function bodyAuth() {
+    try { return (document.body.dataset.auth === 'in'); } catch (_) { return false; }
+  }
+
+  // Fallback: Supabase-Session prüfen (optional, wenn eingebunden)
+  async function supabaseAuth() {
+    try {
+      if (!window.supabase || !supabase.auth) return null; // unbekannt
+      var res = await supabase.auth.getSession();
+      return !!(res && res.data && res.data.session);
+    } catch (_) { return null; }
+  }
+
+  // Rolle holen (nur wenn eingeloggt + Supabase verfügbar)
+  async function getRole() {
     try {
       if (!window.supabase) return 'public';
-      const { data: { session } } = await supabase.auth.getSession();
+      var s = await supabase.auth.getSession();
+      var session = s && s.data && s.data.session;
       if (!session) return 'public';
-      const { data } = await supabase
-        .from('user_profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
-      return data?.role || 'user';
-    } catch (err) {
-      console.warn('Rollenprüfung fehlgeschlagen:', err);
+      var q = await supabase.from('user_profiles').select('role').eq('id', session.user.id).single();
+      return (q && q.data && q.data.role) ? q.data.role : 'user';
+    } catch (_) {
       return 'public';
     }
   }
 
-  async function renderBottomNav() {
-    document.querySelector('.bottom-nav')?.remove();
+  async function isAuthed() {
+    // 1) sofortiges Flag
+    var b = bodyAuth();
+    if (b === true) return true;
+    if (b === false && document.body.dataset.auth) return false; // explizit "out"
+    // 2) Fallback zu Supabase (kann null liefern, wenn nicht da)
+    var s = await supabaseAuth();
+    return !!s;
+  }
 
-    const nav = document.createElement('nav');
+  async function renderBottomNav() {
+    var old = document.querySelector('.bottom-nav');
+    if (old) old.remove();
+
+    var nav = document.createElement('nav');
     nav.className = 'bottom-nav';
 
-    const path = location.pathname.replace(/\/+$/, '') || '/';
-    const role = await getUserRole();
+    var path = (location.pathname.replace(/\/+$/, '') || '/');
+    var authed = await isAuthed();
+    var role = authed ? (await getRole()) : 'public';
 
-    const visibleItems = items.filter(it => {
-      if (it.role === 'public') return true;
-      if (it.role === 'user' && (role === 'user' || role === 'admin')) return true;
-      if (it.role === 'admin' && role === 'admin') return true;
-      return false;
+    // Sichtbarkeit filtern:
+    var list = items.filter(function (it) {
+      if (it.requireRole === 'admin') return (role === 'admin'); // nur Admins
+      return true; // alle anderen immer zeigen (Messenger inkl.)
     });
 
-    nav.innerHTML = visibleItems.map(it => {
-      const href = it.href.replace(/\/+$/, '') || '/';
-      const isActive =
-        (href === '/' && path === '/') ||
-        (href !== '/' && path.startsWith(href));
-      const label = (window.i18n ? i18n.t(it.key) : it.key.split('.').pop());
-      return `
-        <a class="nav-item ${isActive ? 'active' : ''}" href="${it.href}" aria-label="${label}">
-          <img class="nav-icon" src="/assets/icons/${it.id}.svg" alt="${label}">
-          <span class="nav-label">${label}</span>
-        </a>
-      `;
-    }).join('');
+    // HTML aufbauen (ohne Backticks)
+    var html = '';
+    for (var i = 0; i < list.length; i++) {
+      var it = list[i];
+      var baseHref = (it.href.replace(/\/+$/, '') || '/');
+      var isActive = (baseHref === '/' && path === '/') || (baseHref !== '/' && path.indexOf(baseHref) === 0);
 
+      // Label aus i18n, sonst letzter Key-Teil
+      var label = (window.i18n && typeof i18n.t === 'function')
+        ? i18n.t(it.key)
+        : it.key.split('.').pop();
+
+      // Login-Redirect nur, wenn Auth nötig und (noch) nicht eingeloggt
+      var href = (it.requireAuth && !authed)
+        ? '/auth/login.html?next=' + encodeURIComponent(it.href)
+        : it.href;
+
+      // Optionales Lock-Flag für Styling
+      var lockedClass = (it.requireAuth && !authed) ? ' locked' : '';
+      var activeClass = isActive ? ' active' : '';
+
+      html += ''
+        + '<a class="nav-item' + lockedClass + activeClass + '" href="' + href + '" aria-label="' + label + '">'
+        +   '<img class="nav-icon" src="/assets/icons/' + it.id + '.svg" alt="' + label + '">'
+        +   '<span class="nav-label">' + label + '</span>'
+        + '</a>';
+    }
+
+    nav.innerHTML = html;
     document.body.appendChild(nav);
   }
 
+  // Re-render bei Sprachwechsel
   if (window.i18n && typeof i18n.onChange === 'function') {
     i18n.onChange(renderBottomNav);
   }
 
+  // Re-render bei Auth-Wechsel (von auth.js gesetzt)
+  window.addEventListener('storage', function (e) {
+    if (e && e.key === 'vereint.auth.changed') renderBottomNav();
+  });
+
+  // Initial
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', renderBottomNav);
   } else {
