@@ -3,7 +3,7 @@
 
 (function () {
   var items = [
-    { id: 'home',      key: 'nav.home',      href: '/' },
+    { id: 'home',      key: 'nav.home',      href: '/home/' },
     { id: 'project',   key: 'nav.project',   href: '/project/' },
     { id: 'network',   key: 'nav.network',   href: '/network/' },
     { id: 'calendar',  key: 'nav.calendar',  href: '/calendar/' },
