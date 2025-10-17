@@ -17,14 +17,16 @@
 
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+      window.addEventListener('load', () =>
+        navigator.serviceWorker.register('/sw.js').catch(() => {})
+      );
     }
   </script>
 
   <!-- Styles -->
   <link rel="stylesheet" href="/style.css">
 
-  <!-- i18n -->
+  <!-- i18n (dynamisch, keine festen JSON-Dateien) -->
   <script defer src="/assets/js/languages.js"></script>
   <script defer src="/assets/js/i18n.js"></script>
   <script defer src="/assets/js/lang-toggle.js"></script>
@@ -106,12 +108,12 @@
         </div>
         <div class="row inline">
           <div>
-            <label class="muted-small">Klasse</label>
-            <input id="regGrade" placeholder="z. B. 5">
+            <label class="muted-small">Schule</label>
+            <input id="regSchool" placeholder="z. B. GS Eversten">
           </div>
           <div>
             <label class="muted-small">Geburtsjahr</label>
-            <input id="regBirth" type="number" min="2000" max="2035">
+            <input id="regBirth" type="number" min="2008" max="2035">
           </div>
         </div>
         <label class="muted-small">E-Mail</label>
@@ -178,7 +180,7 @@
     const loginOk = document.getElementById('loginOk');
     const regFirst = document.getElementById('regFirst');
     const regLast = document.getElementById('regLast');
-    const regGrade = document.getElementById('regGrade');
+    const regSchool = document.getElementById('regSchool');
     const regBirth = document.getElementById('regBirth');
     const regEmail = document.getElementById('regEmail');
     const regPw = document.getElementById('regPw');
@@ -219,26 +221,45 @@
       if (!regConsent.checked) {
         signupMsg.textContent = 'Bitte Datenschutz bestätigen.'; show(signupMsg, true); return;
       }
-      const { error } = await supabaseClient.auth.signUp({
+
+      const { data, error } = await supabaseClient.auth.signUp({
         email: regEmail.value,
         password: regPw.value,
         options: {
           data: {
-            first_name: regFirst.value,
-            last_name: regLast.value,
-            grade: regGrade.value,
-            birth_year: regBirth.value
+            vorname: regFirst.value,
+            nachname: regLast.value,
+            schule: regSchool.value,
+            geburtsjahr: regBirth.value,
+            rolle: "user"
           },
           emailRedirectTo: location.origin + '/auth/callback.html'
         }
       });
-      signupMsg.textContent = error ? error.message : 'Bestätigungs-E-Mail wurde gesendet.';
-      show(signupMsg, true);
-      if (!error) show(signupOk, true);
+
+      if (error) { signupMsg.textContent = error.message; show(signupMsg, true); return; }
+
+      // zusätzlichen Datensatz in user_profiles anlegen
+      if (data?.user) {
+        await supabaseClient.from('user_profiles').insert([{
+          id: data.user.id,
+          vorname: regFirst.value,
+          nachname: regLast.value,
+          schule: regSchool.value,
+          geburtsjahr: regBirth.value,
+          email: regEmail.value,
+          rolle: 'user',
+          datenschutz: regConsent.checked,
+          created_at: new Date().toISOString()
+        }]);
+      }
+
+      signupMsg.textContent = 'Bestätigungs-E-Mail wurde gesendet.';
+      show(signupMsg, true); show(signupOk, true);
     };
 
     document.getElementById('clearSignup').onclick = () => {
-      [regFirst, regLast, regGrade, regBirth, regEmail, regPw].forEach(i => i.value = '');
+      [regFirst, regLast, regSchool, regBirth, regEmail, regPw].forEach(i => i.value = '');
       regConsent.checked = false; show(signupMsg, false); show(signupOk, false);
     };
 
@@ -247,11 +268,7 @@
       refreshAuthUI();
     };
 
-    supabaseClient.auth.onAuthStateChange((event, session) => {
-      if (event === 'SIGNED_IN') refreshAuthUI();
-      if (event === 'SIGNED_OUT') refreshAuthUI();
-    });
-
+    supabaseClient.auth.onAuthStateChange(() => refreshAuthUI());
     refreshAuthUI();
   </script>
 </body>
