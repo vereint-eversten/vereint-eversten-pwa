@@ -3,60 +3,174 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Home – Verein[t]</title>
+  <title data-i18n="home.metaTitle">Home – Verein[t]</title>
+
+  <!-- PWA -->
+  <link rel="manifest" href="/manifest.webmanifest">
+  <meta name="theme-color" content="#0b0b0b">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="apple-touch-icon" href="/assets/pwa/icon-192.png">
+  <meta name="app-build" content="2025-10-17">
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js').catch(()=>{}));
+    }
+  </script>
+
+  <!-- Styles -->
   <link rel="stylesheet" href="/style.css">
+
+  <!-- i18n -->
+  <script defer src="/assets/js/languages.js"></script>
+  <script defer src="/assets/js/i18n.js"></script>
+  <script defer src="/assets/js/lang-toggle.js"></script>
+
+  <!-- Bottom Navigation -->
   <script defer src="/assets/js/nav.js"></script>
 
+  <!-- Supabase -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+
   <style>
-    main {
-      padding: 16px 16px 84px;
+    main { padding: 16px 16px 84px; }
+    .hero { text-align: center; margin-top: 2rem; }
+    .hero h1 { font-size: 1.6rem; margin-bottom: .5rem; }
+    .hero p { color: #9aa0a6; margin: 0; }
+    .home-grid { display: grid; gap: 1rem; margin-top: 2rem; }
+    .card:hover { border-color: var(--accent); }
+
+    .auth-card input {
+      width: 100%; padding: 10px; border-radius: 8px;
+      border: 1px solid #2a2a2a; background: #141414; color: #eaeaea;
+      margin-top: 8px;
     }
-    .hero {
-      text-align: center;
-      margin-top: 2rem;
+    .auth-actions { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+    .btn { display: inline-block; padding: 10px 12px; border-radius: 8px;
+      text-decoration: none; color: #fff; border: 1px solid #2a2a2a; background: #1a1a1a;
     }
-    .hero h1 {
-      font-size: 1.6rem;
-      margin-bottom: .5rem;
-    }
-    .hero p {
-      color: #9aa0a6;
-      margin: 0;
-    }
-    .home-grid {
-      display: grid;
-      gap: 1rem;
-      margin-top: 2rem;
-    }
-    .card:hover {
-      border-color: var(--accent);
-    }
+    .btn.primary { background: var(--accent, #2ea44f); border-color: transparent; color: #0b0b0b; font-weight: 700; }
+    .muted-small { color: #9aa0a6; font-size: .9rem; margin-top: 6px; }
+    .err { color: #ff7b7b; font-size: .9rem; margin-top: 8px; }
+    .ok { color: #6ee7a1; font-size: .9rem; margin-top: 8px; }
+    .user-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+    .user-email { font-weight: 600; }
   </style>
 </head>
 
-<body>
+<body data-auth="out">
   <main>
     <section class="hero">
-      <h1>Willkommen bei Verein[t]</h1>
-      <p>Schule. Basketball. Für Alle.</p>
+      <h1 data-i18n="home.title">Willkommen bei Verein[t]</h1>
+      <p data-i18n="home.subtitle">Schule. Basketball. Für Alle.</p>
     </section>
 
+    <!-- LOGIN / SIGNUP -->
+    <section id="authSection" class="card auth-card" style="margin-top:16px;">
+      <h2 data-i18n="auth.heading">🔐 Anmeldung</h2>
+      <p class="muted-small" data-i18n="auth.hint">Melde dich an, um Messenger und weitere Bereiche zu nutzen.</p>
+
+      <label for="loginEmail" class="muted-small" data-i18n="auth.emailLabel">E-Mail</label>
+      <input id="loginEmail" type="email" inputmode="email" autocomplete="username" placeholder="name@example.org">
+
+      <label for="loginPassword" class="muted-small" style="margin-top:8px; display:block;" data-i18n="auth.passwordLabel">Passwort</label>
+      <input id="loginPassword" type="password" autocomplete="current-password" placeholder="••••••••">
+
+      <div class="auth-actions">
+        <button id="loginBtn" class="btn primary" data-i18n="auth.login">Einloggen</button>
+        <button id="signupBtn" class="btn" data-i18n="auth.signup">Registrieren</button>
+        <a id="resetLink" class="btn" href="/auth/reset.html" data-i18n="auth.reset">Passwort vergessen</a>
+      </div>
+      <div id="authMsg" class="err" style="display:none;"></div>
+    </section>
+
+    <!-- USER INFO -->
+    <section id="userSection" class="card" style="margin-top:16px; display:none;">
+      <div class="user-row">
+        <div>
+          <div class="muted-small" data-i18n="auth.loggedInAs">Angemeldet als</div>
+          <div id="userEmail" class="user-email">user@example.org</div>
+        </div>
+        <div class="auth-actions" style="margin-top:0">
+          <a class="btn" href="/messenger/" data-i18n="auth.toMessenger">Zum Messenger</a>
+          <button id="logoutBtn" class="btn" data-i18n="auth.logout">Abmelden</button>
+        </div>
+      </div>
+      <div id="authOk" class="ok" style="display:none;" data-i18n="auth.success">Erfolgreich angemeldet.</div>
+    </section>
+
+    <!-- CONTENT -->
     <section class="home-grid">
       <div class="card">
-        <h2>🗓 Nächste Termine</h2>
-        <p>Übersicht der kommenden Events aus dem Kalender-Modul.</p>
+        <h2 data-i18n="home.nextEvents.title">🗓 Nächste Termine</h2>
+        <p data-i18n="home.nextEvents.text">Übersicht der kommenden Events aus dem Kalender-Modul.</p>
       </div>
 
       <div class="card">
-        <h2>💬 Letzte Nachrichten</h2>
-        <p>Neue Chat-Nachrichten aus deinen Teams.</p>
+        <h2 data-i18n="home.lastMessages.title">💬 Letzte Nachrichten</h2>
+        <p data-i18n="home.lastMessages.text">Neue Chat-Nachrichten aus deinen Teams.</p>
       </div>
 
       <div class="card">
-        <h2>🌐 Netzwerk</h2>
-        <p>Partner, Schulen & Förderer auf einen Blick.</p>
+        <h2 data-i18n="home.network.title">🌐 Netzwerk</h2>
+        <p data-i18n="home.network.text">Partner, Schulen & Förderer auf einen Blick.</p>
       </div>
     </section>
   </main>
+
+  <!-- LOGIN-SKRIPT -->
+  <script>
+    const SUPABASE_URL  = "https://ntccnkvpxrpwgxmiherf.supabase.co";
+    const SUPABASE_ANON = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im50Y2Nua3ZweHJwd2d4bWloZXJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTI4MzgyODYsImV4cCI6MjA2ODQxNDI4Nn0.JncC2HbFHONVid0aRYXfFohMu5D_ORVwj0XgyQg3khc";
+    const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
+
+    const authSection = document.getElementById('authSection');
+    const userSection = document.getElementById('userSection');
+    const loginEmail = document.getElementById('loginEmail');
+    const loginPassword = document.getElementById('loginPassword');
+    const msg = document.getElementById('authMsg');
+    const userEmail = document.getElementById('userEmail');
+    const authOk = document.getElementById('authOk');
+
+    async function refreshAuthUI() {
+      const { data } = await supabaseClient.auth.getSession();
+      const session = data?.session;
+      if (session?.user) {
+        userEmail.textContent = session.user.email;
+        authSection.style.display = 'none';
+        userSection.style.display = 'block';
+      } else {
+        authSection.style.display = 'block';
+        userSection.style.display = 'none';
+      }
+    }
+
+    document.getElementById('loginBtn').onclick = async () => {
+      msg.style.display = 'none';
+      const email = loginEmail.value.trim();
+      const pass = loginPassword.value;
+      const { error } = await supabaseClient.auth.signInWithPassword({ email, password: pass });
+      if (error) { msg.textContent = error.message; msg.style.display = 'block'; }
+      else { authOk.style.display = 'block'; await refreshAuthUI(); }
+    };
+
+    document.getElementById('signupBtn').onclick = async () => {
+      msg.style.display = 'none';
+      const email = loginEmail.value.trim();
+      const pass = loginPassword.value;
+      const { error } = await supabaseClient.auth.signUp({ email, password: pass });
+      msg.textContent = error ? error.message : "Bestätigungs-E-Mail wurde gesendet.";
+      msg.style.display = 'block';
+    };
+
+    document.getElementById('logoutBtn').onclick = async () => {
+      await supabaseClient.auth.signOut();
+      await refreshAuthUI();
+    };
+
+    refreshAuthUI();
+  </script>
 </body>
 </html>
