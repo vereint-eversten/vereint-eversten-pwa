@@ -1,143 +1,173 @@
-// nav.js – kombiniert: Top-Bar + Bottom-Nav + i18n + PWA + Auth (Supabase)
+<script>
+// /assets/js/nav.js — 4-Button Bottom-Nav + Top-Bar (Donate/Contact oben links)
+// - i18n-Unterstützung (fallback auf Klartextkeys)
+// - Messenger: gesperrt wenn nicht eingeloggt (führt zu /auth/login.html)
+// - Einstellungen & Admin: nur auf Home ("/") rechts
+// - Netzwerk ist nicht in der Bottom-Nav, gehört unter Projekt
+
 (function () {
-  // ===== CONFIG =====
-  const LOGIN_URL = "/auth/login.html";
-  const HOME_PATH = "/";
+  // -------- Config --------
   const BOTTOM_ITEMS = [
-    { id: "home",      key: "nav.home",      href: "/" },
-    { id: "project",   key: "nav.project",   href: "/project/" },
-    { id: "calendar",  key: "nav.calendar",  href: "/calendar/" },
-    { id: "messenger", key: "nav.messenger", href: "/messenger/", gated: true }
+    { id: 'home',      key: 'nav.home',      href: '/' },
+    { id: 'project',   key: 'nav.project',   href: '/project/' },
+    { id: 'calendar',  key: 'nav.calendar',  href: '/calendar/' },
+    // messenger: sichtbar; wenn public => "locked" + Link zu Login
+    { id: 'messenger', key: 'nav.messenger', href: '/messenger/', role: 'user' }
   ];
 
-  // ===== HELPERS =====
-  const norm = (p) => (p || "/").replace(/\/+$/, "") || "/";
-  const path = norm(location.pathname);
+  // i18n helper
+  const tt = (key, def) => {
+    try { return (window.i18n && typeof i18n.t === 'function') ? i18n.t(key, def || '') : (def || key); }
+    catch (_) { return def || key; }
+  };
 
-  function t(key, fallback) {
+  // Role detection (optional Supabase)
+  async function getAuthInfo() {
+    let role = 'public';
+    let email = null;
     try {
-      return (window.i18n && typeof i18n.t === "function") ? i18n.t(key, fallback || "") : (fallback || key);
-    } catch { return fallback || key; }
-  }
-
-  async function isAuthenticated() {
-    try {
-      if (!window.supabase || !supabase?.auth) return false;
+      if (!window.supabase) return { role, email };
       const { data: { session } } = await supabase.auth.getSession();
-      return !!session?.user;
-    } catch { return false; }
+      if (!session?.user) return { role, email };
+
+      email = session.user.email || null;
+      role = 'user';
+      // optional: admin aus user_profiles
+      const { data, error } = await supabase
+        .from('user_profiles')
+        .select('rolle')
+        .eq('id', session.user.id)
+        .maybeSingle();
+      if (!error && data?.rolle === 'admin') role = 'admin';
+    } catch (e) {
+      console.warn('getAuthInfo failed:', e);
+    }
+    return { role, email };
   }
 
-  // ===== TOP BAR =====
-  async function renderTopBar() {
-    document.querySelector(".topbar")?.remove();
-    const bar = document.createElement("header");
-    bar.className = "topbar";
+  function currentPath() {
+    return (location.pathname.replace(/\/+$/, '') || '/');
+  }
 
-    const left = document.createElement("div");
-    left.className = "left";
-    const showDonate = (path === HOME_PATH);
-    if (showDonate) {
-      left.innerHTML = `
-        <a class="icon-btn" href="/donate/" aria-label="${t("nav.donateContact","Donate / Contact")}">
-          <span aria-hidden="true">🎁</span><span>${t("nav.donateContact","Donate / Contact")}</span>
-        </a>
-      `;
+  function icon(id, label) {
+    // SVG/IMG: Wenn du SVGs hast, kannst du hier direkt <svg> inline setzen.
+    return '<img class="nav-icon" src="/assets/icons/'+id+'.svg" alt="'+escapeHtml(label)+'">';
+  }
+
+  function escapeHtml(s){return String(s).replace(/[&<>\"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]))}
+
+  async function renderTopBar() {
+    document.querySelector('.topbar')?.remove();
+
+    const { role } = await getAuthInfo();
+    const path = currentPath();
+
+    const bar = document.createElement('header');
+    bar.className = 'topbar';
+
+    // Left: Donate/Contact immer sichtbar
+    const left = document.createElement('div');
+    left.className = 'left';
+    const donateLabel = tt('top.donateContact', 'Spenden/Kontakt');
+    const donateBtn = document.createElement('a');
+    donateBtn.href = '/donate/';
+    donateBtn.className = 'icon-btn';
+    donateBtn.setAttribute('aria-label', donateLabel);
+    donateBtn.innerHTML = '❤ ' + escapeHtml(donateLabel);
+    left.appendChild(donateBtn);
+
+    // Middle title (optional)
+    const title = document.createElement('div');
+    title.className = 'title';
+    title.textContent = ''; // leer lassen oder tt('app.title','Verein[t]')
+
+    // Right: nur auf Home ("/") → Settings (+ Admin wenn role=admin)
+    const right = document.createElement('div');
+    right.className = 'right';
+    if (path === '/') {
+      const settingsLabel = tt('top.settings', 'Einstellungen');
+      const settingsBtn = document.createElement('a');
+      settingsBtn.href = '/settings/';
+      settingsBtn.className = 'icon-btn';
+      settingsBtn.setAttribute('aria-label', settingsLabel);
+      settingsBtn.innerHTML = '⚙ ' + escapeHtml(settingsLabel);
+      right.appendChild(settingsBtn);
+
+      if (role === 'admin') {
+        const adminLabel = tt('top.admin', 'Admin');
+        const adminBtn = document.createElement('a');
+        adminBtn.href = '/administration/';
+        adminBtn.className = 'icon-btn';
+        adminBtn.setAttribute('aria-label', adminLabel);
+        adminBtn.innerHTML = '🛡 ' + escapeHtml(adminLabel);
+        right.appendChild(adminBtn);
+      }
     }
 
-    const center = document.createElement("div");
-    center.className = "title";
-    center.setAttribute("data-i18n","home.appName");
-    center.textContent = t("home.appName","Verein[t]");
-
-    const right = document.createElement("div");
-    right.className = "right";
-    right.innerHTML = `
-      <a class="icon-btn" href="/settings/" aria-label="${t("nav.settings","Einstellungen")}">
-        <span aria-hidden="true">⚙</span><span>${t("nav.settings","Einstellungen")}</span>
-      </a>
-    `;
-
     bar.appendChild(left);
-    bar.appendChild(center);
+    bar.appendChild(title);
     bar.appendChild(right);
-    document.body.prepend(bar);
+    document.body.appendChild(bar);
   }
 
-  // ===== BOTTOM NAV =====
   async function renderBottomNav() {
-    document.querySelector(".bottom-nav")?.remove();
-    const authed = await isAuthenticated();
-    const nav = document.createElement("nav");
-    nav.className = "bottom-nav";
+    document.querySelector('.bottom-nav')?.remove();
 
-    nav.innerHTML = BOTTOM_ITEMS.map(item => {
-      const href = norm(item.href);
-      const isActive = (href === "/" && path === "/") || (href !== "/" && path.startsWith(href));
-      const locked = item.gated && !authed;
-      const label = t(item.key, item.id);
-      const aria = locked ? ${label} – ${t("common.locked","gesperrt")} : label;
-      const icon = iconFor(item.id, locked);
-      return `
-        <a class="nav-item ${isActive ? "active" : ""} ${locked ? "locked" : ""}"
-           href="${item.href}" data-id="${item.id}" aria-label="${aria}">
-          ${icon}
-          <span class="nav-label" data-i18n="${item.key}">${label}</span>
-        </a>`;
-    }).join("");
+    const { role } = await getAuthInfo();
+    const path = currentPath();
 
-    // Auth-Gate
-    nav.addEventListener("click", (e) => {
-      const a = e.target.closest("a.nav-item");
-      if (!a) return;
-      const id = a.getAttribute("data-id");
-      const def = BOTTOM_ITEMS.find(x => x.id === id);
-      if (def?.gated && a.classList.contains("locked")) {
-        e.preventDefault();
-        location.href = LOGIN_URL;
+    const nav = document.createElement('nav');
+    nav.className = 'bottom-nav';
+
+    const html = BOTTOM_ITEMS.map(it => {
+      const href = (it.href.replace(/\/+$/, '') || '/');
+      const isActive =
+        (href === '/' && path === '/') ||
+        (href !== '/' && path.startsWith(href));
+
+      let label = tt(it.key, it.key.split('.').pop());
+      // role handling: messenger "locked" für public
+      let locked = false;
+      let finalHref = it.href;
+
+      if (it.role === 'user' && role === 'public') {
+        locked = true;
+        finalHref = '/auth/login.html';
+        label = tt('nav.messengerLocked', 'Messenger (Login)');
       }
-    });
 
+      return (
+        '<a class="nav-item '+(isActive ? 'active ' : '')+(locked ? 'locked' : '')+'" href="'+finalHref+'" aria-label="'+escapeHtml(label)+'">'
+        + icon(it.id, label)
+        + '<span class="nav-label">'+escapeHtml(label)+'</span>'
+        + '</a>'
+      );
+    }).join('');
+
+    nav.innerHTML = html;
     document.body.appendChild(nav);
   }
 
-  // ===== ICONS =====
-  function iconFor(id, locked) {
-    const badge = locked ? <circle cx="19" cy="6.5" r="4.5" fill="currentColor" opacity=".25"/> : "";
-    switch (id) {
-      case "home":
-        return <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 10.5l8-6 8 6V19a2 2 0 0 1-2 2h-4v-6H10v6H6a2 2 0 0 1-2-2z" fill="currentColor"/>${badge}</svg>;
-      case "project":
-        return <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 4h16v4H4zM4 10h16v10H4z" fill="currentColor"/>${badge}</svg>;
-      case "calendar":
-        return <svg class="nav-icon" viewBox="0 0 24 24"><path d="M7 2v3M17 2v3M3 9h18M5 12h4M11 12h4M17 12h2M5 16h6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>${badge}</svg>;
-      case "messenger":
-        return <svg class="nav-icon" viewBox="0 0 24 24"><path d="M4 19l2-5 6-3 6 3-2 5-4 2zM6 6h12" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/>${badge}</svg>;
-      default:
-        return <svg class="nav-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="currentColor"/></svg>;
-    }
-  }
-
-  // ===== PWA INIT =====
-  function initPWA() {
-    if ("serviceWorker" in navigator) navigator.serviceWorker.register("/sw.js").catch(()=>{});
-  }
-
-  // ===== INIT =====
-  async function init() {
+  async function renderAll() {
     await renderTopBar();
     await renderBottomNav();
-    initPWA();
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", init);
+  // Re-render bei Sprachwechsel
+  if (window.i18n && typeof i18n.onChange === 'function') {
+    i18n.onChange(renderAll);
+  }
+
+  // Re-render bei Auth-Änderung (falls Supabase vorhanden)
+  if (window.supabase && supabase.auth?.onAuthStateChange) {
+    supabase.auth.onAuthStateChange(() => renderAll());
+  }
+
+  // Initial
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderAll);
   } else {
-    init();
-  }
-
-  // ===== i18n Hot-Reload =====
-  if (window.i18n && typeof i18n.onChange === "function") {
-    i18n.onChange(() => { renderTopBar(); renderBottomNav(); });
+    renderAll();
   }
 })();
+</script>
